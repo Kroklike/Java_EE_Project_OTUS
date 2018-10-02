@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>ru.otus.akn.project</groupId>
+  <artifactId>otusJavaEEProject</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <modules>
+    <module>sql-migrations</module>
+  </modules>
+  <packaging>pom</packaging>
+
+  <name>otusJavaEEProject Maven Webapp</name>
+  <url>http://www.otus.ru</url>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+    <javaee.version>8.0</javaee.version>
+    <lombok.version>1.18.2</lombok.version>
+    <hibernate.version>5.3.6.Final</hibernate.version>
+    <junit.version>4.11</junit.version>
+    <h2.version>1.4.197</h2.version>
+    <oracle.driver.version>11.2.0.4</oracle.driver.version>
+
+    <tomcat.deploymentPath>http://localhost:8080/manager/text</tomcat.deploymentPath>
+    <glassfish.location>E:\glassfish-5.0\glassfish5</glassfish.location>
+
+    <mavencompiler.version>3.5.1</mavencompiler.version>
+    <mavenbuilder.version>3.0.0</mavenbuilder.version>
+    <mavendeploy.version>2.2</mavendeploy.version>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>javax</groupId>
+      <artifactId>javaee-api</artifactId>
+      <version>${javaee.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>${lombok.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-core</artifactId>
+      <version>${hibernate.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.oracle.jdbc</groupId>
+      <artifactId>ojdbc6</artifactId>
+      <version>${oracle.driver.version}</version>
+      <scope>compile</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>${junit.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.h2database</groupId>
+      <artifactId>h2</artifactId>
+      <version>${h2.version}</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <!-- Oracle Maven Repository -->
+  <repositories>
+    <repository>
+      <id>maven.oracle.com</id>
+      <name>oracle-maven-repo</name>
+      <url>https://maven.oracle.com</url>
+      <layout>default</layout>
+      <releases>
+        <enabled>true</enabled>
+        <updatePolicy>always</updatePolicy>
+      </releases>
+    </repository>
+  </repositories>
+
+  <pluginRepositories>
+    <pluginRepository>
+      <id>maven.oracle.com</id>
+      <name>oracle-maven-repo</name>
+      <url>https://maven.oracle.com</url>
+      <layout>default</layout>
+      <releases>
+        <enabled>true</enabled>
+        <updatePolicy>always</updatePolicy>
+      </releases>
+    </pluginRepository>
+  </pluginRepositories>
+
+  <build>
+    <finalName>JavaEE</finalName>
+    <sourceDirectory>src/main/java</sourceDirectory>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+      </resource>
+    </resources>
+    <testResources>
+      <testResource>
+        <directory>src/test/resources</directory>
+      </testResource>
+    </testResources>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>${mavencompiler.version}</version>
+        <configuration>
+          <source>${maven.compiler.source}</source>
+          <target>${maven.compiler.target}</target>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>${mavenbuilder.version}</version>
+        <configuration>
+          <warSourceDirectory>src/main/webapp</warSourceDirectory>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.tomcat.maven</groupId>
+        <artifactId>tomcat7-maven-plugin</artifactId>
+        <version>${mavendeploy.version}</version>
+        <configuration>
+          <url>${tomcat.deploymentPath}</url>
+          <server>TomcatServer</server>
+          <path>/${project.build.finalName}</path>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.cargo</groupId>
+        <artifactId>cargo-maven2-plugin</artifactId>
+        <configuration>
+          <container>
+            <containerId>glassfish5x</containerId>
+            <type>installed</type>
+            <!-- Path to directory where glassfish is installed -->
+            <home>${glassfish.location}</home>
+          </container>
+          <configuration>
+            <type>existing</type>
+            <!-- Path to domains directory -->
+            <home>${glassfish.location}/glassfish/domains</home>
+            <properties>
+              <!-- Domain name where application will be deployed. -->
+              <cargo.glassfish.domain.name>domain1</cargo.glassfish.domain.name>
+              <!-- Glassfish user to authenticate -->
+              <cargo.remote.username>admin</cargo.remote.username>
+              <!-- Glassfish password to authenticate -->
+              <cargo.remote.password></cargo.remote.password>
+            </properties>
+          </configuration>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>
