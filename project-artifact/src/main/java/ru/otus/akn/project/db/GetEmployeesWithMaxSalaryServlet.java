@@ -7,7 +7,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
-import java.util.Arrays;
 import java.util.List;
 
 @WebServlet("/getEmployeesWithMaxSalary")
@@ -29,7 +28,19 @@ public class GetEmployeesWithMaxSalaryServlet extends HttpServlet {
             List<Object[]> employeeList = query.getResultList();
             try (PrintWriter pw = response.getWriter()) {
                 for (Object[] employee : employeeList) {
-                    pw.println(Arrays.toString(employee));
+                    pw.print("{EmployeeId: " + employee[0] + " ");
+                    pw.print("PositionId: " + employee[1] + " ");
+                    pw.print("DepartmentId: " + employee[2] + " ");
+                    pw.print("FirstName: " + employee[3] + " ");
+                    pw.print("LastName: " + employee[4] + " ");
+                    pw.print("EmploymentDate: " + employee[5] + " ");
+                    pw.print("Salary: " + employee[6] + " ");
+                    pw.print("BonusPercent: " + employee[7] + " ");
+                    pw.print("MiddleName: " + employee[8] + " ");
+                    pw.print("TelephoneNumber: " + employee[9] + " ");
+                    pw.print("Email: " + employee[10] + " ");
+                    pw.print("DismissalDate: " + employee[11] + " ");
+                    pw.print("UserId: " + employee[12] + "}\n");
                 }
             }
         } catch (Exception e) {
