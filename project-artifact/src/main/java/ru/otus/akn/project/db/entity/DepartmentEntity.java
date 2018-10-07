@@ -11,10 +11,12 @@ public class DepartmentEntity {
 
     @Id
     @Column(name = "DEPARTMENT_ID")
+    @SequenceGenerator(name = "DEPARTMENTS_SEQ", sequenceName = "DEPARTMENTS_SEQ", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "DEPARTMENTS_SEQ")
     private long departmentId;
 
     @Basic
-    @Column(name = "DEPARTMENT_NAME")
+    @Column(name = "DEPARTMENT_NAME", nullable = false)
     private String departmentName;
 
     @Basic

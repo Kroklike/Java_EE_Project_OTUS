@@ -10,17 +10,19 @@ import javax.persistence.*;
 public class UserEntity {
     @Id
     @Column(name = "USER_ID")
+    @SequenceGenerator(name = "USERS_SEQ", sequenceName = "USERS_SEQ", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "USERS_SEQ")
     private long userId;
 
     @Basic
-    @Column(name = "LOGIN")
+    @Column(name = "LOGIN", nullable = false)
     private String login;
 
     @Basic
-    @Column(name = "PASSWORD_HASH")
+    @Column(name = "PASSWORD_HASH", nullable = false)
     private String passwordHash;
 
     @Basic
-    @Column(name = "IS_ACTIVE")
+    @Column(name = "IS_ACTIVE", nullable = false)
     private Boolean isActive;
 }
