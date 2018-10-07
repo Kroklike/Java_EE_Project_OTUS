@@ -6,7 +6,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import java.util.List;
 
-public class PositionDAO {
+public class PositionsDAO {
 
     public static PositionEntity getPositionEntity(EntityManager em, String positionName) {
         Query positionQ = em.createQuery("select position from PositionEntity position " +
@@ -19,6 +19,11 @@ public class PositionDAO {
             throw new RuntimeException("Found more than one position");
         }
         return list.get(0);
+    }
+
+    public static List<PositionEntity> getAllPositionEntities(EntityManager em) {
+        Query positionQ = em.createQuery("select position from PositionEntity position ");
+        return (List<PositionEntity>) positionQ.getResultList();
     }
 
 }

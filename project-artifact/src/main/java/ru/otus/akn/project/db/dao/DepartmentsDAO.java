@@ -21,4 +21,9 @@ public class DepartmentsDAO {
         return list.get(0);
     }
 
+    public static List<DepartmentEntity> getAllDepartmentEntities(EntityManager em) {
+        Query deptQ = em.createQuery("select dept from DepartmentEntity dept");
+        return (List<DepartmentEntity>) deptQ.getResultList();
+    }
+
 }

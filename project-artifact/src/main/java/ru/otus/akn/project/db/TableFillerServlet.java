@@ -24,8 +24,11 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+import static ru.otus.akn.project.db.dao.DepartmentsDAO.getAllDepartmentEntities;
 import static ru.otus.akn.project.db.dao.DepartmentsDAO.getDepartmentEntity;
-import static ru.otus.akn.project.db.dao.PositionDAO.getPositionEntity;
+import static ru.otus.akn.project.db.dao.EmployeesDAO.getAllEmployeeEntities;
+import static ru.otus.akn.project.db.dao.PositionsDAO.getAllPositionEntities;
+import static ru.otus.akn.project.db.dao.PositionsDAO.getPositionEntity;
 
 @WebServlet("/fillTable")
 public class TableFillerServlet extends HttpServlet {
@@ -55,6 +58,10 @@ public class TableFillerServlet extends HttpServlet {
     private void fillUpDepartmentsTable(HttpServletResponse response, EntityManager em) throws ServletException {
         EntityTransaction transaction = em.getTransaction();
         try {
+            if (getAllDepartmentEntities(em).size() != 0) {
+                response.getWriter().println("Departments table have already filled");
+                return;
+            }
             File departmentFile = getResourceFile(CSV_DEPARTMENTS);
             transaction.begin();
             try (CSVReader reader = new CSVReader(new FileReader(departmentFile), CSV_SPLITTER)) {
@@ -78,6 +85,10 @@ public class TableFillerServlet extends HttpServlet {
     private void fillUpPositionsTable(HttpServletResponse response, EntityManager em) throws ServletException {
         EntityTransaction transaction = em.getTransaction();
         try {
+            if (getAllPositionEntities(em).size() != 0) {
+                response.getWriter().println("Positions table have already filled");
+                return;
+            }
             File positionFile = getResourceFile(CSV_POSITIONS);
             transaction.begin();
             try (CSVReader reader = new CSVReader(new FileReader(positionFile), CSV_SPLITTER)) {
@@ -100,6 +111,10 @@ public class TableFillerServlet extends HttpServlet {
         EntityTransaction transaction = em.getTransaction();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_FORMAT);
         try {
+            if (getAllEmployeeEntities(em).size() != 0) {
+                response.getWriter().println("Employees table have already filled");
+                return;
+            }
             File employeeFile = getResourceFile(CSV_EMPLOYEES);
             transaction.begin();
             try (CSVReader reader = new CSVReader(new FileReader(employeeFile), CSV_SPLITTER)) {
