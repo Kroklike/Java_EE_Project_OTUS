@@ -1,5 +1,9 @@
 <html>
 <body>
-<h2>Hello World!</h2>
+<h2>/fillTable</h2>
+<h2>/cleanTable</h2>
+<h2>/getEmployees</h2>
+<h2>/changeLastNameAndPosition</h2>
+<h2>/deleteThreeEmployees</h2>
 </body>
 </html>
