@@ -5,5 +5,6 @@
 <h2>/getEmployees</h2>
 <h2>/changeLastNameAndPosition</h2>
 <h2>/deleteThreeEmployees</h2>
+<h2>/getEmployeesWithMaxSalary</h2>
 </body>
 </html>
