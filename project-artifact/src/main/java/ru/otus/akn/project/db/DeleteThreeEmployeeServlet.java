@@ -28,6 +28,7 @@ public class DeleteThreeEmployeeServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException {
         EntityManager manager = emf.createEntityManager();
+        EntityTransaction transaction = manager.getTransaction();
         try {
             List<EmployeeEntity> entities = getAllEmployeeEntities(manager);
             Collections.shuffle(entities);
@@ -35,7 +36,6 @@ public class DeleteThreeEmployeeServlet extends HttpServlet {
             if (toDelete.size() < 3) {
                 throw new RuntimeException("Three employees did not find");
             }
-            EntityTransaction transaction = manager.getTransaction();
             transaction.begin();
             for (EmployeeEntity entity : toDelete) {
                 manager.remove(entity);
@@ -43,6 +43,7 @@ public class DeleteThreeEmployeeServlet extends HttpServlet {
             transaction.commit();
             response.getWriter().println("Three employees successfully deleted!");
         } catch (Exception e) {
+            transaction.rollback();
             throw new ServletException(e);
         } finally {
             manager.close();

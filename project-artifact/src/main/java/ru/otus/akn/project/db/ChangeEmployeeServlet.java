@@ -31,6 +31,7 @@ public class ChangeEmployeeServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException {
         EntityManager manager = emf.createEntityManager();
+        EntityTransaction transaction = manager.getTransaction();
         try {
             List<EmployeeEntity> entitiesOrderById = getAllEmployeeEntitiesOrderById(manager);
             Collections.shuffle(entitiesOrderById);
@@ -43,7 +44,6 @@ public class ChangeEmployeeServlet extends HttpServlet {
             } else if (!positionEntity.isPresent()) {
                 throw new RuntimeException("Position did not find");
             } else {
-                EntityTransaction transaction = manager.getTransaction();
                 transaction.begin();
                 for (EmployeeEntity entity : entities) {
                     entity.setLastName(Generator.generateName());
@@ -54,6 +54,7 @@ public class ChangeEmployeeServlet extends HttpServlet {
             }
             response.getWriter().println("Two employees successfully changed!");
         } catch (Exception e) {
+            transaction.rollback();
             throw new ServletException(e);
         } finally {
             manager.close();

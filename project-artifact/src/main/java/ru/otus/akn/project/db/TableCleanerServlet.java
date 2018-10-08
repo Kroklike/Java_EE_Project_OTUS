@@ -29,11 +29,11 @@ public class TableCleanerServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException {
         EntityManager manager = emf.createEntityManager();
+        EntityTransaction transaction = manager.getTransaction();
         try {
             List<EmployeeEntity> entities = getAllEmployeeEntities(manager);
             List<DepartmentEntity> departmentEntities = getAllDepartmentEntities(manager);
             List<PositionEntity> positionEntities = getAllPositionEntities(manager);
-            EntityTransaction transaction = manager.getTransaction();
             transaction.begin();
             for (EmployeeEntity entity : entities) {
                 manager.remove(entity);
@@ -47,6 +47,7 @@ public class TableCleanerServlet extends HttpServlet {
             transaction.commit();
             response.getWriter().println("All tables cleaned!");
         } catch (Exception e) {
+            transaction.rollback();
             throw new ServletException(e);
         } finally {
             manager.close();
