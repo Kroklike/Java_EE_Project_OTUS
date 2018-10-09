@@ -1,6 +1,10 @@
 package ru.otus.akn.project.db;
 
-import javax.persistence.*;
+import ru.otus.akn.project.db.util.EntityManagerControlGeneric;
+
+import javax.persistence.EntityManager;
+import javax.persistence.ParameterMode;
+import javax.persistence.StoredProcedureQuery;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -9,23 +13,26 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
 import java.util.List;
 
+import static ru.otus.akn.project.db.util.PersistenceUtil.MANAGER_FACTORY;
+
 @WebServlet("/getEmployeesWithMaxSalary")
 public class GetEmployeesWithMaxSalaryServlet extends HttpServlet {
 
-    private static final String PERSISTENCE_UNIT_NAME = "jpa";
-    private static final EntityManagerFactory emf =
-            Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME); // for Tomcat
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-        EntityManager manager = emf.createEntityManager();
         try {
-            StoredProcedureQuery query = manager
-                    .createStoredProcedureQuery("employee_with_max_salary")
-                    .registerStoredProcedureParameter(1, Class.class,
-                            ParameterMode.REF_CURSOR);
-            query.execute();
-            List<Object[]> employeeList = query.getResultList();
+            List<Object[]> employeeList = new EntityManagerControlGeneric<List<Object[]>>(MANAGER_FACTORY) {
+                @Override
+                public List<Object[]> requestMethod(EntityManager manager) {
+                    StoredProcedureQuery query = manager
+                            .createStoredProcedureQuery("employee_with_max_salary")
+                            .registerStoredProcedureParameter(1, Class.class,
+                                    ParameterMode.REF_CURSOR);
+                    query.execute();
+                    return query.getResultList();
+                }
+            }.processRequest();
+
             try (PrintWriter pw = response.getWriter()) {
                 for (Object[] employee : employeeList) {
                     pw.print("{EmployeeId: " + employee[0] + " ");
@@ -45,8 +52,6 @@ public class GetEmployeesWithMaxSalaryServlet extends HttpServlet {
             }
         } catch (Exception e) {
             throw new ServletException(e);
-        } finally {
-            manager.close();
         }
     }
 }

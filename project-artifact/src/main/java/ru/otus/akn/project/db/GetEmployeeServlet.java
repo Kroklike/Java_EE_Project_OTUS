@@ -1,10 +1,9 @@
 package ru.otus.akn.project.db;
 
 import ru.otus.akn.project.db.entity.EmployeeEntity;
+import ru.otus.akn.project.db.util.EntityManagerControlGeneric;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -14,26 +13,25 @@ import java.io.PrintWriter;
 import java.util.List;
 
 import static ru.otus.akn.project.db.dao.EmployeesDAO.getAllEmployeeEntitiesOrderById;
+import static ru.otus.akn.project.db.util.PersistenceUtil.MANAGER_FACTORY;
 
 @WebServlet("/getEmployees")
 public class GetEmployeeServlet extends HttpServlet {
-    private static final String PERSISTENCE_UNIT_NAME = "jpa";
-
-    private static final EntityManagerFactory emf =
-            Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME); // for Tomcat
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-        EntityManager manager = emf.createEntityManager();
         try {
-            List<EmployeeEntity> entitiesOrderById = getAllEmployeeEntitiesOrderById(manager);
+            List<EmployeeEntity> entitiesOrderById = new EntityManagerControlGeneric<List<EmployeeEntity>>(MANAGER_FACTORY) {
+                @Override
+                public List<EmployeeEntity> requestMethod(EntityManager manager) {
+                    return getAllEmployeeEntitiesOrderById(manager);
+                }
+            }.processRequest();
             try (PrintWriter pw = response.getWriter()) {
                 entitiesOrderById.forEach(pw::println);
             }
         } catch (Exception e) {
             throw new ServletException(e);
-        } finally {
-            manager.close();
         }
     }
 }
