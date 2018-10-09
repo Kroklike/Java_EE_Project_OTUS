@@ -3,10 +3,10 @@ package ru.otus.akn.project.db;
 import ru.otus.akn.project.db.entity.DepartmentEntity;
 import ru.otus.akn.project.db.entity.EmployeeEntity;
 import ru.otus.akn.project.db.entity.PositionEntity;
+import ru.otus.akn.project.db.util.TransactionQueryConsumer;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -29,25 +29,26 @@ public class TableCleanerServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException {
         EntityManager manager = emf.createEntityManager();
-        EntityTransaction transaction = manager.getTransaction();
         try {
             List<EmployeeEntity> entities = getAllEmployeeEntities(manager);
             List<DepartmentEntity> departmentEntities = getAllDepartmentEntities(manager);
             List<PositionEntity> positionEntities = getAllPositionEntities(manager);
-            transaction.begin();
-            for (EmployeeEntity entity : entities) {
-                manager.remove(entity);
-            }
-            for (PositionEntity entity : positionEntities) {
-                manager.remove(entity);
-            }
-            for (DepartmentEntity entity : departmentEntities) {
-                manager.remove(entity);
-            }
-            transaction.commit();
+            new TransactionQueryConsumer(manager) {
+                @Override
+                public void needToProcessData() {
+                    for (EmployeeEntity entity : entities) {
+                        manager.remove(entity);
+                    }
+                    for (PositionEntity entity : positionEntities) {
+                        manager.remove(entity);
+                    }
+                    for (DepartmentEntity entity : departmentEntities) {
+                        manager.remove(entity);
+                    }
+                }
+            }.processQueryInTransaction();
             response.getWriter().println("All tables cleaned!");
         } catch (Exception e) {
-            transaction.rollback();
             throw new ServletException(e);
         } finally {
             manager.close();

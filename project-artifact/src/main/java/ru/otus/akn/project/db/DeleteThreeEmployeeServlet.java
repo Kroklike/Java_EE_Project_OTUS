@@ -1,10 +1,10 @@
 package ru.otus.akn.project.db;
 
 import ru.otus.akn.project.db.entity.EmployeeEntity;
+import ru.otus.akn.project.db.util.TransactionQueryConsumer;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -28,7 +28,6 @@ public class DeleteThreeEmployeeServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException {
         EntityManager manager = emf.createEntityManager();
-        EntityTransaction transaction = manager.getTransaction();
         try {
             List<EmployeeEntity> entities = getAllEmployeeEntities(manager);
             Collections.shuffle(entities);
@@ -36,14 +35,16 @@ public class DeleteThreeEmployeeServlet extends HttpServlet {
             if (toDelete.size() < 3) {
                 throw new RuntimeException("Three employees did not find");
             }
-            transaction.begin();
-            for (EmployeeEntity entity : toDelete) {
-                manager.remove(entity);
-            }
-            transaction.commit();
+            new TransactionQueryConsumer(manager) {
+                @Override
+                public void needToProcessData() {
+                    for (EmployeeEntity entity : toDelete) {
+                        manager.remove(entity);
+                    }
+                }
+            }.processQueryInTransaction();
             response.getWriter().println("Three employees successfully deleted!");
         } catch (Exception e) {
-            transaction.rollback();
             throw new ServletException(e);
         } finally {
             manager.close();
