@@ -1,5 +1,6 @@
 package ru.otus.akn.project.xml;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.XML;
 
@@ -21,6 +22,8 @@ import static ru.otus.akn.project.xml.MarshalXMLServlet.PATH_TO_XML_FILE;
 public class XmlToJsonServlet extends HttpServlet {
 
     public static final String PATH_TO_JSON_FILE = "/WEB-INF/classes/json-data/employee.json";
+    private static final String EMPLOYEES_JSON_NAME = "employees";
+    private static final String EMPLOYEE_JSON_ARRAY = "employee";
     private static final int INDENT_FACTOR = 4;
 
     @Override
@@ -32,13 +35,16 @@ public class XmlToJsonServlet extends HttpServlet {
              BufferedReader fileReaderXml = new BufferedReader(
                      new FileReader(getResourceFile(this, PATH_TO_XML_FILE)))) {
 
-            pw.println("Path to json file: " + PATH_TO_JSON_FILE);
             pw.println("Path to xml file: " + PATH_TO_XML_FILE);
+            pw.println("Path to json file: " + PATH_TO_JSON_FILE);
             String xmlContent = getWholeStringFromFile(fileReaderXml).toString();
             if (xmlContent.isEmpty()) {
                 throw new RuntimeException("Xml file is empty.");
             }
             JSONObject xmlJsonObj = XML.toJSONObject(xmlContent);
+            JSONObject employeesObject = xmlJsonObj.getJSONObject(EMPLOYEES_JSON_NAME);
+            JSONObject employeeArray = employeesObject.getJSONObject(EMPLOYEE_JSON_ARRAY);
+            replaceSingleElementToArrayIfNeed(employeeArray, employeesObject);
             fileWriterJson.write(xmlJsonObj.toString(INDENT_FACTOR));
             fileWriterJson.flush();
             pw.println("Employees list wrote successfully in json format.");
@@ -48,4 +54,14 @@ public class XmlToJsonServlet extends HttpServlet {
             throw new ServletException("Got exception when tried to convert xml to json", e);
         }
     }
+
+    private void replaceSingleElementToArrayIfNeed(Object InsideArray, JSONObject rootObject) {
+        if (!(InsideArray instanceof JSONArray)) {
+            JSONArray jsonArray = new JSONArray();
+            jsonArray.put(InsideArray);
+            rootObject.remove(EMPLOYEE_JSON_ARRAY);
+            rootObject.put(EMPLOYEE_JSON_ARRAY, jsonArray);
+        }
+    }
+
 }
