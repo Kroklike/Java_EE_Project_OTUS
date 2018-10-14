@@ -4,11 +4,15 @@ import lombok.Data;
 import lombok.ToString;
 import ru.otus.akn.project.xml.adapter.DateTimeAdapter;
 
+import javax.json.bind.annotation.JsonbDateFormat;
+import javax.json.bind.annotation.JsonbProperty;
 import javax.persistence.*;
 import javax.xml.bind.annotation.*;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+
+import static ru.otus.akn.project.xml.adapter.DateTimeAdapter.DATE_FORMAT;
 
 @Data
 @Entity
@@ -28,11 +32,13 @@ public class EmployeeEntity {
     @ManyToOne
     @JoinColumn(name = "POSITION_ID", nullable = false, foreignKey = @ForeignKey(name = "EMPLOYEE_POSITION_FK"))
     @XmlElement(required = true, name = "position")
+    @JsonbProperty("position")
     private PositionEntity positionEntity;
 
     @ManyToOne
     @JoinColumn(name = "DEPARTMENT_ID", nullable = false, foreignKey = @ForeignKey(name = "EMPLOYEE_DEPARTMENT_FK"))
     @XmlElement(required = true, name = "department")
+    @JsonbProperty("department")
     private DepartmentEntity departmentEntity;
 
     @Basic
@@ -49,6 +55,7 @@ public class EmployeeEntity {
     @Column(name = "EMPLOYMENT_DATE", nullable = false)
     @XmlElement(required = true)
     @XmlJavaTypeAdapter(DateTimeAdapter.class)
+    @JsonbDateFormat(value = DATE_FORMAT)
     private LocalDate employmentDate;
 
     @Basic
@@ -76,6 +83,7 @@ public class EmployeeEntity {
     @Basic
     @Column(name = "DISMISSAL_DATE")
     @XmlJavaTypeAdapter(DateTimeAdapter.class)
+    @JsonbDateFormat(value = DATE_FORMAT)
     private LocalDate dismissalDate;
 
     @OneToOne

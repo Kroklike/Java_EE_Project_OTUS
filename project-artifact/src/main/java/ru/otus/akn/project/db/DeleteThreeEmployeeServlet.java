@@ -1,8 +1,8 @@
 package ru.otus.akn.project.db;
 
 import ru.otus.akn.project.db.entity.EmployeeEntity;
-import ru.otus.akn.project.db.util.EntityManagerControl;
-import ru.otus.akn.project.db.util.TransactionQueryConsumer;
+import ru.otus.akn.project.util.EntityManagerControl;
+import ru.otus.akn.project.util.TransactionQueryConsumer;
 
 import javax.persistence.EntityManager;
 import javax.servlet.ServletException;
@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ru.otus.akn.project.db.dao.EmployeesDAO.getAllEmployeeEntities;
-import static ru.otus.akn.project.db.util.PersistenceUtil.MANAGER_FACTORY;
+import static ru.otus.akn.project.util.PersistenceUtil.MANAGER_FACTORY;
 
 @WebServlet("/deleteThreeEmployees")
 public class DeleteThreeEmployeeServlet extends HttpServlet {

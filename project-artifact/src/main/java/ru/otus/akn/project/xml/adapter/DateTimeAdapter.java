@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 public class DateTimeAdapter extends XmlAdapter<String, LocalDate> {
-    private final static String DATE_FORMAT = "dd-MM-yyyy";
+    public final static String DATE_FORMAT = "dd-MM-yyyy";
 
     @Override
     public LocalDate unmarshal(String xmlFormat) {

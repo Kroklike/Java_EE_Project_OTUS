@@ -2,9 +2,9 @@ package ru.otus.akn.project.db;
 
 import ru.otus.akn.project.db.entity.EmployeeEntity;
 import ru.otus.akn.project.db.entity.PositionEntity;
-import ru.otus.akn.project.db.util.EntityManagerControl;
-import ru.otus.akn.project.db.util.Generator;
-import ru.otus.akn.project.db.util.TransactionQueryConsumer;
+import ru.otus.akn.project.util.EntityManagerControl;
+import ru.otus.akn.project.util.Generator;
+import ru.otus.akn.project.util.TransactionQueryConsumer;
 
 import javax.persistence.EntityManager;
 import javax.servlet.ServletException;
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 import static ru.otus.akn.project.db.dao.EmployeesDAO.getAllEmployeeEntitiesOrderById;
 import static ru.otus.akn.project.db.dao.PositionsDAO.getAllPositionEntities;
-import static ru.otus.akn.project.db.util.PersistenceUtil.MANAGER_FACTORY;
+import static ru.otus.akn.project.util.PersistenceUtil.MANAGER_FACTORY;
 
 @WebServlet("/changeLastNameAndPosition")
 public class ChangeEmployeeServlet extends HttpServlet {

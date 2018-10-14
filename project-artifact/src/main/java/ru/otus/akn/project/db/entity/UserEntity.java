@@ -3,6 +3,7 @@ package ru.otus.akn.project.db.entity;
 import lombok.Data;
 import lombok.ToString;
 
+import javax.json.bind.annotation.JsonbProperty;
 import javax.persistence.*;
 import javax.xml.bind.annotation.*;
 

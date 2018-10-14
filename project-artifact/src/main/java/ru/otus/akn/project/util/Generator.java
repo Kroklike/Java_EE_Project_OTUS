@@ -1,4 +1,4 @@
-package ru.otus.akn.project.db.util;
+package ru.otus.akn.project.util;
 
 import java.util.Random;
 import java.util.stream.IntStream;

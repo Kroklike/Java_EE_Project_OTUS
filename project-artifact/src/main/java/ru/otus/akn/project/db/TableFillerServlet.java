@@ -4,8 +4,8 @@ import com.opencsv.CSVReader;
 import ru.otus.akn.project.db.entity.DepartmentEntity;
 import ru.otus.akn.project.db.entity.EmployeeEntity;
 import ru.otus.akn.project.db.entity.PositionEntity;
-import ru.otus.akn.project.db.util.EntityManagerControl;
-import ru.otus.akn.project.db.util.TransactionQueryConsumer;
+import ru.otus.akn.project.util.EntityManagerControl;
+import ru.otus.akn.project.util.TransactionQueryConsumer;
 
 import javax.persistence.EntityManager;
 import javax.servlet.ServletException;
@@ -24,8 +24,8 @@ import static ru.otus.akn.project.db.dao.DepartmentsDAO.getDepartmentEntity;
 import static ru.otus.akn.project.db.dao.EmployeesDAO.getAllEmployeeEntities;
 import static ru.otus.akn.project.db.dao.PositionsDAO.getAllPositionEntities;
 import static ru.otus.akn.project.db.dao.PositionsDAO.getPositionEntity;
-import static ru.otus.akn.project.db.util.PersistenceUtil.MANAGER_FACTORY;
-import static ru.otus.akn.project.db.util.ResourceUtil.getResourceFile;
+import static ru.otus.akn.project.util.PersistenceUtil.MANAGER_FACTORY;
+import static ru.otus.akn.project.util.ResourceUtil.getResourceFile;
 
 @WebServlet("/fillTable")
 public class TableFillerServlet extends HttpServlet {

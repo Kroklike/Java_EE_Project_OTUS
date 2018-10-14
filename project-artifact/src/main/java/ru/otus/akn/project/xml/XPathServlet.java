@@ -15,9 +15,10 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathFactory;
 import java.io.PrintWriter;
+import java.math.BigDecimal;
 
-import static ru.otus.akn.project.db.util.ResourceUtil.getResourceFile;
-import static ru.otus.akn.project.xml.MarshalXMLServlet.FILE_TO_SAVE_EMPLOYEES_OBJECT;
+import static ru.otus.akn.project.util.ResourceUtil.getResourceFile;
+import static ru.otus.akn.project.xml.MarshalXMLServlet.PATH_TO_XML_FILE;
 
 @WebServlet("/xPathEmployeeSearching")
 public class XPathServlet extends HttpServlet {
@@ -30,22 +31,26 @@ public class XPathServlet extends HttpServlet {
 
         try {
             builder = factory.newDocumentBuilder();
-            doc = builder.parse(getResourceFile(this, FILE_TO_SAVE_EMPLOYEES_OBJECT));
+            doc = builder.parse(getResourceFile(this, PATH_TO_XML_FILE));
 
             XPathFactory xPathFactory = XPathFactory.newInstance();
             XPath xPath = xPathFactory.newXPath();
-            XPathExpression expression = xPath.compile("/employees/employee" +
-                    "[salary > (sum(/employees/employee/salary) div count(/employees/employee))]/@employeeId");
+            XPathExpression searchAverageSalary = xPath.compile(
+                    "sum(/employees/employee/salary) div count(/employees/employee)");
+            BigDecimal averageSalary = new BigDecimal(searchAverageSalary.evaluate(doc))
+                    .setScale(4, BigDecimal.ROUND_HALF_UP);
 
-            NodeList result = (NodeList) expression.evaluate(doc, XPathConstants.NODESET);
+            XPathExpression searchEmpWithMoreThanAvgSalary = xPath.compile("/employees/employee" +
+                    "[salary > " + averageSalary + "]/@employeeId");
+
+            NodeList result = (NodeList) searchEmpWithMoreThanAvgSalary.evaluate(doc, XPathConstants.NODESET);
 
             try (PrintWriter pw = resp.getWriter()) {
-                pw.println("Employees with more than average salary:");
+                pw.println("Employees with more than average salary (" + averageSalary + "):");
                 for (int i = 0; i < result.getLength(); i++) {
-                    pw.println("-Employee number: " + result.item(i).getNodeValue());
+                    pw.println("-EmployeeId: " + result.item(i).getNodeValue());
                 }
             }
-
         } catch (Exception e) {
             throw new ServletException("Got exception when tried use xpath.", e);
         }

@@ -1,4 +1,4 @@
-package ru.otus.akn.project.db.util;
+package ru.otus.akn.project.util;
 
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;

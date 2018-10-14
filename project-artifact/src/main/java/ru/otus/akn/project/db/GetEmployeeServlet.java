@@ -1,7 +1,7 @@
 package ru.otus.akn.project.db;
 
 import ru.otus.akn.project.db.entity.EmployeeEntity;
-import ru.otus.akn.project.db.util.EntityManagerControlGeneric;
+import ru.otus.akn.project.util.EntityManagerControlGeneric;
 
 import javax.persistence.EntityManager;
 import javax.servlet.ServletException;
@@ -13,7 +13,7 @@ import java.io.PrintWriter;
 import java.util.List;
 
 import static ru.otus.akn.project.db.dao.EmployeesDAO.getAllEmployeeEntitiesOrderById;
-import static ru.otus.akn.project.db.util.PersistenceUtil.MANAGER_FACTORY;
+import static ru.otus.akn.project.util.PersistenceUtil.MANAGER_FACTORY;
 
 @WebServlet("/getEmployees")
 public class GetEmployeeServlet extends HttpServlet {
