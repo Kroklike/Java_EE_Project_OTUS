@@ -14,6 +14,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
@@ -32,8 +34,8 @@ import static ru.otus.akn.project.db.util.ResourceUtil.getResourceFile;
 @WebServlet("/marshalEmployees")
 public class MarshalXMLServlet extends HttpServlet {
 
+    public final static String FILE_TO_SAVE_EMPLOYEES_OBJECT = "/WEB-INF/classes/xml-data/employee_list.xml";
     private final static Logger LOGGER = Logger.getLogger(MarshalXMLServlet.class.getName());
-    private final static String FILE_TO_SAVE_EMPLOYEES_OBJECT = "/WEB-INF/classes/xml-data/employee_list.xml";
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException {
@@ -57,13 +59,21 @@ public class MarshalXMLServlet extends HttpServlet {
         EmployeesList toMarshal = new EmployeesList();
         toMarshal.setEmployeeEntities(entitiesOrderById);
 
-        try (PrintWriter pw = resp.getWriter()) {
+        try (PrintWriter pw = resp.getWriter();
+             FileWriter fileWriter = new FileWriter(getResourceFile(this, FILE_TO_SAVE_EMPLOYEES_OBJECT));
+             BufferedReader fileReader = new BufferedReader(
+                     new FileReader(getResourceFile(this, FILE_TO_SAVE_EMPLOYEES_OBJECT)))) {
             JAXBContext context = JAXBContext.newInstance(EmployeesList.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, TRUE);
             pw.println("Path to file: " + new URI(FILE_TO_SAVE_EMPLOYEES_OBJECT).toString());
-            marshaller.marshal(toMarshal, new FileWriter(getResourceFile(this, FILE_TO_SAVE_EMPLOYEES_OBJECT)));
+            marshaller.marshal(toMarshal, fileWriter);
             pw.println("Employees list wrote successfully.");
+            pw.println("\nNow employees list file contains: \n");
+            String line;
+            while ((line = fileReader.readLine()) != null) {
+                pw.println(line);
+            }
         } catch (Exception e) {
             throw new ServletException("Got exception when tried to marshal employee objects", e);
         }
