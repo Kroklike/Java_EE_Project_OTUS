@@ -8,7 +8,6 @@ import ru.otus.akn.project.db.util.EntityManagerControl;
 import ru.otus.akn.project.db.util.TransactionQueryConsumer;
 
 import javax.persistence.EntityManager;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -17,9 +16,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileReader;
 import java.math.BigDecimal;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -29,6 +25,7 @@ import static ru.otus.akn.project.db.dao.EmployeesDAO.getAllEmployeeEntities;
 import static ru.otus.akn.project.db.dao.PositionsDAO.getAllPositionEntities;
 import static ru.otus.akn.project.db.dao.PositionsDAO.getPositionEntity;
 import static ru.otus.akn.project.db.util.PersistenceUtil.MANAGER_FACTORY;
+import static ru.otus.akn.project.db.util.ResourceUtil.getResourceFile;
 
 @WebServlet("/fillTable")
 public class TableFillerServlet extends HttpServlet {
@@ -60,7 +57,7 @@ public class TableFillerServlet extends HttpServlet {
             response.getWriter().println("Departments table have already filled");
             return;
         }
-        File departmentFile = getResourceFile(CSV_DEPARTMENTS);
+        File departmentFile = getResourceFile(this, CSV_DEPARTMENTS);
         new TransactionQueryConsumer(em) {
             @Override
             public void needToProcessData() throws Exception {
@@ -84,7 +81,7 @@ public class TableFillerServlet extends HttpServlet {
             response.getWriter().println("Positions table have already filled");
             return;
         }
-        File positionFile = getResourceFile(CSV_POSITIONS);
+        File positionFile = getResourceFile(this, CSV_POSITIONS);
         new TransactionQueryConsumer(em) {
             @Override
             public void needToProcessData() throws Exception {
@@ -107,7 +104,7 @@ public class TableFillerServlet extends HttpServlet {
             response.getWriter().println("Employees table have already filled");
             return;
         }
-        File employeeFile = getResourceFile(CSV_EMPLOYEES);
+        File employeeFile = getResourceFile(this, CSV_EMPLOYEES);
         new TransactionQueryConsumer(em) {
             @Override
             public void needToProcessData() throws Exception {
@@ -138,13 +135,6 @@ public class TableFillerServlet extends HttpServlet {
             }
         }.processQueryInTransaction();
         response.getWriter().println("Employees table filled");
-    }
-
-
-    private File getResourceFile(String csvPath) throws MalformedURLException, URISyntaxException {
-        ServletContext context = getServletContext();
-        URL positionCsv = context.getResource(csvPath);
-        return new File(positionCsv.toURI());
     }
 
 }
