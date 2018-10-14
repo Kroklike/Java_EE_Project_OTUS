@@ -34,7 +34,7 @@ import static ru.otus.akn.project.db.util.ResourceUtil.getResourceFile;
 @WebServlet("/marshalEmployees")
 public class MarshalXMLServlet extends HttpServlet {
 
-    public final static String FILE_TO_SAVE_EMPLOYEES_OBJECT = "/WEB-INF/classes/xml-data/employee_list.xml";
+    public final static String FILE_TO_SAVE_EMPLOYEES_OBJECT = "/WEB-INF/classes/xml-data/employee.xml";
     private final static Logger LOGGER = Logger.getLogger(MarshalXMLServlet.class.getName());
 
     @Override
@@ -69,7 +69,7 @@ public class MarshalXMLServlet extends HttpServlet {
             pw.println("Path to file: " + new URI(FILE_TO_SAVE_EMPLOYEES_OBJECT).toString());
             marshaller.marshal(toMarshal, fileWriter);
             pw.println("Employees list wrote successfully.");
-            pw.println("\nNow employees list file contains: \n");
+            pw.println("\nNow employee.xml file contains: \n");
             String line;
             while ((line = fileReader.readLine()) != null) {
                 pw.println(line);
