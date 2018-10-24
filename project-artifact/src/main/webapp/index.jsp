@@ -37,5 +37,7 @@
         <td><h2>/getEmployeesWithMaxSalary</h2></td>
     </tr>
 </table>
+
+<a href="html/main.html">Go to web-page</a>
 </body>
 </html>
