@@ -1,32 +1,104 @@
 @import url('https://fonts.googleapis.com/css?family=Ubuntu+Condensed');
 
-.header {
+.container {
     overflow: auto;
-    margin: 10px;
-    padding: 10px;
-    display: inline-block;
+    display: flex;
 }
 
 .center-block {
-    display: inline-block;
-    float: left;
-    width: 70%;
-    text-align: center;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    padding: 1px;
+    margin: 20px;
+}
+
+.description-item {
+    font-family: 'Ubuntu Condensed', sans-serif;
+    margin: 20px;
+    font-size: 18px;
+}
+
+.category-block {
+    width: 300px;
+    height: 600px;
+    margin: 10px;
+}
+
+.component-grid {
+    overflow: auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.news {
+    width: 300px;
+    height: 300px;
+    margin: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.news-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     border: 3px #CCCCCC solid;
     -moz-border-radius: 10px;
     -webkit-border-radius: 10px;
     -khtml-border-radius: 10px;
     border-radius: 10px;
-    padding: 1px;
-    margin: 10px;
+    text-align: center;
+    font-family: 'Ubuntu Condensed', sans-serif;
 }
 
-.category-block {
-    display: inline-block;
-    float: right;
-    width: 27%;
-    height: 800px;
+.news-text a, .news-text a:visited {
+    color: #9d999d;
+}
+
+.news-text a.current, .news-text a:hover {
+    color: #feb386;
+}
+
+.news-text a:hover:before, .news-text .current:before {
+    left: 0;
+}
+
+.news-text a:hover:after, .news-text .current:after {
+    right: 0;
+}
+
+.news-text a {
+    text-decoration: none;
+    transition: color .2s;
+}
+
+.news-img {
+    display: flex;
+    justify-content: center;
+}
+
+.news-img img {
+    height: 110px;
+    width: auto;
+}
+
+.header {
+    overflow: auto;
     margin: 10px;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+}
+
+.main-info {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
 }
 
 html,
@@ -39,17 +111,12 @@ footer {
     height: 100px;
 }
 
-.container {
-    overflow: hidden;
-}
-
 .search-form {
     padding: 4px;
-    width: 15em;
+    width: 100%;
 }
 
 .with-round-border {
-    float: left;
     height: 200px;
     border: 3px #CCCCCC solid;
     -moz-border-radius: 10px;
@@ -57,26 +124,30 @@ footer {
     -khtml-border-radius: 10px;
     border-radius: 10px;
     padding: 5px;
-    display: inline-block;
     margin: 10px;
 }
 
-#logo {
-    float: left;
+.with-round-border img {
+    width: auto;
     height: 200px;
-    border-radius: 10%;
-    display: inline-block;
 }
 
 .description-block {
-    display: block;
-    margin-top: 30px;
-    alignment: center;
+    margin: 10px;
     font-size: 25px;
     line-height: 1.1;
     color: #078eda;
     font-weight: bold;
     text-shadow: 1px 1px 0px #062838;
+}
+
+.prices-table {
+    font-family: 'Ubuntu Condensed', sans-serif;
+}
+
+.prices-table td {
+    width: 50%;
+    height: 150px;
 }
 
 .menu-main {
@@ -179,73 +250,4 @@ footer {
 .menu-main {
     box-sizing: border-box;
     margin: 0;
-}
-
-.widget {
-    padding: 20px;
-    border: 5px solid #f1f1f1;
-    background: #fff;
-    border-radius: 5px;
-    font-family: 'Roboto', sans-serif;
-}
-
-.widget h3 {
-    margin-bottom: 20px;
-    text-align: center;
-    font-size: 24px;
-    font-weight: normal;
-    color: #424949;
-}
-
-.widget ul {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    width: 250px;
-}
-
-.widget li {
-    border-bottom: 1px solid #eaeaea;
-    padding-bottom: 15px;
-    margin-bottom: 15px;
-}
-
-.widget li:last-child {
-    border-bottom: none;
-    margin-bottom: 0;
-    padding-bottom: 0;
-}
-
-.widget a {
-    text-decoration: none;
-    color: #616a6b;
-    display: inline-block;
-}
-
-.widget li:before {
-    font-family: FontAwesome;
-    font-size: 20px;
-    vertical-align: bottom;
-    color: #dd3333;
-    margin-right: 14px;
-}
-
-.widget li:nth-child(1):before {
-    content: "\f1fc";
-}
-
-.widget li:nth-child(2):before {
-    content: "\f0d0";
-}
-
-.widget li:nth-child(3):before {
-    content: "\f0cd";
-}
-
-.widget li:nth-child(4):before {
-    content: "\f028";
-}
-
-.widget li:nth-child(5):before {
-    content: "\f03d";
 }
