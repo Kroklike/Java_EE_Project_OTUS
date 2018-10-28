@@ -15,6 +15,38 @@
     margin: 20px;
 }
 
+* {
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+}
+
+.material-partner {
+    width: 600px;
+    height: 300px;
+    margin: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.material-partner img {
+    height: 300px;
+    width: 300px;
+}
+
+.material-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border: 5px #CCCCCC solid;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -khtml-border-radius: 10px;
+    border-radius: 10px;
+    text-align: center;
+    font-family: 'Ubuntu Condensed', sans-serif;
+}
+
 .description-item {
     font-family: 'Ubuntu Condensed', sans-serif;
     margin: 20px;
@@ -56,23 +88,24 @@
     font-family: 'Ubuntu Condensed', sans-serif;
 }
 
-.news-text a, .news-text a:visited {
+.a-style a, .a-style a:visited {
     color: #9d999d;
 }
 
-.news-text a.current, .news-text a:hover {
+.a-style a.current, .a-style a:hover {
     color: #feb386;
 }
 
-.news-text a:hover:before, .news-text .current:before {
+.a-style a:hover:before, .a-style .current:before {
     left: 0;
 }
 
-.news-text a:hover:after, .news-text .current:after {
+.a-style a:hover:after, .a-style .current:after {
     right: 0;
 }
 
-.news-text a {
+
+.a-style a {
     text-decoration: none;
     transition: color .2s;
 }
@@ -161,7 +194,7 @@ footer {
 .back {
     min-height: 100%;
     padding-bottom: 100px;
-    background-image: url("../images/wood2.jpg");
+    background-image: url("../images/wood.jpg");
 }
 
 .before-back {
@@ -250,4 +283,8 @@ footer {
 .menu-main {
     box-sizing: border-box;
     margin: 0;
+}
+
+#workSlider {
+    margin-top: 30px;
 }
