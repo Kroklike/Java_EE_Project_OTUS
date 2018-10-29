@@ -99,6 +99,14 @@
 
 <script>
     includeHTML();
+    $(document).ready(function () {
+        $.get("http://localhost:8080/currencyRatesToJson", {}, function (data, status) {
+            var currencyDataEUR = "<p>EUR = " + data.EUR + "</p>";
+            var currencyDataUSD = "<p>USD = " + data.USD + "</p>";
+            $("#currency-div").append(currencyDataEUR);
+            $("#currency-div").append(currencyDataUSD);
+        });
+    });
 </script>
 
 </body>
