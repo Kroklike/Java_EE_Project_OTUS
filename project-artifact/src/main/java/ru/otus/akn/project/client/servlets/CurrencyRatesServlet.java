@@ -1,6 +1,5 @@
 package ru.otus.akn.project.client.servlets;
 
-import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -14,9 +13,7 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathFactory;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.net.*;
 import java.nio.charset.StandardCharsets;
@@ -26,11 +23,12 @@ import java.util.List;
 import java.util.Map;
 
 import static ru.otus.akn.project.util.Converter.convertStringWithXmlToDocument;
+import static ru.otus.akn.project.util.OutputResultUtil.writeMapToResponse;
 
 @WebServlet("/currencyRatesToJson")
 public class CurrencyRatesServlet extends HttpServlet {
 
-    private static final Map<String, BigDecimal> cachedRate = new HashMap<>();
+    private static final Map<String, BigDecimal> CACHED_RATE = new HashMap<>();
     private static final String CBR_CURRENCY_RATES_URL = "http://www.cbr.ru/scripts/XML_daily.asp";
     private static final String EUR = "EUR";
     private static final String USD = "USD";
@@ -40,8 +38,8 @@ public class CurrencyRatesServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
         try {
 
-            if (!cachedRate.isEmpty()) {
-                writeCurToResponse(resp);
+            if (!CACHED_RATE.isEmpty()) {
+                writeMapToResponse(resp, CACHED_RATE);
                 return;
             }
 
@@ -81,21 +79,10 @@ public class CurrencyRatesServlet extends HttpServlet {
                     Node node = currency.item(i);
                     findAndAddByCurrencyListName(node, curListToSearch);
                 }
-                writeCurToResponse(resp);
+                writeMapToResponse(resp, CACHED_RATE);
             }
         } catch (Exception e) {
-            throw new RuntimeException("Something goes wring when try to get currency rates", e);
-        }
-    }
-
-    private void writeCurToResponse(HttpServletResponse resp) throws IOException {
-        JSONObject json = new JSONObject();
-        for (Map.Entry<String, BigDecimal> entry : cachedRate.entrySet()) {
-            json.put(entry.getKey(), entry.getValue());
-        }
-        resp.setContentType("application/json");
-        try (PrintWriter out = resp.getWriter()) {
-            out.write(json.toString());
+            throw new RuntimeException("Something goes wring when tried to get currency rates", e);
         }
     }
 
@@ -121,7 +108,7 @@ public class CurrencyRatesServlet extends HttpServlet {
             }
         }
         if (needToAdd) {
-            cachedRate.put(curName, curRate);
+            CACHED_RATE.put(curName, curRate);
         }
     }
 }
