@@ -5,6 +5,7 @@
     <title>Вход в систему</title>
     <script src="../libs/jquery/jquery-3.3.1.min.js"></script>
     <script type="text/javascript" src="../js/includeHTML.js"></script>
+    <script type="text/javascript" src="../js/getCurrencyRates.js"></script>
     <link type="text/css" rel="stylesheet" href="../css/application.css">
 </head>
 <body>
@@ -56,7 +57,12 @@
                     inputElement.addEventListener("blur", blurListener, true);
                 </script>
             </div>
-            <div class="category-block" w3-include-html="../html/common/side-menu.html"></div>
+            <div class="category-block with-round-border">
+                <div id="currency-div" class="description-item currency">
+                </div>
+                <div id="rbc-div" class="rbc-news">
+                </div>
+            </div>
         </div>
     </div>
 </div>

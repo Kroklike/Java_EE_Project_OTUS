@@ -18,8 +18,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.net.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,6 +44,8 @@ public class CurrencyRatesServlet extends HttpServlet {
                 writeCurToResponse(resp);
                 return;
             }
+
+            CookieHandler.setDefault(new CookieManager(null, CookiePolicy.ACCEPT_ALL));
 
             URL url = new URL(CBR_CURRENCY_RATES_URL);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
