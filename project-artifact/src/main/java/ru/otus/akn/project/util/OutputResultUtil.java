@@ -16,7 +16,6 @@ public class OutputResultUtil {
             json.append(entry.getKey(), entry.getValue());
         }
         resp.setContentType("application/json");
-        System.out.println(json.toString());
         try (PrintWriter out = resp.getWriter()) {
             out.write(json.toString());
         }
