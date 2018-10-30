@@ -20,13 +20,15 @@ public class JsoupServlet extends HttpServlet {
 
     private static final String rbcURL = "https://www.rbc.ru/";
     private static final Map<String, String> NEWS_HEADERS = new HashMap<>();
+    private static final int MAX_NUMBER_OF_NEWS = 10;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
         try {
+            boolean firstNews = true;
             Document document = Jsoup.connect(rbcURL).get();
             Elements els = document.getElementsByClass("main-feed__item");
-            for (Element el : els) {
+            for (Element el : els.subList(0, Math.min(MAX_NUMBER_OF_NEWS, els.size()))) {
                 Elements href = el.getElementsByClass("main-feed__link");
                 if (href.size() == 0) {
                     continue;
@@ -37,6 +39,14 @@ public class JsoupServlet extends HttpServlet {
                     continue;
                 }
                 String newsTitle = new String(text.get(0).text().getBytes(), StandardCharsets.UTF_8);
+                if (firstNews) {
+                    firstNews = false;
+                    if (!NEWS_HEADERS.isEmpty() && NEWS_HEADERS.containsKey(newsTitle)) {
+                        break;
+                    }
+                    NEWS_HEADERS.clear();
+                }
+
                 NEWS_HEADERS.put(newsTitle, hrefData);
             }
             resp.setCharacterEncoding("UTF-8");

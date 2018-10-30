@@ -53,8 +53,14 @@
     font-size: 18px;
 }
 
+.rbc-news-item {
+    font-family: 'Ubuntu Condensed', sans-serif;
+    margin: 20px;
+    font-size: 14px;
+}
+
 .category-block {
-    width: 400px;
+    width: 550px;
     height: 600px;
     margin: 10px;
     display: flex;
