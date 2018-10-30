@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static ru.otus.akn.project.util.OutputResultUtil.writeMapToResponse;
@@ -19,7 +19,7 @@ import static ru.otus.akn.project.util.OutputResultUtil.writeMapToResponse;
 public class JsoupServlet extends HttpServlet {
 
     private static final String rbcURL = "https://www.rbc.ru/";
-    private static final Map<String, String> NEWS_HEADERS = new HashMap<>();
+    private static final Map<String, String> NEWS_HEADERS = new LinkedHashMap<>();
     private static final int MAX_NUMBER_OF_NEWS = 10;
 
     @Override
