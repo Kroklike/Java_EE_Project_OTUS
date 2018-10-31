@@ -17,6 +17,7 @@ import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.net.*;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,14 +34,20 @@ public class CurrencyRatesServlet extends HttpServlet {
     private static final String EUR = "EUR";
     private static final String USD = "USD";
     private static final int TIMEOUT = 2000;
+    private static LocalDate lastUpdateDate;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
         try {
 
             if (!CACHED_RATE.isEmpty()) {
-                writeMapToResponse(resp, CACHED_RATE);
-                return;
+                if (lastUpdateDate == null || lastUpdateDate.isBefore(LocalDate.now())) {
+                    CACHED_RATE.clear();
+                }
+                else {
+                    writeMapToResponse(resp, CACHED_RATE);
+                    return;
+                }
             }
 
             CookieHandler.setDefault(new CookieManager(null, CookiePolicy.ACCEPT_ALL));
@@ -79,6 +86,7 @@ public class CurrencyRatesServlet extends HttpServlet {
                     Node node = currency.item(i);
                     findAndAddByCurrencyListName(node, curListToSearch);
                 }
+                lastUpdateDate = LocalDate.now();
                 writeMapToResponse(resp, CACHED_RATE);
             }
         } catch (Exception e) {
