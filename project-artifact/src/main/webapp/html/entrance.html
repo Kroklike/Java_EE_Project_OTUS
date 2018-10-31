@@ -18,45 +18,19 @@
         <div class="container">
             <div class="center-block">
                 <span class="description-block">Вход в систему</span>
-                <form method="post" action="j_security_check" class="loginForm">
+                <form method="post" action="http://localhost:8080/loginCheck" class="loginForm">
                     <div>
-                        <label for="login">Login:</label>
-                        <input type="text" id="login" name="j_username" autocomplete="off" placeholder="Type your login"/>
+                        <label for="login">Логин:</label>
+                        <input type="text" id="login" name="username" autocomplete="off" placeholder="Введите свой логин"/>
                     </div>
                     <div>
-                        <label for="password">Password:</label>
-                        <input type="password" id="password" name="j_password" autocomplete="off" placeholder="Type your password"/>
+                        <label for="password">Пароль:</label>
+                        <input type="password" id="password" name="password" autocomplete="off" placeholder="Введите свой пароль"/>
                     </div>
                     <div class="submitArea">
-                        <input type="submit" id="submit" value="Logon"/>
+                        <input type="submit" id="submit" value="Войти!"/>
                     </div>
                 </form>
-                <script>
-                    var checkLoginForm = function() {
-                        var checked = document.getElementById('login').value != ''
-                            && document.getElementById('password').value != '';
-                        if (checked) {
-                            document.getElementById('submit').removeAttribute('disabled');
-                        }
-                        else {
-                            document.getElementById('submit').setAttribute('disabled', 'disabled')
-                        }
-                    };
-                    checkLoginForm();
-                    var focusListener = function(event) {
-                        event.target.style.background = "#528394";
-                    };
-                    var blurListener = function(event) {
-                        event.target.style.background = "";
-                        checkLoginForm();
-                    };
-                    var inputElement = document.getElementById('login');
-                    inputElement.addEventListener("focus", focusListener, true);
-                    inputElement.addEventListener("blur", blurListener, true);
-                    inputElement = document.getElementById('password');
-                    inputElement.addEventListener("focus", focusListener, true);
-                    inputElement.addEventListener("blur", blurListener, true);
-                </script>
             </div>
             <div class="category-block with-round-border">
                 <div id="currency-div" class="description-item currency">

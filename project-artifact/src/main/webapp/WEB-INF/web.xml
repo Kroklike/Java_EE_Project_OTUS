@@ -6,11 +6,4 @@
 
     <display-name>Archetype Created Web Application</display-name>
 
-    <login-config>
-        <auth-method>FORM</auth-method>
-        <form-login-config>
-            <form-login-page>/html/entrance.html</form-login-page>
-            <form-error-page>/html/login_failed.html</form-error-page>
-        </form-login-config>
-    </login-config>
 </web-app>
