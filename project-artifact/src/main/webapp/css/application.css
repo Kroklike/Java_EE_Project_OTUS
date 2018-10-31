@@ -68,6 +68,10 @@
     justify-content: center;
 }
 
+textarea {
+    resize: none !important;
+}
+
 footer {
     display: flex;
     justify-content: center;

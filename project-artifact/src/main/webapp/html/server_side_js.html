@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Вход в систему</title>
+    <script src="../libs/jquery/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="../js/includeHTML.js"></script>
+    <script type="text/javascript" src="../js/getCurrencyRates.js"></script>
+    <script type="text/javascript" src="../js/getRBCNews.js"></script>
+    <link type="text/css" rel="stylesheet" href="../css/application.css">
+</head>
+<body>
+
+<div class="back">
+    <div class="before-back">
+        <div w3-include-html="../html/common/header.html"></div>
+        <div w3-include-html="../html/common/under-header-menu.html"></div>
+        <div class="container">
+            <div class="center-block">
+                <span class="description-block">Исполнение js на серверной стороне</span>
+                <form method="post" action="http://localhost:8080/serverSideJs">
+                    <div>
+                        <p>JS для исполнения:</p>
+                        <textarea id="jsText" name="jsForExecution" cols="100" rows="25" ></textarea>
+                    </div>
+                    <div class="submitArea">
+                        <input type="submit" id="submit" value="Запустить!"/>
+                    </div>
+                </form>
+            </div>
+            <div id="category" class="category-block with-round-border">
+                <div id="currency-div" class="description-item currency">
+                </div>
+                <div id="rbc-div" class="rbc-news">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer w3-include-html="../html/common/footer.html"></footer>
+
+<script>
+    includeHTML();
+</script>
+
+</body>
+</html>
