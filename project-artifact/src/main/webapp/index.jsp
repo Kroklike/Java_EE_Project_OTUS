@@ -13,10 +13,12 @@
     <tr>
         <td><h3>DB servlets</h3></td>
         <td><h3>Xml and Json servlets</h3></td>
+        <td><h3>HTML, CSS, JS</h3></td>
     </tr>
     <tr>
         <td><h2>/fillTable</h2></td>
         <td><h2>/marshalEmployees</h2></td>
+        <td><h2><a href="html/main.html">Go to web-page</a></h2></td>
     </tr>
     <tr>
         <td><h2>/cleanTable</h2></td>
@@ -37,7 +39,5 @@
         <td><h2>/getEmployeesWithMaxSalary</h2></td>
     </tr>
 </table>
-
-<a href="html/main.html">Go to web-page</a>
 </body>
 </html>
