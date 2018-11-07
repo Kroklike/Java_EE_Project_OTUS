@@ -179,6 +179,10 @@ footer {
     width: 100%;
 }
 
+.search-box {
+    color: #808080;
+}
+
 .with-round-border {
     border: 3px #CCCCCC solid;
     -moz-border-radius: 10px;

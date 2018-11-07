@@ -45,6 +45,35 @@
             <artifactId>jettison</artifactId>
             <version>1.4.0</version>
         </dependency>
+
+        <!-- GWT -->
+        <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-user</artifactId>
+            <!--<scope>provided</scope>-->
+        </dependency>
+        <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-dev</artifactId>
+            <!--<scope>provided</scope>-->
+        </dependency>
+        <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-codeserver</artifactId>
+            <!--<scope>provided</scope>-->
+        </dependency>
+        <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-servlet</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- Gin -->
+        <dependency>
+            <groupId>com.google.gwt.inject</groupId>
+            <artifactId>gin</artifactId>
+            <version>${gin.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -109,6 +138,33 @@
                             <cargo.remote.password></cargo.remote.password>
                         </properties>
                     </configuration>
+                </configuration>
+            </plugin>
+            <!--GWT Plugin-->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>gwt-maven-plugin</artifactId>
+                <version>${gwt.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <module>ru.otus.akn.project.gwt.project</module>
+                    <extraJvmArgs>
+                        -Xss1024K -Xmx1024M -Duser.language=ru -Duser.country=RU -Djavax.xml.parsers.DocumentBuilderFactory=com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl -Djavax.xml.parsers.SAXParserFactory=com.sun.org.apache.xerces.internal.jaxp.SAXParserFactoryImpl -javaagent:${lombok.lib}=ECJ
+                    </extraJvmArgs>
+                    <logLevel>INFO</logLevel>
+                    <copyWebapp>true</copyWebapp>
+                    <hostedWebapp>${webappDirectory}</hostedWebapp>
+                    <runTarget>project.html</runTarget>
+                    <extraParam>true</extraParam>
+                    <extra>extras</extra>
+                    <optimizationLevel>9</optimizationLevel>
+                    <deploy>${project.build.directory}/gwtDeploy</deploy>
                 </configuration>
             </plugin>
         </plugins>

@@ -1,0 +1,37 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+
+    <ui:with field='res' type='ru.otus.akn.project.gwt.client.constants.ApplicationConstants'/>
+
+    <g:HTMLPanel addStyleNames="header">
+        <div class="with-round-border">
+            <g:Image url="../../images/logo.png"/>
+        </div>
+        <div class="with-round-border main-info">
+            <div>
+                <g:Label text="{res.header_description_block}" addStyleNames="description-block"/>
+            </div>
+            <div class="description-item">
+                <g:Label text="{res.header_phone_number}"/>
+            </div>
+            <div class="description-item">
+                <g:Label text="{res.header_address}"/>
+            </div>
+            <g:FormPanel ui:field="searchPanel" method="get" action="http://www.google.com/search">
+                <g:HTMLPanel addStyleNames="search-form">
+                    <table border="0" align="center" cellpadding="0">
+                        <tr>
+                            <td>
+                                <g:TextBox name="q" ui:field="searchBox" size="50" addStyleNames="search-box" maxLength="255"/>
+                            </td>
+                            <td>
+                                <g:SubmitButton text="{res.header_start_search}"/>
+                                <g:Hidden name="sitesearch" value="mfr-group.com"/>
+                            </td>
+                        </tr>
+                    </table>
+                </g:HTMLPanel>
+            </g:FormPanel>
+        </div>
+    </g:HTMLPanel>
+</ui:UiBinder>
