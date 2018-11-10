@@ -153,14 +153,14 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <module>ru.otus.akn.project.gwt.project</module>
+                    <module>ru.otus.akn.project.gwt.Project</module>
                     <extraJvmArgs>
                         -Xss1024K -Xmx1024M -Duser.language=ru -Duser.country=RU -Djavax.xml.parsers.DocumentBuilderFactory=com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl -Djavax.xml.parsers.SAXParserFactory=com.sun.org.apache.xerces.internal.jaxp.SAXParserFactoryImpl -javaagent:${lombok.lib}=ECJ
                     </extraJvmArgs>
                     <logLevel>INFO</logLevel>
                     <copyWebapp>true</copyWebapp>
                     <hostedWebapp>${webappDirectory}</hostedWebapp>
-                    <runTarget>project.html</runTarget>
+                    <runTarget>Project.html</runTarget>
                     <extraParam>true</extraParam>
                     <extra>extras</extra>
                     <optimizationLevel>9</optimizationLevel>

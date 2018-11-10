@@ -11,7 +11,7 @@ public class DefaultTextBox extends TextBox implements FocusHandler, BlurHandler
 
     public DefaultTextBox(String defText) {
         defaultText = defText;
-        setText(defaultText);
+        setValue(defaultText);
         addFocusHandler(this);
         addBlurHandler(this);
     }
