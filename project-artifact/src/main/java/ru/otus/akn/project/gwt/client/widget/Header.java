@@ -17,7 +17,7 @@ public class Header extends Composite {
     public interface HeaderUiBinder extends UiBinder<HTMLPanel, Header> {
     }
 
-    private static HeaderUiBinder ourUiBinder = INSTANCE.getHeaderUiBinder();
+    private static HeaderUiBinder headerUiBinder = INSTANCE.getHeaderUiBinder();
     private static final ApplicationConstants CONSTANTS = INSTANCE.getConstants();
 
     @UiField(provided = true)
@@ -27,6 +27,6 @@ public class Header extends Composite {
 
     @Inject
     public Header() {
-        initWidget(ourUiBinder.createAndBindUi(this));
+        initWidget(headerUiBinder.createAndBindUi(this));
     }
 }

@@ -19,6 +19,36 @@ public interface ApplicationConstants extends Constants {
     @Key("header.search.box")
     String headerSearchBox();
 
+    @Key("under.header.menu.main")
+    String underHeaderMenuMain();
+
+    @Key("under.header.menu.entrance")
+    String underHeaderMenuEntrance();
+
+    @Key("under.header.menu.materials")
+    String underHeaderMenuMaterials();
+
+    @Key("under.header.menu.prices")
+    String underHeaderMenuPrices();
+
+    @Key("under.header.menu.projects")
+    String underHeaderMenuProjects();
+
+    @Key("center.block.news")
+    String centerBlockNews();
+
+    @Key("center.block.login")
+    String centerBlockLogin();
+
+    @Key("center.block.materials")
+    String centerBlockMaterials();
+
+    @Key("center.block.prices")
+    String centerBlockPrices();
+
+    @Key("center.block.projects")
+    String centerBlockProjects();
+
     @Key("login.label.alt")
     String login_label_alt();
 
@@ -33,9 +63,6 @@ public interface ApplicationConstants extends Constants {
 
     @Key("logon.button.alt")
     String logon_button_alt();
-
-    @Key("form.header")
-    String form_header();
 
     String title();
 

@@ -22,7 +22,8 @@
                     <table border="0" align="center" cellpadding="0">
                         <tr>
                             <td>
-                                <g:TextBox ui:field="searchBox" width="200px" addStyleNames="search-box" maxLength="255" name="q"/>
+                                <g:TextBox ui:field="searchBox" width="200px" addStyleNames="search-box" maxLength="255"
+                                           name="q"/>
                             </td>
                             <td>
                                 <g:SubmitButton text="{res.headerStartSearch}"/>

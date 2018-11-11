@@ -1,0 +1,25 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+
+    <ui:with field='res' type='ru.otus.akn.project.gwt.client.constants.ApplicationConstants'/>
+
+    <g:HTMLPanel addStyleNames="menu-main">
+        <ul>
+            <li>
+                <g:Hyperlink ui:field="main" text="{res.underHeaderMenuMain}"/>
+            </li>
+            <li>
+                <g:Hyperlink ui:field="entrance" text="{res.underHeaderMenuEntrance}"/>
+            </li>
+            <li>
+                <g:Hyperlink ui:field="materials" text="{res.underHeaderMenuMaterials}"/>
+            </li>
+            <li>
+                <g:Hyperlink ui:field="prices" text="{res.underHeaderMenuPrices}"/>
+            </li>
+            <li>
+                <g:Hyperlink ui:field="projects" text="{res.underHeaderMenuProjects}"/>
+            </li>
+        </ul>
+    </g:HTMLPanel>
+</ui:UiBinder>

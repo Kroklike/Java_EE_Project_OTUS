@@ -18,7 +18,7 @@ public class Footer extends Composite {
     public interface FooterUiBinder extends UiBinder<Label, Footer> {
     }
 
-    private static FooterUiBinder ourUiBinder = INSTANCE.getFooterUiBinder();
+    private static FooterUiBinder footerUiBinder = INSTANCE.getFooterUiBinder();
     private static final ApplicationMessages MESSAGES = INSTANCE.getMessages();
     private static final String DATE_FORMAT = "yyyy";
 
@@ -27,6 +27,6 @@ public class Footer extends Composite {
 
     @Inject
     public Footer() {
-        initWidget(ourUiBinder.createAndBindUi(this));
+        initWidget(footerUiBinder.createAndBindUi(this));
     }
 }

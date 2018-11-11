@@ -238,17 +238,6 @@ footer {
     display: inline-block;
 }
 
-.menu-main li:after {
-    content: "|";
-    color: #606060;
-    display: inline-block;
-    vertical-align: top;
-}
-
-.menu-main li:last-child:after {
-    content: none;
-}
-
 .menu-main a {
     text-decoration: none;
     font-family: 'Ubuntu Condensed', sans-serif;
@@ -298,10 +287,6 @@ footer {
 
     .menu-main li {
         display: block;
-    }
-
-    .menu-main li:after {
-        content: none;
     }
 
     .menu-main a {

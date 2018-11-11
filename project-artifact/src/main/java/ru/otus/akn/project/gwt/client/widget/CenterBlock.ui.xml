@@ -1,0 +1,23 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+
+    <ui:with field='res' type='ru.otus.akn.project.gwt.client.constants.ApplicationConstants'/>
+
+    <g:DeckPanel ui:field="mainBlock">
+        <g:HTMLPanel>
+            <g:Label text="{res.centerBlockNews}" addStyleNames="description-block"/>
+        </g:HTMLPanel>
+        <g:HTMLPanel>
+            <g:Label text="{res.centerBlockLogin}" addStyleNames="description-block"/>
+        </g:HTMLPanel>
+        <g:HTMLPanel>
+            <g:Label text="{res.centerBlockMaterials}" addStyleNames="description-block"/>
+        </g:HTMLPanel>
+        <g:HTMLPanel>
+            <g:Label text="{res.centerBlockPrices}" addStyleNames="description-block"/>
+        </g:HTMLPanel>
+        <g:HTMLPanel>
+            <g:Label text="{res.centerBlockProjects}" addStyleNames="description-block"/>
+        </g:HTMLPanel>
+    </g:DeckPanel>
+</ui:UiBinder>

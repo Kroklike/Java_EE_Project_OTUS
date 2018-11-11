@@ -5,8 +5,10 @@ import com.google.gwt.user.client.ui.*;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
+import ru.otus.akn.project.gwt.client.widget.CenterBlock;
 import ru.otus.akn.project.gwt.client.widget.Footer;
 import ru.otus.akn.project.gwt.client.widget.Header;
+import ru.otus.akn.project.gwt.client.widget.UnderHeaderMenu;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>
@@ -36,7 +38,9 @@ public class Project implements EntryPoint {
         // elements with a particular CSS class and replace them with widgets.
         //
         RootPanel.get("header").add(new Header());
+        RootPanel.get("under-header-menu").add(new UnderHeaderMenu());
         RootPanel.get("footer").add(new Footer());
+        RootPanel.get("center-block").add(new CenterBlock());
     }
 
     private static class MyAsyncCallback implements AsyncCallback<String> {
