@@ -23,7 +23,7 @@ public class Header extends Composite {
     @UiField(provided = true)
     FormPanel searchPanel = new FormPanel((String) null);
     @UiField(provided = true)
-    TextBox searchBox = new DefaultTextBox(CONSTANTS.header_search_box());
+    TextBox searchBox = new DefaultTextBox(CONSTANTS.headerSearchBox());
 
     @Inject
     public Header() {

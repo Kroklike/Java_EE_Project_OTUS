@@ -4,6 +4,8 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.inject.client.GinModules;
 import com.google.gwt.inject.client.Ginjector;
 import ru.otus.akn.project.gwt.client.constants.ApplicationConstants;
+import ru.otus.akn.project.gwt.client.constants.ApplicationMessages;
+import ru.otus.akn.project.gwt.client.widget.Footer.FooterUiBinder;
 import ru.otus.akn.project.gwt.client.widget.Header.HeaderUiBinder;
 
 @GinModules(ApplicationGinModule.class)
@@ -13,5 +15,9 @@ public interface ApplicationInjector extends Ginjector {
 
     ApplicationConstants getConstants();
 
+    ApplicationMessages getMessages();
+
     HeaderUiBinder getHeaderUiBinder();
+
+    FooterUiBinder getFooterUiBinder();
 }

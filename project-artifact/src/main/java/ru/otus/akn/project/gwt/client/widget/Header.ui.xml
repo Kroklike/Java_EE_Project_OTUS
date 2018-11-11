@@ -9,13 +9,13 @@
         </div>
         <div class="with-round-border main-info">
             <div>
-                <g:Label text="{res.header_description_block}" addStyleNames="description-block"/>
+                <g:Label text="{res.headerDescriptionBlock}" addStyleNames="description-block"/>
             </div>
             <div class="description-item">
-                <g:Label text="{res.header_phone_number}"/>
+                <g:Label text="{res.headerPhoneNumber}"/>
             </div>
             <div class="description-item">
-                <g:Label text="{res.header_address}"/>
+                <g:Label text="{res.headerAddress}"/>
             </div>
             <g:FormPanel ui:field="searchPanel" method="get" action="http://www.google.com/search">
                 <g:HTMLPanel addStyleNames="search-form">
@@ -25,7 +25,7 @@
                                 <g:TextBox ui:field="searchBox" width="200px" addStyleNames="search-box" maxLength="255" name="q"/>
                             </td>
                             <td>
-                                <g:SubmitButton text="{res.header_start_search}"/>
+                                <g:SubmitButton text="{res.headerStartSearch}"/>
                                 <g:Hidden name="sitesearch" value="mfr-group.com"/>
                             </td>
                         </tr>

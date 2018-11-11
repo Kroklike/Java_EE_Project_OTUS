@@ -5,19 +5,19 @@ import com.google.gwt.i18n.client.Constants;
 public interface ApplicationConstants extends Constants {
 
     @Key("header.description.block")
-    String header_description_block();
+    String headerDescriptionBlock();
 
     @Key("header.phone.number")
-    String header_phone_number();
+    String headerPhoneNumber();
 
     @Key("header.address")
-    String header_address();
+    String headerAddress();
 
     @Key("header.start.search")
-    String header_start_search();
+    String headerStartSearch();
 
     @Key("header.search.box")
-    String header_search_box();
+    String headerSearchBox();
 
     @Key("login.label.alt")
     String login_label_alt();

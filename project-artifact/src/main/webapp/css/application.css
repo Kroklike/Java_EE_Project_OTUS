@@ -72,12 +72,6 @@ textarea {
     resize: none !important;
 }
 
-footer {
-    display: flex;
-    justify-content: center;
-    background-image: url(../images/footer-background.jpg);
-}
-
 .footer-text {
     margin-top: 50px;
     font-family: 'Ubuntu Condensed', sans-serif;
@@ -172,6 +166,9 @@ body {
 footer {
     margin-top: -100px;
     height: 100px;
+    display: flex;
+    justify-content: center;
+    background-image: url(../images/footer-background.jpg);
 }
 
 .search-form {
