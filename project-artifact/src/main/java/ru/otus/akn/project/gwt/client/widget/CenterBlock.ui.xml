@@ -10,9 +10,22 @@
             <g:Label text="{res.centerBlockNews}" addStyleNames="description-block"/>
             <g:FlowPanel ui:field="newsBlock" addStyleNames="component-grid"/>
         </g:FlowPanel>
-        <g:HTMLPanel>
+        <g:FlowPanel>
             <g:Label text="{res.centerBlockLogin}" addStyleNames="description-block"/>
-        </g:HTMLPanel>
+            <g:VerticalPanel>
+                <g:HorizontalPanel ui:field="loginPanel">
+                    <g:Label text="{res.loginLabel}"/>
+                    <g:TextBox ui:field="loginTextField"/>
+                </g:HorizontalPanel>
+                <g:HorizontalPanel ui:field="passwordPanel">
+                    <g:Label text="{res.passwordLabel}"/>
+                    <g:PasswordTextBox ui:field="passwordTextField"/>
+                </g:HorizontalPanel>
+                <g:HorizontalPanel horizontalAlignment="ALIGN_CENTER" width="100%">
+                    <g:Button text="{res.logonButton}" ui:field="submit"/>
+                </g:HorizontalPanel>
+            </g:VerticalPanel>
+        </g:FlowPanel>
         <g:FlowPanel ui:field="materialBlock">
             <g:Label text="{res.centerBlockMaterials}" addStyleNames="description-block"/>
             <g:Label text="{res.centerBlockMaterialsMain}" addStyleNames="description-item"/>

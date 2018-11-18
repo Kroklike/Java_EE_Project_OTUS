@@ -142,8 +142,8 @@ public interface ApplicationConstants extends Constants {
     @Key("center.block.business.class.repair.prices")
     String centerBlockBusinessClassRepairPrices();
 
-    @Key("login.label.alt")
-    String login_label_alt();
+    @Key("login.label")
+    String loginLabel();
 
     @Key("logon.success")
     String logon_success();
@@ -151,11 +151,11 @@ public interface ApplicationConstants extends Constants {
     @Key("login.placeholder.alt")
     String login_placeholder_alt();
 
-    @Key("password.label.alt")
-    String password_label_alt();
+    @Key("password.label")
+    String passwordLabel();
 
-    @Key("logon.button.alt")
-    String logon_button_alt();
+    @Key("logon.button")
+    String logonButton();
 
     String title();
 
