@@ -1,9 +1,11 @@
 package ru.otus.akn.project.db;
 
 import com.opencsv.CSVReader;
+import org.apache.commons.codec.digest.DigestUtils;
 import ru.otus.akn.project.db.entity.DepartmentEntity;
 import ru.otus.akn.project.db.entity.EmployeeEntity;
 import ru.otus.akn.project.db.entity.PositionEntity;
+import ru.otus.akn.project.db.entity.UserEntity;
 import ru.otus.akn.project.util.EntityManagerControl;
 import ru.otus.akn.project.util.TransactionQueryConsumer;
 
@@ -24,6 +26,7 @@ import static ru.otus.akn.project.db.dao.DepartmentsDAO.getDepartmentEntity;
 import static ru.otus.akn.project.db.dao.EmployeesDAO.getAllEmployeeEntities;
 import static ru.otus.akn.project.db.dao.PositionsDAO.getAllPositionEntities;
 import static ru.otus.akn.project.db.dao.PositionsDAO.getPositionEntity;
+import static ru.otus.akn.project.db.dao.UsersDAO.getAllUsersEntities;
 import static ru.otus.akn.project.util.PersistenceUtil.MANAGER_FACTORY;
 import static ru.otus.akn.project.util.ResourceUtil.getResourceFile;
 
@@ -33,6 +36,7 @@ public class TableFillerServlet extends HttpServlet {
     private static final String CSV_DEPARTMENTS = "/WEB-INF/classes/DATA/DEPARTMENTS.csv";
     private static final String CSV_POSITIONS = "/WEB-INF/classes/DATA/POSITIONS.csv";
     private static final String CSV_EMPLOYEES = "/WEB-INF/classes/DATA/EMPLOYEES.csv";
+    private static final String CSV_USERS = "/WEB-INF/classes/DATA/USERS.csv";
     private static final String DATE_FORMAT = "dd.MM.yyyy";
     private static final char CSV_SPLITTER = ';';
 
@@ -45,6 +49,7 @@ public class TableFillerServlet extends HttpServlet {
                     fillUpDepartmentsTable(response, manager);
                     fillUpPositionsTable(response, manager);
                     fillUpEmployeesTable(response, manager);
+                    fillUpUsersTable(response, manager);
                 }
             }.processRequest();
         } catch (Exception e) {
@@ -74,6 +79,30 @@ public class TableFillerServlet extends HttpServlet {
             }
         }.processQueryInTransaction();
         response.getWriter().println("Departments table filled");
+    }
+
+    private void fillUpUsersTable(HttpServletResponse response, EntityManager em) throws Exception {
+        if (getAllUsersEntities(em).size() != 0) {
+            response.getWriter().println("Users table have already filled");
+            return;
+        }
+        File userFile = getResourceFile(this, CSV_USERS);
+        new TransactionQueryConsumer(em) {
+            @Override
+            public void needToProcessData() throws Exception {
+                try (CSVReader reader = new CSVReader(new FileReader(userFile), CSV_SPLITTER)) {
+                    String[] nextLine;
+                    while ((nextLine = reader.readNext()) != null) {
+                        UserEntity userEntity = new UserEntity();
+                        userEntity.setLogin(nextLine[0]);
+                        userEntity.setPasswordHash(DigestUtils.sha256Hex(nextLine[1]));
+                        userEntity.setIsActive(Boolean.parseBoolean(nextLine[2]));
+                        em.persist(userEntity);
+                    }
+                }
+            }
+        }.processQueryInTransaction();
+        response.getWriter().println("Users table filled");
     }
 
     private void fillUpPositionsTable(HttpServletResponse response, EntityManager em) throws Exception {

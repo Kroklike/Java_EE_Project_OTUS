@@ -7,6 +7,7 @@ import ru.otus.akn.project.gwt.client.service.AuthorisationService;
 import ru.otus.akn.project.gwt.client.widget.CenterBlock.CenterBlockUiBinder;
 import ru.otus.akn.project.gwt.client.widget.Footer.FooterUiBinder;
 import ru.otus.akn.project.gwt.client.widget.Header.HeaderUiBinder;
+import ru.otus.akn.project.gwt.client.widget.SideMenu.SideMenuUiBinder;
 import ru.otus.akn.project.gwt.client.widget.UnderHeaderMenu.UnderHeaderMenuUiBinder;
 
 public class ApplicationGinModule extends AbstractGinModule {
@@ -18,5 +19,6 @@ public class ApplicationGinModule extends AbstractGinModule {
         bind(UnderHeaderMenuUiBinder.class);
         bind(CenterBlockUiBinder.class);
         bind(AuthorisationService.class);
+        bind(SideMenuUiBinder.class);
     }
 }

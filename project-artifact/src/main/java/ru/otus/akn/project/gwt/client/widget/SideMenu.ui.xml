@@ -1,0 +1,7 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <g:FlowPanel ui:field="sideMenu">
+        <g:FlowPanel ui:field="currency" addStyleNames="description-item currency"/>
+        <g:FlowPanel ui:field="news" addStyleNames="a-style"/>
+    </g:FlowPanel>
+</ui:UiBinder>

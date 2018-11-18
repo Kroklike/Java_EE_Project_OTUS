@@ -1,5 +1,8 @@
 package ru.otus.akn.project.client.servlets;
 
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -9,6 +12,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -50,9 +55,31 @@ public class JsoupServlet extends HttpServlet {
                 NEWS_HEADERS.put(newsTitle, hrefData);
             }
             resp.setCharacterEncoding("UTF-8");
-            writeMapToResponse(resp, NEWS_HEADERS);
+            String callbackParam = req.getParameter("callback");
+            if (callbackParam != null) {
+                jsonpResponse(resp, callbackParam);
+            } else {
+                writeMapToResponse(resp, NEWS_HEADERS);
+            }
         } catch (Exception e) {
             throw new RuntimeException("Something went wrong when tried to get news from rbc.ru", e);
+        }
+    }
+
+    private void jsonpResponse(HttpServletResponse resp,
+                               String callback) throws JSONException, IOException {
+        JSONArray array = new JSONArray();
+
+        for (Map.Entry<String, String> entry : NEWS_HEADERS.entrySet()) {
+            JSONObject object = new JSONObject();
+            object.append("title", entry.getKey());
+            object.append("url", entry.getValue());
+            array.put(object);
+        }
+
+        resp.setContentType("application/json");
+        try (PrintWriter out = resp.getWriter()) {
+            out.write(callback + "(" + array.toString() + ")");
         }
     }
 }

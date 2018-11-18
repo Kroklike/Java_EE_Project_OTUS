@@ -9,6 +9,7 @@ import ru.otus.akn.project.gwt.client.service.AuthorisationServiceAsync;
 import ru.otus.akn.project.gwt.client.widget.CenterBlock.CenterBlockUiBinder;
 import ru.otus.akn.project.gwt.client.widget.Footer.FooterUiBinder;
 import ru.otus.akn.project.gwt.client.widget.Header.HeaderUiBinder;
+import ru.otus.akn.project.gwt.client.widget.SideMenu.SideMenuUiBinder;
 import ru.otus.akn.project.gwt.client.widget.UnderHeaderMenu.UnderHeaderMenuUiBinder;
 
 @GinModules(ApplicationGinModule.class)
@@ -29,4 +30,6 @@ public interface ApplicationInjector extends Ginjector {
     CenterBlockUiBinder getCenterBlockUiBinder();
 
     AuthorisationServiceAsync getAuthorisationService();
+
+    SideMenuUiBinder getSideMenuUiBinder();
 }
