@@ -1,23 +1,88 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
-             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:b='urn:import:org.gwtbootstrap3.client.ui'
+             xmlns:b.html='urn:import:org.gwtbootstrap3.client.ui.html'>
 
     <ui:with field='res' type='ru.otus.akn.project.gwt.client.constants.ApplicationConstants'/>
 
     <g:DeckPanel ui:field="mainBlock">
-        <g:HTMLPanel>
+        <g:FlowPanel>
             <g:Label text="{res.centerBlockNews}" addStyleNames="description-block"/>
-        </g:HTMLPanel>
+            <g:FlowPanel ui:field="newsBlock" addStyleNames="component-grid"/>
+        </g:FlowPanel>
         <g:HTMLPanel>
             <g:Label text="{res.centerBlockLogin}" addStyleNames="description-block"/>
         </g:HTMLPanel>
-        <g:HTMLPanel>
+        <g:FlowPanel ui:field="materialBlock">
             <g:Label text="{res.centerBlockMaterials}" addStyleNames="description-block"/>
-        </g:HTMLPanel>
+            <g:Label text="{res.centerBlockMaterialsMain}" addStyleNames="description-item"/>
+        </g:FlowPanel>
         <g:HTMLPanel>
             <g:Label text="{res.centerBlockPrices}" addStyleNames="description-block"/>
+            <div class="component-grid">
+                <g:Label text="{res.centerBlockPricesMain}" addStyleNames="description-item"/>
+                <table class="prices-table">
+                    <tr>
+                        <td>
+                            <g:Label text="{res.centerBlockDesignProject}"/>
+                        </td>
+                        <td>
+                            <g:Label text="{res.centerBlockDesignProjectPrices}"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <g:Label text="{res.centerBlockOverhaul}"/>
+                        </td>
+                        <td>
+                            <g:Label text="{res.centerBlockOverhaulPrices}"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <g:Label text="{res.centerBlockBusinessClassRepair}"/>
+                        </td>
+                        <td>
+                            <g:Label text="{res.centerBlockBusinessClassRepairPrices}"/>
+                        </td>
+                    </tr>
+                </table>
+            </div>
         </g:HTMLPanel>
         <g:HTMLPanel>
             <g:Label text="{res.centerBlockProjects}" addStyleNames="description-block"/>
+            <b:Carousel b:id="workSlider">
+
+                <b:CarouselIndicators>
+                    <b:CarouselIndicator dataTarget="#workSlider"
+                                         dataSlideTo="0" active="true"/>
+                    <b:CarouselIndicator dataTarget="#workSlider"
+                                         dataSlideTo="1"/>
+                    <b:CarouselIndicator dataTarget="#workSlider"
+                                         dataSlideTo="2"/>
+                </b:CarouselIndicators>
+
+                <b:CarouselInner>
+                    <b:CarouselSlide active="true">
+                        <b:Image url="../images/project1.jpg"/>
+                        <b:CarouselCaption>
+                            <b.html:Paragraph text="{res.centerBlockDesignProjectCaption}"/>
+                        </b:CarouselCaption>
+                    </b:CarouselSlide>
+                    <b:CarouselSlide>
+                        <b:Image url="../images/project2.jpg"/>
+                        <b:CarouselCaption>
+                            <b.html:Paragraph text="{res.centerBlockOverhaulCaption}"/>
+                        </b:CarouselCaption>
+                    </b:CarouselSlide>
+                    <b:CarouselSlide>
+                        <b:Image url="../images/project3.jpg"/>
+                        <b:CarouselCaption>
+                            <b.html:Paragraph text="{res.centerBlockBusinessClassRepairCaption}"/>
+                        </b:CarouselCaption>
+                    </b:CarouselSlide>
+                </b:CarouselInner>
+            </b:Carousel>
         </g:HTMLPanel>
     </g:DeckPanel>
 </ui:UiBinder>

@@ -10,6 +10,7 @@
 
     <inherits name="com.google.gwt.i18n.I18N"/>
     <inherits name="com.google.gwt.inject.Inject"/>
+    <inherits name="org.gwtbootstrap3.GwtBootstrap3"/>
 
     <extend-property name="locale" values="en"/>
     <extend-property name="locale" values="ru"/>

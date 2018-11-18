@@ -32,15 +32,11 @@ public class Project implements EntryPoint {
             }
         });
 
-        // Assume that the host HTML has elements defined whose
-        // IDs are "slot1", "slot2".  In a real app, you probably would not want
-        // to hard-code IDs.  Instead, you could, for example, search for all
-        // elements with a particular CSS class and replace them with widgets.
-        //
         RootPanel.get("header").add(new Header());
-        RootPanel.get("under-header-menu").add(new UnderHeaderMenu());
+        CenterBlock centerBlock = new CenterBlock();
+        RootPanel.get("center-block").add(centerBlock);
+        RootPanel.get("under-header-menu").add(new UnderHeaderMenu(centerBlock));
         RootPanel.get("footer").add(new Footer());
-        RootPanel.get("center-block").add(new CenterBlock());
     }
 
     private static class MyAsyncCallback implements AsyncCallback<String> {

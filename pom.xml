@@ -21,6 +21,7 @@
     <h2.version>1.4.197</h2.version>
     <oracle.driver.version>11.2.0.4</oracle.driver.version>
     <gwt.version>2.8.2</gwt.version>
+    <gwt.bootstrap.version>0.9.4</gwt.bootstrap.version>
     <gin.version>2.1.2</gin.version>
 
     <tomcat.deploymentPath>http://localhost:8080/manager/text</tomcat.deploymentPath>

@@ -68,6 +68,13 @@
             <scope>runtime</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.gwtbootstrap3</groupId>
+            <artifactId>gwtbootstrap3</artifactId>
+            <version>${gwt.bootstrap.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
         <!-- Gin -->
         <dependency>
             <groupId>com.google.gwt.inject</groupId>

@@ -6,19 +6,19 @@
     <g:HTMLPanel addStyleNames="menu-main">
         <ul>
             <li>
-                <g:Hyperlink ui:field="main" text="{res.underHeaderMenuMain}"/>
+                <g:Anchor ui:field="main" text="{res.underHeaderMenuMain}"/>
             </li>
             <li>
-                <g:Hyperlink ui:field="entrance" text="{res.underHeaderMenuEntrance}"/>
+                <g:Anchor ui:field="entrance" text="{res.underHeaderMenuEntrance}"/>
             </li>
             <li>
-                <g:Hyperlink ui:field="materials" text="{res.underHeaderMenuMaterials}"/>
+                <g:Anchor ui:field="materials" text="{res.underHeaderMenuMaterials}"/>
             </li>
             <li>
-                <g:Hyperlink ui:field="prices" text="{res.underHeaderMenuPrices}"/>
+                <g:Anchor ui:field="prices" text="{res.underHeaderMenuPrices}"/>
             </li>
             <li>
-                <g:Hyperlink ui:field="projects" text="{res.underHeaderMenuProjects}"/>
+                <g:Anchor ui:field="projects" text="{res.underHeaderMenuProjects}"/>
             </li>
         </ul>
     </g:HTMLPanel>
