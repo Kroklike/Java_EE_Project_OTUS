@@ -2,15 +2,22 @@ package ru.otus.akn.project.gwt.client.widget;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
 import com.google.inject.Inject;
 import ru.otus.akn.project.gwt.client.constants.ApplicationConstants;
 import ru.otus.akn.project.gwt.client.model.NewsItemCreator;
 import ru.otus.akn.project.gwt.client.model.PartnerItemCreator;
+import ru.otus.akn.project.gwt.client.service.AuthorisationServiceAsync;
+import ru.otus.akn.project.gwt.shared.User;
+import ru.otus.akn.project.gwt.shared.exception.WrongCredentialsException;
 
 import java.util.Date;
 
@@ -30,6 +37,7 @@ public class CenterBlock extends Composite {
 
     private static CenterBlockUiBinder centerBlockUiBinder = INSTANCE.getCenterBlockUiBinder();
     private static final ApplicationConstants CONSTANTS = INSTANCE.getConstants();
+    private AuthorisationServiceAsync service = INSTANCE.getAuthorisationService();
 
     @UiField
     DeckPanel mainBlock;
@@ -37,6 +45,10 @@ public class CenterBlock extends Composite {
     FlowPanel materialBlock;
     @UiField
     FlowPanel newsBlock;
+    @UiField
+    TextBox loginTextField;
+    @UiField
+    TextBox passwordTextField;
 
     @Inject
     public CenterBlock() {
@@ -136,6 +148,24 @@ public class CenterBlock extends Composite {
         materialBlock.add(favorit.getItem());
         materialBlock.add(ruchidel.getItem());
         materialBlock.add(sistrom.getItem());
+    }
+
+    @UiHandler("submit")
+    void clickHandler(ClickEvent evt) {
+        User user = new User(loginTextField.getValue(), passwordTextField.getValue());
+        service.authorize(user, new AsyncCallback<Void>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                if (caught instanceof WrongCredentialsException) {
+                    Window.alert(caught.getLocalizedMessage());
+                }
+            }
+
+            @Override
+            public void onSuccess(Void result) {
+                Window.alert("Вход успешен!");
+            }
+        });
     }
 
     private int getYearForDateType(int normalYear) {

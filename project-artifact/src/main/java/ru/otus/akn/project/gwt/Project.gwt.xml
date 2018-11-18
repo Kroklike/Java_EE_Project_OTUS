@@ -16,7 +16,7 @@
     <extend-property name="locale" values="ru"/>
     <set-property-fallback name="locale" value="ru"/>
 
-    <!-- Specify the app servlets.                   -->
-    <servlet path='/projectService' class='ru.otus.akn.project.gwt.server.ProjectServiceImpl'/>
+    <source path='client'/>
+    <source path='shared'/>
 
 </module>
