@@ -18,12 +18,10 @@ import java.math.BigDecimal;
 import java.net.*;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static ru.otus.akn.project.util.Converter.convertStringWithXmlToDocument;
+import static ru.otus.akn.project.util.OutputResultUtil.parseInnerCurrency;
 import static ru.otus.akn.project.util.OutputResultUtil.writeMapToResponse;
 
 @WebServlet("/currencyRatesToJson")
@@ -31,8 +29,7 @@ public class CurrencyRatesServlet extends HttpServlet {
 
     private static final Map<String, BigDecimal> CACHED_RATE = new HashMap<>();
     private static final String CBR_CURRENCY_RATES_URL = "http://www.cbr.ru/scripts/XML_daily.asp";
-    private static final String EUR = "EUR";
-    private static final String USD = "USD";
+    private static final List<String> CURRENCY_FOR_SEARCH = Arrays.asList("EUR", "USD");
     private static final int TIMEOUT = 2000;
     private static LocalDate lastUpdateDate;
 
@@ -78,45 +75,15 @@ public class CurrencyRatesServlet extends HttpServlet {
 
                 NodeList currency = (NodeList) searchValute.evaluate(xmlDocument, XPathConstants.NODESET);
 
-                List<String> curListToSearch = new ArrayList<>();
-                curListToSearch.add(EUR);
-                curListToSearch.add(USD);
-
                 for (int i = 0; i < currency.getLength(); i++) {
                     Node node = currency.item(i);
-                    findAndAddByCurrencyListName(node, curListToSearch);
+                    parseInnerCurrency(node, CURRENCY_FOR_SEARCH, CACHED_RATE);
                 }
                 lastUpdateDate = LocalDate.now();
                 writeMapToResponse(resp, CACHED_RATE);
             }
         } catch (Exception e) {
             throw new RuntimeException("Something goes wring when tried to get currency rates", e);
-        }
-    }
-
-    private void findAndAddByCurrencyListName(Node node, List<String> curNames) {
-        NodeList childNodes = node.getChildNodes();
-        boolean needToAdd = false;
-        String curName = null;
-        BigDecimal curRate = null;
-        for (int j = 0; j < childNodes.getLength(); j++) {
-            Node childItem = childNodes.item(j);
-            if (childItem.getNodeName().equals("CharCode")) {
-                String charCodeValue = childItem.getFirstChild().getTextContent();
-                if (curNames.contains(charCodeValue)) {
-                    needToAdd = true;
-                    curName = charCodeValue;
-                }
-            }
-            if (childItem.getNodeName().equals("Value")) {
-                String rateValue = childItem.getFirstChild().getTextContent()
-                        .replace("\"", "")
-                        .replace(",", ".");
-                curRate = new BigDecimal(rateValue);
-            }
-        }
-        if (needToAdd) {
-            CACHED_RATE.put(curName, curRate);
         }
     }
 }
