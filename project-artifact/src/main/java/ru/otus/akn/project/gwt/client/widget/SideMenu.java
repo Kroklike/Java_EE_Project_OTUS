@@ -14,6 +14,7 @@ import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.Node;
 import com.google.gwt.xml.client.NodeList;
 import com.google.gwt.xml.client.XMLParser;
+import ru.otus.akn.project.gwt.client.constants.ApplicationConstants;
 import ru.otus.akn.project.gwt.client.model.NewsJSO;
 
 import java.math.BigDecimal;
@@ -39,6 +40,7 @@ public class SideMenu extends Composite {
     }
 
     private static SideMenuUiBinder sideMenuUiBinder = INSTANCE.getSideMenuUiBinder();
+    private static final ApplicationConstants CONSTANTS = INSTANCE.getConstants();
 
     @UiField
     FlowPanel sideMenu;
@@ -90,7 +92,7 @@ public class SideMenu extends Composite {
                             }
                         }
                         if (result.size() > 0) {
-                            currency.add(new Label("Текущий курс валют: "));
+                            currency.add(new Label(CONSTANTS.sideMenuRates()));
                             String currencyInfo = "EUR " + result.get(EUR_KEY) +
                                     " | USD " + result.get(USD_KEY);
                             currency.add(new Label(currencyInfo));

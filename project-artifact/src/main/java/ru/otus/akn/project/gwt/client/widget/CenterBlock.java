@@ -1,5 +1,6 @@
 package ru.otus.akn.project.gwt.client.widget;
 
+import com.google.gwt.cell.client.DateCell;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -7,11 +8,16 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.uibinder.client.UiTemplate;
+import com.google.gwt.user.cellview.client.Column;
+import com.google.gwt.user.cellview.client.DataGrid;
+import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
+import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
 import com.google.inject.Inject;
+import ru.otus.akn.project.db.entity.EmployeeEntity;
 import ru.otus.akn.project.gwt.client.constants.ApplicationConstants;
 import ru.otus.akn.project.gwt.client.model.NewsItemCreator;
 import ru.otus.akn.project.gwt.client.model.PartnerItemCreator;
@@ -19,6 +25,8 @@ import ru.otus.akn.project.gwt.client.service.AuthorisationServiceAsync;
 import ru.otus.akn.project.gwt.shared.User;
 import ru.otus.akn.project.gwt.shared.exception.WrongCredentialsException;
 
+import java.time.ZoneOffset;
+import java.time.temporal.TemporalField;
 import java.util.Date;
 
 import static ru.otus.akn.project.gwt.client.gin.ApplicationInjector.INSTANCE;
@@ -63,6 +71,40 @@ public class CenterBlock extends Composite {
         initMaterialBlock();
 
         mainBlock.showWidget(MAIN_LINK_INDEX);
+    }
+
+    private void initTableBlock() {
+        DataGrid<EmployeeEntity> table = new DataGrid<>();
+        table.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.ENABLED);
+
+        TextColumn<EmployeeEntity> fullName = new TextColumn<EmployeeEntity>() {
+            @Override
+            public String getValue(EmployeeEntity employee) {
+                return employee.getFirstName() + " " + employee.getLastName() + " " + employee.getMiddleName();
+            }};
+        table.addColumn(fullName, "Full name");
+
+        TextColumn<EmployeeEntity> department = new TextColumn<EmployeeEntity>() {
+            @Override
+            public String getValue(EmployeeEntity employee) {
+                return employee.getDepartmentEntity().getDepartmentName();
+            }};
+        table.addColumn(department, "Department");
+
+        TextColumn<EmployeeEntity> position = new TextColumn<EmployeeEntity>() {
+            @Override
+            public String getValue(EmployeeEntity employee) {
+                return employee.getPositionEntity().getPositionName();
+            }};
+        table.addColumn(position, "Position");
+
+        TextColumn<EmployeeEntity> telephoneNumber = new TextColumn<EmployeeEntity>() {
+            @Override
+            public String getValue(EmployeeEntity employee) {
+                return employee.getTelephoneNumber();
+            }};
+        table.addColumn(telephoneNumber, "Telephone number");
+
     }
 
     private void initNewsBlock() {

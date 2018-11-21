@@ -19,6 +19,9 @@ public interface ApplicationConstants extends Constants {
     @Key("header.search.box")
     String headerSearchBox();
 
+    @Key("side.menu.rates")
+    String sideMenuRates();
+
     @Key("under.header.menu.main")
     String underHeaderMenuMain();
 
