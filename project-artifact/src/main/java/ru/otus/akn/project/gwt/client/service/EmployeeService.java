@@ -11,4 +11,6 @@ public interface EmployeeService extends RemoteService {
 
     List<Employee> getAllEmployees();
 
+    void deleteEmployeeById(Long employeeId);
+
 }

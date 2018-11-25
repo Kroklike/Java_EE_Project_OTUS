@@ -1,5 +1,6 @@
 package ru.otus.akn.project.gwt.client.widget;
 
+import com.google.gwt.cell.client.ButtonCell;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -7,6 +8,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.uibinder.client.UiTemplate;
+import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.DataGrid;
 import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
 import com.google.gwt.user.cellview.client.TextColumn;
@@ -117,6 +119,29 @@ public class CenterBlock extends Composite {
         };
         table.addColumn(salary, "Salary");
 
+        Column<Employee, String> deleteBtn = new Column<Employee, String>(
+                new ButtonCell()) {
+            @Override
+            public String getValue(Employee c) {
+                return "x";
+            }
+        };
+
+        table.addColumn(deleteBtn, "");
+
+        deleteBtn.setFieldUpdater((index, employee, value) ->
+                employeeService.deleteEmployeeById(employee.getId(),
+                        new AsyncCallback<Void>() {
+                            @Override
+                            public void onFailure(Throwable caught) {
+                                LOGGER.log(Level.SEVERE, caught.getLocalizedMessage());
+                            }
+
+                            @Override
+                            public void onSuccess(Void result) {
+                                updateDataGrid();
+                            }
+                        }));
 
         table.setTitle(CONSTANTS.centerBlockLoginAfter());
         employeeDataGrid = table;
@@ -224,21 +249,23 @@ public class CenterBlock extends Composite {
             public void onSuccess(Void result) {
                 Window.alert("Вход успешен!");
                 mainBlock.showWidget(EMPLOYEE_LIST_LINK_INDEX);
-                employeePanel.setVisible(true);
-                employeeDataGrid.setVisible(true);
 
-                employeeService.getAllEmployees(new AsyncCallback<List<Employee>>() {
-                    @Override
-                    public void onFailure(Throwable caught) {
-                        LOGGER.log(Level.SEVERE, caught.getLocalizedMessage());
-                    }
+                updateDataGrid();
+            }
+        });
+    }
 
-                    @Override
-                    public void onSuccess(List<Employee> result) {
-                        employeeDataGrid.setRowCount(result.size(), true);
-                        employeeDataGrid.setRowData(0, result);
-                    }
-                });
+    private void updateDataGrid() {
+        employeeService.getAllEmployees(new AsyncCallback<List<Employee>>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                LOGGER.log(Level.SEVERE, caught.getLocalizedMessage());
+            }
+
+            @Override
+            public void onSuccess(List<Employee> result) {
+                employeeDataGrid.setRowCount(result.size(), true);
+                employeeDataGrid.setRowData(0, result);
             }
         });
     }

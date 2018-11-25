@@ -9,4 +9,5 @@ public interface EmployeeServiceAsync {
 
     void getAllEmployees(AsyncCallback<List<Employee>> async);
 
+    void deleteEmployeeById(Long employeeId, AsyncCallback<Void> async);
 }
