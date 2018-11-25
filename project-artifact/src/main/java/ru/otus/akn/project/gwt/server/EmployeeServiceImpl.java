@@ -12,8 +12,7 @@ import javax.servlet.annotation.WebServlet;
 import java.util.ArrayList;
 import java.util.List;
 
-import static ru.otus.akn.project.db.dao.EmployeesDAO.deleteEmployeeEntityById;
-import static ru.otus.akn.project.db.dao.EmployeesDAO.getAllEmployeeEntities;
+import static ru.otus.akn.project.db.dao.EmployeesDAO.*;
 import static ru.otus.akn.project.util.PersistenceUtil.MANAGER_FACTORY;
 
 @WebServlet("/Project/EmployeeService")
@@ -41,6 +40,20 @@ public class EmployeeServiceImpl extends RemoteServiceServlet implements Employe
         }
 
         return result;
+    }
+
+    @Override
+    public void updateEmployee(Employee employee) {
+        try {
+            new EntityManagerControl(MANAGER_FACTORY) {
+                @Override
+                public void requestMethod(EntityManager manager) {
+                    updateEmployeeEntity(manager, employee);
+                }
+            }.processRequest();
+        } catch (Exception e) {
+            throw new RuntimeException("Something went wrong when tried to update employee entity from DB by id.", e);
+        }
     }
 
     @Override

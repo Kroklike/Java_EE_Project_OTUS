@@ -1,6 +1,7 @@
 package ru.otus.akn.project.gwt.client.widget;
 
 import com.google.gwt.cell.client.ButtonCell;
+import com.google.gwt.cell.client.TextInputCell;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -87,13 +88,38 @@ public class CenterBlock extends Composite {
         DataGrid<Employee> table = new DataGrid<>();
         table.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.ENABLED);
 
-        TextColumn<Employee> fullName = new TextColumn<Employee>() {
+        TextInputCell fullNameCell = new TextInputCell();
+        Column<Employee, String> fullName = new Column<Employee, String>(fullNameCell) {
             @Override
             public String getValue(Employee employee) {
                 return employee.getFullName();
             }
         };
         table.addColumn(fullName, "Full name");
+        fullName.setFieldUpdater((index, row, value) -> {
+            String[] strings = value.split(" ");
+            if (strings.length > 3 || strings.length < 2) {
+                throw new RuntimeException("Получено некорректное ФИО");
+            } else {
+                for (String partOfName : strings) {
+                    if (partOfName.contains("[^a-za-Zа-яА-Я]")) {
+                        throw new RuntimeException("ФИО должно содержать только буквы и пробелы");
+                    }
+                }
+                row.setFullName(value);
+                employeeService.updateEmployee(row, new AsyncCallback<Void>() {
+                    @Override
+                    public void onFailure(Throwable caught) {
+                        LOGGER.log(Level.SEVERE, caught.getLocalizedMessage());
+                    }
+
+                    @Override
+                    public void onSuccess(Void result) {
+                        updateDataGrid();
+                    }
+                });
+            }
+        });
 
         TextColumn<Employee> department = new TextColumn<Employee>() {
             @Override
