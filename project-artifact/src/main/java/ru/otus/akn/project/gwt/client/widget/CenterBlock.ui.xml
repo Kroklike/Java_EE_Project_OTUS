@@ -26,6 +26,7 @@
                 </g:HorizontalPanel>
             </g:VerticalPanel>
         </g:FlowPanel>
+        <g:SimpleLayoutPanel ui:field="employeePanel"/>
         <g:FlowPanel ui:field="materialBlock">
             <g:Label text="{res.centerBlockMaterials}" addStyleNames="description-block"/>
             <g:Label text="{res.centerBlockMaterialsMain}" addStyleNames="description-item"/>

@@ -4,6 +4,7 @@ import com.google.gwt.inject.client.AbstractGinModule;
 import ru.otus.akn.project.gwt.client.constants.ApplicationConstants;
 import ru.otus.akn.project.gwt.client.constants.ApplicationMessages;
 import ru.otus.akn.project.gwt.client.service.AuthorisationService;
+import ru.otus.akn.project.gwt.client.service.EmployeeService;
 import ru.otus.akn.project.gwt.client.widget.CenterBlock.CenterBlockUiBinder;
 import ru.otus.akn.project.gwt.client.widget.Footer.FooterUiBinder;
 import ru.otus.akn.project.gwt.client.widget.Header.HeaderUiBinder;
@@ -20,5 +21,6 @@ public class ApplicationGinModule extends AbstractGinModule {
         bind(CenterBlockUiBinder.class);
         bind(AuthorisationService.class);
         bind(SideMenuUiBinder.class);
+        bind(EmployeeService.class);
     }
 }

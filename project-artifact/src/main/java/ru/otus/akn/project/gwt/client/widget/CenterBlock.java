@@ -15,15 +15,19 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
 import com.google.inject.Inject;
-import ru.otus.akn.project.db.entity.EmployeeEntity;
 import ru.otus.akn.project.gwt.client.constants.ApplicationConstants;
 import ru.otus.akn.project.gwt.client.model.NewsItemCreator;
 import ru.otus.akn.project.gwt.client.model.PartnerItemCreator;
 import ru.otus.akn.project.gwt.client.service.AuthorisationServiceAsync;
+import ru.otus.akn.project.gwt.client.service.EmployeeServiceAsync;
+import ru.otus.akn.project.gwt.shared.Employee;
 import ru.otus.akn.project.gwt.shared.User;
 import ru.otus.akn.project.gwt.shared.exception.WrongCredentialsException;
 
 import java.util.Date;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static ru.otus.akn.project.gwt.client.gin.ApplicationInjector.INSTANCE;
 
@@ -31,17 +35,21 @@ public class CenterBlock extends Composite {
 
     public static final int MAIN_LINK_INDEX = 0;
     public static final int ENTRANCE_LINK_INDEX = 1;
-    public static final int MATERIAL_LINK_INDEX = 2;
-    public static final int PRICES_LINK_INDEX = 3;
-    public static final int PROJECTS_LINK_INDEX = 4;
+    public static final int EMPLOYEE_LIST_LINK_INDEX = 2;
+    public static final int MATERIAL_LINK_INDEX = 3;
+    public static final int PRICES_LINK_INDEX = 4;
+    public static final int PROJECTS_LINK_INDEX = 5;
 
     @UiTemplate("CenterBlock.ui.xml")
     public interface CenterBlockUiBinder extends UiBinder<DeckPanel, CenterBlock> {
     }
 
-    private static CenterBlockUiBinder centerBlockUiBinder = INSTANCE.getCenterBlockUiBinder();
+    private static final Logger LOGGER = Logger.getLogger(CenterBlock.class.getSimpleName());
     private static final ApplicationConstants CONSTANTS = INSTANCE.getConstants();
-    private AuthorisationServiceAsync service = INSTANCE.getAuthorisationService();
+    private static CenterBlockUiBinder centerBlockUiBinder = INSTANCE.getCenterBlockUiBinder();
+    private AuthorisationServiceAsync authorisationService = INSTANCE.getAuthorisationService();
+    private EmployeeServiceAsync employeeService = INSTANCE.getEmployeeService();
+    private DataGrid<Employee> employeeDataGrid;
 
     @UiField
     DeckPanel mainBlock;
@@ -53,6 +61,8 @@ public class CenterBlock extends Composite {
     TextBox loginTextField;
     @UiField
     TextBox passwordTextField;
+    @UiField
+    SimpleLayoutPanel employeePanel;
 
     @Inject
     public CenterBlock() {
@@ -65,46 +75,53 @@ public class CenterBlock extends Composite {
 
         initNewsBlock();
         initMaterialBlock();
+        initTableBlock();
 
         mainBlock.showWidget(MAIN_LINK_INDEX);
     }
 
     private void initTableBlock() {
-        DataGrid<EmployeeEntity> table = new DataGrid<>();
+
+        DataGrid<Employee> table = new DataGrid<>();
         table.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.ENABLED);
 
-        TextColumn<EmployeeEntity> fullName = new TextColumn<EmployeeEntity>() {
+        TextColumn<Employee> fullName = new TextColumn<Employee>() {
             @Override
-            public String getValue(EmployeeEntity employee) {
-                return employee.getFirstName() + " " + employee.getLastName() + " " + employee.getMiddleName();
+            public String getValue(Employee employee) {
+                return employee.getFullName();
             }
         };
         table.addColumn(fullName, "Full name");
 
-        TextColumn<EmployeeEntity> department = new TextColumn<EmployeeEntity>() {
+        TextColumn<Employee> department = new TextColumn<Employee>() {
             @Override
-            public String getValue(EmployeeEntity employee) {
-                return employee.getDepartmentEntity().getDepartmentName();
+            public String getValue(Employee employee) {
+                return employee.getDepartmentName();
             }
         };
         table.addColumn(department, "Department");
 
-        TextColumn<EmployeeEntity> position = new TextColumn<EmployeeEntity>() {
+        TextColumn<Employee> position = new TextColumn<Employee>() {
             @Override
-            public String getValue(EmployeeEntity employee) {
-                return employee.getPositionEntity().getPositionName();
+            public String getValue(Employee employee) {
+                return employee.getPositionName();
             }
         };
         table.addColumn(position, "Position");
 
-        TextColumn<EmployeeEntity> telephoneNumber = new TextColumn<EmployeeEntity>() {
+        TextColumn<Employee> salary = new TextColumn<Employee>() {
             @Override
-            public String getValue(EmployeeEntity employee) {
-                return employee.getTelephoneNumber();
+            public String getValue(Employee employee) {
+                return employee.getSalary().toString();
             }
         };
-        table.addColumn(telephoneNumber, "Telephone number");
+        table.addColumn(salary, "Salary");
 
+
+        table.setTitle(CONSTANTS.centerBlockLoginAfter());
+        employeeDataGrid = table;
+
+        employeePanel.add(table);
     }
 
     private void initNewsBlock() {
@@ -195,7 +212,7 @@ public class CenterBlock extends Composite {
     @UiHandler("submit")
     void clickHandler(ClickEvent evt) {
         User user = new User(loginTextField.getValue(), passwordTextField.getValue());
-        service.authorize(user, new AsyncCallback<Void>() {
+        authorisationService.authorize(user, new AsyncCallback<Void>() {
             @Override
             public void onFailure(Throwable caught) {
                 if (caught instanceof WrongCredentialsException) {
@@ -206,6 +223,22 @@ public class CenterBlock extends Composite {
             @Override
             public void onSuccess(Void result) {
                 Window.alert("Вход успешен!");
+                mainBlock.showWidget(EMPLOYEE_LIST_LINK_INDEX);
+                employeePanel.setVisible(true);
+                employeeDataGrid.setVisible(true);
+
+                employeeService.getAllEmployees(new AsyncCallback<List<Employee>>() {
+                    @Override
+                    public void onFailure(Throwable caught) {
+                        LOGGER.log(Level.SEVERE, caught.getLocalizedMessage());
+                    }
+
+                    @Override
+                    public void onSuccess(List<Employee> result) {
+                        employeeDataGrid.setRowCount(result.size(), true);
+                        employeeDataGrid.setRowData(0, result);
+                    }
+                });
             }
         });
     }

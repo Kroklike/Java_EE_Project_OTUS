@@ -76,6 +76,9 @@ public interface ApplicationConstants extends Constants {
     @Key("center.block.login")
     String centerBlockLogin();
 
+    @Key("center.block.login.after")
+    String centerBlockLoginAfter();
+
     @Key("center.block.materials")
     String centerBlockMaterials();
 
