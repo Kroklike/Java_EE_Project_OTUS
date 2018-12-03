@@ -229,6 +229,19 @@ public class CenterBlock extends Composite {
                             }
                         }));
 
+        Column<Employee, String> addBtn = new Column<Employee, String>(
+                new ButtonCell()) {
+            @Override
+            public String getValue(Employee c) {
+                return "+";
+            }
+        };
+
+        table.addColumn(addBtn, "");
+
+        addBtn.setFieldUpdater((index, employee, value) ->
+                updateDataGridWithNewRow());
+
         table.setTitle(CONSTANTS.centerBlockLoginAfter());
         employeeDataGrid = table;
 
@@ -401,6 +414,31 @@ public class CenterBlock extends Composite {
                 employeeDataGrid.redraw();
             }
         });
+    }
+
+    private void updateDataGridWithNewRow() {
+        employeeService.getAllEmployees(new AsyncCallback<List<Employee>>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                LOGGER.log(Level.SEVERE, caught.getLocalizedMessage());
+            }
+
+            @Override
+            public void onSuccess(List<Employee> result) {
+                result.add(createEmptyEmployee());
+                employeeDataGrid.setRowCount(result.size(), true);
+                employeeDataGrid.setRowData(0, result);
+                employeeDataGrid.redraw();
+            }
+        });
+    }
+
+    private Employee createEmptyEmployee() {
+        Employee newRow = new Employee();
+        newRow.setSalary(new BigDecimal(0));
+        newRow.setFirstName("");
+        newRow.setLastName("");
+        return newRow;
     }
 
     private int getYearForDateType(int normalYear) {
