@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
-import javax.annotation.Nullable;
 import java.math.BigDecimal;
 
 @Data
@@ -14,10 +13,12 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class Employee implements IsSerializable {
 
-    @Nullable
     private Long id;
     @NonNull
-    private String fullName;
+    private String firstName;
+    @NonNull
+    private String lastName;
+    private String middleName;
     @NonNull
     private String departmentName;
     @NonNull

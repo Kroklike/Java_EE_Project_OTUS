@@ -73,9 +73,9 @@ public class EmployeeServiceImpl extends RemoteServiceServlet implements Employe
     private Employee convertEmployeeEntityToEmployee(EmployeeEntity employeeEntity) {
         Employee employee = new Employee();
         employee.setId(employeeEntity.getEmployeeId());
-        employee.setFullName(employeeEntity.getFirstName() + " "
-                + employeeEntity.getLastName() + " "
-                + (employeeEntity.getMiddleName() == null ? "" : employeeEntity.getMiddleName()));
+        employee.setFirstName(employeeEntity.getFirstName());
+        employee.setLastName(employeeEntity.getLastName());
+        employee.setMiddleName(employeeEntity.getMiddleName() == null ? "" : employeeEntity.getMiddleName());
         employee.setDepartmentName(employeeEntity.getDepartmentEntity().getDepartmentName());
         employee.setPositionName(employeeEntity.getPositionEntity().getPositionName());
         employee.setSalary(employeeEntity.getSalary());

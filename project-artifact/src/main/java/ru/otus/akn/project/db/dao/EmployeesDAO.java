@@ -11,6 +11,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static ru.otus.akn.project.db.dao.DepartmentsDAO.getDepartmentEntity;
+import static ru.otus.akn.project.db.dao.PositionsDAO.getPositionEntity;
+
 public class EmployeesDAO {
 
     public static List<EmployeeEntity> getAllEmployeeEntities(EntityManager em) {
@@ -33,20 +36,15 @@ public class EmployeesDAO {
         new TransactionQueryConsumer(em) {
             @Override
             public void needToProcessData() {
-                String[] names = employee.getFullName().split(" ");
-                String firstName = names[0];
-                String lastName = names[1];
-                String middleName;
-                if (names.length == 2) {
-                    middleName = "";
-                } else {
-                    middleName = names[2];
-                }
                 Query employeeQ = em.createQuery("update EmployeeEntity set firstName = :firstName " +
-                        ", lastName = :lastName, middleName = :middleName, salary = :salary where id = :id");
-                employeeQ.setParameter("firstName", firstName);
-                employeeQ.setParameter("lastName", lastName);
-                employeeQ.setParameter("middleName", middleName);
+                        ", lastName = :lastName, middleName = :middleName, salary = :salary " +
+                        ", departmentEntity = :department, positionEntity = :position where id = :id");
+                employeeQ.setParameter("firstName", employee.getFirstName());
+                employeeQ.setParameter("lastName", employee.getLastName());
+                employeeQ.setParameter("middleName", employee.getMiddleName().isEmpty() ?
+                        null : employee.getMiddleName());
+                employeeQ.setParameter("department", getDepartmentEntity(em, employee.getDepartmentName()));
+                employeeQ.setParameter("position", getPositionEntity(em, employee.getPositionName()));
                 employeeQ.setParameter("salary", employee.getSalary());
                 employeeQ.setParameter("id", employee.getId());
                 employeeQ.executeUpdate();

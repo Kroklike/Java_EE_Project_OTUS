@@ -12,7 +12,6 @@ import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.DataGrid;
 import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
-import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -22,11 +21,17 @@ import ru.otus.akn.project.gwt.client.constants.ApplicationConstants;
 import ru.otus.akn.project.gwt.client.model.NewsItemCreator;
 import ru.otus.akn.project.gwt.client.model.PartnerItemCreator;
 import ru.otus.akn.project.gwt.client.service.AuthorisationServiceAsync;
+import ru.otus.akn.project.gwt.client.service.DepartmentServiceAsync;
 import ru.otus.akn.project.gwt.client.service.EmployeeServiceAsync;
+import ru.otus.akn.project.gwt.client.service.PositionServiceAsync;
+import ru.otus.akn.project.gwt.shared.Department;
 import ru.otus.akn.project.gwt.shared.Employee;
+import ru.otus.akn.project.gwt.shared.Position;
 import ru.otus.akn.project.gwt.shared.User;
 import ru.otus.akn.project.gwt.shared.exception.WrongCredentialsException;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -42,6 +47,7 @@ public class CenterBlock extends Composite {
     public static final int MATERIAL_LINK_INDEX = 3;
     public static final int PRICES_LINK_INDEX = 4;
     public static final int PROJECTS_LINK_INDEX = 5;
+    public static final String CHECK_ONLY_LETTERS = "[^a-zA-Zа-яА-Я]*";
 
     @UiTemplate("CenterBlock.ui.xml")
     public interface CenterBlockUiBinder extends UiBinder<DeckPanel, CenterBlock> {
@@ -52,6 +58,8 @@ public class CenterBlock extends Composite {
     private static CenterBlockUiBinder centerBlockUiBinder = INSTANCE.getCenterBlockUiBinder();
     private AuthorisationServiceAsync authorisationService = INSTANCE.getAuthorisationService();
     private EmployeeServiceAsync employeeService = INSTANCE.getEmployeeService();
+    private DepartmentServiceAsync departmentService = INSTANCE.getDepartmentService();
+    private PositionServiceAsync positionService = INSTANCE.getPositionService();
     private DataGrid<Employee> employeeDataGrid;
 
     @UiField
@@ -88,40 +96,70 @@ public class CenterBlock extends Composite {
         DataGrid<Employee> table = new DataGrid<>();
         table.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.ENABLED);
 
-        TextInputCell fullNameCell = new TextInputCell();
-        Column<Employee, String> fullName = new Column<Employee, String>(fullNameCell) {
+        TextInputCell firstNameCell = new TextInputCell();
+        Column<Employee, String> firstName = new Column<Employee, String>(firstNameCell) {
             @Override
             public String getValue(Employee employee) {
-                return employee.getFullName();
+                return employee.getFirstName();
             }
         };
-        table.addColumn(fullName, "Full name");
-        fullName.setFieldUpdater((index, row, value) -> {
-            String[] strings = value.split(" ");
-            if (strings.length > 3 || strings.length < 2) {
-                throw new RuntimeException("Получено некорректное ФИО");
-            } else {
-                for (String partOfName : strings) {
-                    if (partOfName.contains("[^a-za-Zа-яА-Я]")) {
-                        throw new RuntimeException("ФИО должно содержать только буквы и пробелы");
-                    }
-                }
-                row.setFullName(value);
-                employeeService.updateEmployee(row, new AsyncCallback<Void>() {
-                    @Override
-                    public void onFailure(Throwable caught) {
-                        LOGGER.log(Level.SEVERE, caught.getLocalizedMessage());
-                    }
 
-                    @Override
-                    public void onSuccess(Void result) {
-                        updateDataGrid();
-                    }
-                });
+        table.addColumn(firstName, "First name");
+
+        firstName.setFieldUpdater((index, row, value) -> {
+            if (value == null || value.isEmpty()) {
+                Window.alert("Имя должно быть заполнено");
+                updateDataGrid();
+                return;
+            } else if (value.matches(CHECK_ONLY_LETTERS)) {
+                Window.alert("Имя должно содержать только буквы");
+                updateDataGrid();
+                return;
             }
+            row.setFirstName(value);
+            updateEmployee(row);
         });
 
-        TextColumn<Employee> department = new TextColumn<Employee>() {
+        TextInputCell lastNameCell = new TextInputCell();
+        Column<Employee, String> lastName = new Column<Employee, String>(lastNameCell) {
+            @Override
+            public String getValue(Employee employee) {
+                return employee.getLastName();
+            }
+        };
+        table.addColumn(lastName, "Last name");
+        lastName.setFieldUpdater((index, row, value) -> {
+            if (value == null || value.isEmpty()) {
+                Window.alert("Фамилия должна быть заполнена");
+                return;
+            } else if (value.matches(CHECK_ONLY_LETTERS)) {
+                Window.alert("Фамилия должна содержать только буквы");
+                return;
+            }
+            row.setLastName(value);
+            updateEmployee(row);
+        });
+
+        TextInputCell middleNameCell = new TextInputCell();
+        Column<Employee, String> middleName = new Column<Employee, String>(middleNameCell) {
+            @Override
+            public String getValue(Employee employee) {
+                return employee.getMiddleName();
+            }
+        };
+        table.addColumn(middleName, "Middle name");
+        middleName.setFieldUpdater((index, row, value) -> {
+            if (value != null && !value.isEmpty() && value.matches(CHECK_ONLY_LETTERS)) {
+                Window.alert("Отчество должно содержать только буквы");
+                updateDataGrid();
+                return;
+            }
+            row.setMiddleName(value);
+            updateEmployee(row);
+        });
+
+        DynamicSelectionCell departmentCell = new DynamicSelectionCell();
+        Column<Employee, String> department = new Column<Employee, String>(departmentCell) {
             @Override
             public String getValue(Employee employee) {
                 return employee.getDepartmentName();
@@ -129,7 +167,14 @@ public class CenterBlock extends Composite {
         };
         table.addColumn(department, "Department");
 
-        TextColumn<Employee> position = new TextColumn<Employee>() {
+        department.setFieldUpdater((index, employee, value) -> {
+            employee.setDepartmentName(value);
+            updateEmployee(employee);
+        });
+
+        DynamicSelectionCell positionCell = new DynamicSelectionCell();
+
+        Column<Employee, String> position = new Column<Employee, String>(positionCell) {
             @Override
             public String getValue(Employee employee) {
                 return employee.getPositionName();
@@ -137,13 +182,28 @@ public class CenterBlock extends Composite {
         };
         table.addColumn(position, "Position");
 
-        TextColumn<Employee> salary = new TextColumn<Employee>() {
+        position.setFieldUpdater((index, employee, value) -> {
+            employee.setPositionName(value);
+            updateEmployee(employee);
+        });
+
+        TextInputCell salaryCell = new TextInputCell();
+        Column<Employee, String> salary = new Column<Employee, String>(salaryCell) {
             @Override
             public String getValue(Employee employee) {
                 return employee.getSalary().toString();
             }
         };
         table.addColumn(salary, "Salary");
+        salary.setFieldUpdater((index, row, value) -> {
+            if (value.matches("[^0-9]*")) {
+                Window.alert("Зарплата должна состоять только из цифр");
+                updateDataGrid();
+                return;
+            }
+            row.setSalary(new BigDecimal(value));
+            updateEmployee(row);
+        });
 
         Column<Employee, String> deleteBtn = new Column<Employee, String>(
                 new ButtonCell()) {
@@ -172,7 +232,53 @@ public class CenterBlock extends Composite {
         table.setTitle(CONSTANTS.centerBlockLoginAfter());
         employeeDataGrid = table;
 
+        departmentService.getAllDepartments(new AsyncCallback<List<Department>>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                LOGGER.log(Level.SEVERE, caught.getLocalizedMessage());
+            }
+
+            @Override
+            public void onSuccess(List<Department> result) {
+                List<String> departmentNames = new ArrayList<>();
+                for (Department department : result) {
+                    departmentNames.add(department.getDepartmentName());
+                }
+                departmentCell.addOptions(departmentNames);
+            }
+        });
+
+        positionService.getAllPositions(new AsyncCallback<List<Position>>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                LOGGER.log(Level.SEVERE, caught.getLocalizedMessage());
+            }
+
+            @Override
+            public void onSuccess(List<Position> result) {
+                List<String> positionNames = new ArrayList<>();
+                for (Position position : result) {
+                    positionNames.add(position.getPositionName());
+                }
+                positionCell.addOptions(positionNames);
+            }
+        });
+
         employeePanel.add(table);
+    }
+
+    private void updateEmployee(Employee employee) {
+        employeeService.updateEmployee(employee, new AsyncCallback<Void>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                LOGGER.log(Level.SEVERE, caught.getLocalizedMessage());
+            }
+
+            @Override
+            public void onSuccess(Void result) {
+                updateDataGrid();
+            }
+        });
     }
 
     private void initNewsBlock() {
@@ -292,6 +398,7 @@ public class CenterBlock extends Composite {
             public void onSuccess(List<Employee> result) {
                 employeeDataGrid.setRowCount(result.size(), true);
                 employeeDataGrid.setRowData(0, result);
+                employeeDataGrid.redraw();
             }
         });
     }

@@ -5,8 +5,7 @@ import com.google.gwt.inject.client.GinModules;
 import com.google.gwt.inject.client.Ginjector;
 import ru.otus.akn.project.gwt.client.constants.ApplicationConstants;
 import ru.otus.akn.project.gwt.client.constants.ApplicationMessages;
-import ru.otus.akn.project.gwt.client.service.AuthorisationServiceAsync;
-import ru.otus.akn.project.gwt.client.service.EmployeeServiceAsync;
+import ru.otus.akn.project.gwt.client.service.*;
 import ru.otus.akn.project.gwt.client.widget.CenterBlock.CenterBlockUiBinder;
 import ru.otus.akn.project.gwt.client.widget.Footer.FooterUiBinder;
 import ru.otus.akn.project.gwt.client.widget.Header.HeaderUiBinder;
@@ -35,4 +34,8 @@ public interface ApplicationInjector extends Ginjector {
     SideMenuUiBinder getSideMenuUiBinder();
 
     EmployeeServiceAsync getEmployeeService();
+
+    DepartmentServiceAsync getDepartmentService();
+
+    PositionServiceAsync getPositionService();
 }
