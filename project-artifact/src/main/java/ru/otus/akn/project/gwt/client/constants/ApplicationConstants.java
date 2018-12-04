@@ -157,6 +157,42 @@ public interface ApplicationConstants extends Constants {
     @Key("logon.button")
     String logonButton();
 
+    @Key("employee.table.first.name")
+    String employeeTableFirstName();
+
+    @Key("employee.table.first.name.not.null")
+    String employeeTableFirstNameNotNull();
+
+    @Key("employee.table.first.name.only.letters")
+    String employeeTableFirstNameOnlyLetters();
+
+    @Key("employee.table.last.name")
+    String employeeTableLastName();
+
+    @Key("employee.table.last.name.not.null")
+    String employeeTableLastNameNotNull();
+
+    @Key("employee.table.last.name.only.letters")
+    String employeeTableLastNameOnlyLetters();
+
+    @Key("employee.table.middle.name")
+    String employeeTableMiddleName();
+
+    @Key("employee.table.middle.name.only.letters")
+    String employeeTableMiddleNameOnlyLetters();
+
+    @Key("employee.table.department")
+    String employeeTableDepartment();
+
+    @Key("employee.table.position")
+    String employeeTablePosition();
+
+    @Key("employee.table.salary")
+    String employeeTableSalary();
+
+    @Key("employee.table.salary.only.numbers")
+    String employeeTableSalaryOnlyNumbers();
+
     String title();
 
 }

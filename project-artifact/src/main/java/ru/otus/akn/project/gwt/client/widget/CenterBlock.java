@@ -47,7 +47,8 @@ public class CenterBlock extends Composite {
     public static final int MATERIAL_LINK_INDEX = 3;
     public static final int PRICES_LINK_INDEX = 4;
     public static final int PROJECTS_LINK_INDEX = 5;
-    public static final String CHECK_ONLY_LETTERS = "[^a-zA-Zа-яА-Я]*";
+    private static final String CHECK_ONLY_LETTERS = "[^a-zA-Zа-яА-Я]*";
+    private static final String ONLY_NUMBERS_CHECK = "[^0-9]*";
 
     @UiTemplate("CenterBlock.ui.xml")
     public interface CenterBlockUiBinder extends UiBinder<DeckPanel, CenterBlock> {
@@ -96,173 +97,14 @@ public class CenterBlock extends Composite {
         DataGrid<Employee> table = new DataGrid<>();
         table.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.ENABLED);
 
-        TextInputCell firstNameCell = new TextInputCell();
-        Column<Employee, String> firstName = new Column<Employee, String>(firstNameCell) {
-            @Override
-            public String getValue(Employee employee) {
-                return employee.getFirstName();
-            }
-        };
-
-        table.addColumn(firstName, "First name");
-
-        firstName.setFieldUpdater((index, row, value) -> {
-            if (value == null || value.isEmpty()) {
-                Window.alert("Имя должно быть заполнено");
-                return;
-            } else if (value.matches(CHECK_ONLY_LETTERS)) {
-                Window.alert("Имя должно содержать только буквы");
-                return;
-            } else if (!row.isReadyToSave()) {
-                row.setFirstName(value);
-                return;
-            }
-            row.setFirstName(value);
-            updateEmployee(row);
-        });
-
-        TextInputCell lastNameCell = new TextInputCell();
-        Column<Employee, String> lastName = new Column<Employee, String>(lastNameCell) {
-            @Override
-            public String getValue(Employee employee) {
-                return employee.getLastName();
-            }
-        };
-        table.addColumn(lastName, "Last name");
-        lastName.setFieldUpdater((index, row, value) -> {
-            if (value == null || value.isEmpty()) {
-                Window.alert("Фамилия должна быть заполнена");
-                return;
-            } else if (value.matches(CHECK_ONLY_LETTERS)) {
-                Window.alert("Фамилия должна содержать только буквы");
-                return;
-            } else if (!row.isReadyToSave()) {
-                row.setLastName(value);
-                return;
-            }
-            row.setLastName(value);
-            updateEmployee(row);
-        });
-
-        TextInputCell middleNameCell = new TextInputCell();
-        Column<Employee, String> middleName = new Column<Employee, String>(middleNameCell) {
-            @Override
-            public String getValue(Employee employee) {
-                return employee.getMiddleName();
-            }
-        };
-        table.addColumn(middleName, "Middle name");
-        middleName.setFieldUpdater((index, row, value) -> {
-            if (value != null && !value.isEmpty() && value.matches(CHECK_ONLY_LETTERS)) {
-                Window.alert("Отчество должно содержать только буквы");
-                return;
-            } else if (!row.isReadyToSave()) {
-                row.setMiddleName(value);
-                return;
-            }
-            row.setMiddleName(value);
-            updateEmployee(row);
-        });
-
-        DynamicSelectionCell departmentCell = new DynamicSelectionCell();
-        Column<Employee, String> department = new Column<Employee, String>(departmentCell) {
-            @Override
-            public String getValue(Employee employee) {
-                return employee.getDepartmentName();
-            }
-        };
-        table.addColumn(department, "Department");
-
-        department.setFieldUpdater((index, employee, value) -> {
-            if (!employee.isReadyToSave()) {
-                employee.setDepartmentName(value);
-                return;
-            }
-            employee.setDepartmentName(value);
-            updateEmployee(employee);
-        });
-
-        DynamicSelectionCell positionCell = new DynamicSelectionCell();
-
-        Column<Employee, String> position = new Column<Employee, String>(positionCell) {
-            @Override
-            public String getValue(Employee employee) {
-                return employee.getPositionName();
-            }
-        };
-        table.addColumn(position, "Position");
-
-        position.setFieldUpdater((index, employee, value) -> {
-            if (!employee.isReadyToSave()) {
-                employee.setPositionName(value);
-                return;
-            }
-            employee.setPositionName(value);
-            updateEmployee(employee);
-        });
-
-        TextInputCell salaryCell = new TextInputCell();
-        Column<Employee, String> salary = new Column<Employee, String>(salaryCell) {
-            @Override
-            public String getValue(Employee employee) {
-                return employee.getSalary().toString();
-            }
-        };
-        table.addColumn(salary, "Salary");
-        salary.setFieldUpdater((index, row, value) -> {
-            if (value.matches("[^0-9]*")) {
-                Window.alert("Зарплата должна состоять только из цифр");
-                return;
-            } else if (!row.isReadyToSave()) {
-                row.setSalary(new BigDecimal(value));
-                return;
-            }
-            row.setSalary(new BigDecimal(value));
-            updateEmployee(row);
-        });
-
-        Column<Employee, String> deleteBtn = new Column<Employee, String>(
-                new ButtonCell()) {
-            @Override
-            public String getValue(Employee c) {
-                return "x";
-            }
-        };
-
-        table.addColumn(deleteBtn, "");
-
-        deleteBtn.setFieldUpdater((index, employee, value) ->
-        {
-            if (employee.getId() != null) {
-                employeeService.deleteEmployeeById(employee.getId(),
-                        new AsyncCallback<Void>() {
-                            @Override
-                            public void onFailure(Throwable caught) {
-                                LOGGER.log(Level.SEVERE, caught.getLocalizedMessage());
-                            }
-
-                            @Override
-                            public void onSuccess(Void result) {
-                                updateDataGrid();
-                            }
-                        });
-            } else {
-                updateDataGrid();
-            }
-        });
-
-        Column<Employee, String> addBtn = new Column<Employee, String>(
-                new ButtonCell()) {
-            @Override
-            public String getValue(Employee c) {
-                return "+";
-            }
-        };
-
-        table.addColumn(addBtn, "");
-
-        addBtn.setFieldUpdater((index, employee, value) ->
-                updateDataGridWithNewRow());
+        initFirstNameColumn(table);
+        initLastNameColumn(table);
+        initMiddleNameColumn(table);
+        DynamicSelectionCell departmentCell = initDepartmentColumn(table);
+        DynamicSelectionCell positionCell = initPositionColumn(table);
+        initSalaryColumn(table);
+        initDeleteButton(table);
+        initAddNewButton(table);
 
         table.setTitle(CONSTANTS.centerBlockLoginAfter());
         employeeDataGrid = table;
@@ -300,6 +142,192 @@ public class CenterBlock extends Composite {
         });
 
         employeePanel.add(table);
+    }
+
+    private void initAddNewButton(DataGrid<Employee> table) {
+        Column<Employee, String> addBtn = new Column<Employee, String>(
+                new ButtonCell()) {
+            @Override
+            public String getValue(Employee c) {
+                return "+";
+            }
+        };
+
+        table.addColumn(addBtn, "");
+
+        addBtn.setFieldUpdater((index, employee, value) ->
+                updateDataGridWithNewRow());
+    }
+
+    private void initDeleteButton(DataGrid<Employee> table) {
+        Column<Employee, String> deleteBtn = new Column<Employee, String>(
+                new ButtonCell()) {
+            @Override
+            public String getValue(Employee c) {
+                return "x";
+            }
+        };
+
+        table.addColumn(deleteBtn, "");
+
+        deleteBtn.setFieldUpdater((index, employee, value) ->
+        {
+            if (employee.getId() != null) {
+                employeeService.deleteEmployeeById(employee.getId(),
+                        new AsyncCallback<Void>() {
+                            @Override
+                            public void onFailure(Throwable caught) {
+                                LOGGER.log(Level.SEVERE, caught.getLocalizedMessage());
+                            }
+
+                            @Override
+                            public void onSuccess(Void result) {
+                                updateDataGrid();
+                            }
+                        });
+            } else {
+                updateDataGrid();
+            }
+        });
+    }
+
+    private void initSalaryColumn(DataGrid<Employee> table) {
+        TextInputCell salaryCell = new TextInputCell();
+        Column<Employee, String> salary = new Column<Employee, String>(salaryCell) {
+            @Override
+            public String getValue(Employee employee) {
+                return employee.getSalary().toString();
+            }
+        };
+        table.addColumn(salary, CONSTANTS.employeeTableSalary());
+        salary.setFieldUpdater((index, row, value) -> {
+            if (value.matches(ONLY_NUMBERS_CHECK)) {
+                Window.alert(CONSTANTS.employeeTableSalaryOnlyNumbers());
+                return;
+            } else if (!row.isReadyToSave()) {
+                row.setSalary(new BigDecimal(value));
+                return;
+            }
+            row.setSalary(new BigDecimal(value));
+            updateEmployee(row);
+        });
+    }
+
+    private DynamicSelectionCell initPositionColumn(DataGrid<Employee> table) {
+        DynamicSelectionCell positionCell = new DynamicSelectionCell();
+
+        Column<Employee, String> position = new Column<Employee, String>(positionCell) {
+            @Override
+            public String getValue(Employee employee) {
+                return employee.getPositionName();
+            }
+        };
+        table.addColumn(position, CONSTANTS.employeeTablePosition());
+
+        position.setFieldUpdater((index, employee, value) -> {
+            if (!employee.isReadyToSave()) {
+                employee.setPositionName(value);
+                return;
+            }
+            employee.setPositionName(value);
+            updateEmployee(employee);
+        });
+        return positionCell;
+    }
+
+    private DynamicSelectionCell initDepartmentColumn(DataGrid<Employee> table) {
+        DynamicSelectionCell departmentCell = new DynamicSelectionCell();
+        Column<Employee, String> department = new Column<Employee, String>(departmentCell) {
+            @Override
+            public String getValue(Employee employee) {
+                return employee.getDepartmentName();
+            }
+        };
+        table.addColumn(department, CONSTANTS.employeeTableDepartment());
+
+        department.setFieldUpdater((index, employee, value) -> {
+            if (!employee.isReadyToSave()) {
+                employee.setDepartmentName(value);
+                return;
+            }
+            employee.setDepartmentName(value);
+            updateEmployee(employee);
+        });
+        return departmentCell;
+    }
+
+    private void initMiddleNameColumn(DataGrid<Employee> table) {
+        TextInputCell middleNameCell = new TextInputCell();
+        Column<Employee, String> middleName = new Column<Employee, String>(middleNameCell) {
+            @Override
+            public String getValue(Employee employee) {
+                return employee.getMiddleName();
+            }
+        };
+        table.addColumn(middleName, CONSTANTS.employeeTableMiddleName());
+        middleName.setFieldUpdater((index, row, value) -> {
+            if (value != null && !value.isEmpty() && value.matches(CHECK_ONLY_LETTERS)) {
+                Window.alert(CONSTANTS.employeeTableMiddleNameOnlyLetters());
+                return;
+            } else if (!row.isReadyToSave()) {
+                row.setMiddleName(value);
+                return;
+            }
+            row.setMiddleName(value);
+            updateEmployee(row);
+        });
+    }
+
+    private void initLastNameColumn(DataGrid<Employee> table) {
+        TextInputCell lastNameCell = new TextInputCell();
+        Column<Employee, String> lastName = new Column<Employee, String>(lastNameCell) {
+            @Override
+            public String getValue(Employee employee) {
+                return employee.getLastName();
+            }
+        };
+        table.addColumn(lastName, CONSTANTS.employeeTableLastName());
+        lastName.setFieldUpdater((index, row, value) -> {
+            if (value == null || value.isEmpty()) {
+                Window.alert(CONSTANTS.employeeTableLastNameNotNull());
+                return;
+            } else if (value.matches(CHECK_ONLY_LETTERS)) {
+                Window.alert(CONSTANTS.employeeTableLastNameOnlyLetters());
+                return;
+            } else if (!row.isReadyToSave()) {
+                row.setLastName(value);
+                return;
+            }
+            row.setLastName(value);
+            updateEmployee(row);
+        });
+    }
+
+    private void initFirstNameColumn(DataGrid<Employee> table) {
+        TextInputCell firstNameCell = new TextInputCell();
+        Column<Employee, String> firstName = new Column<Employee, String>(firstNameCell) {
+            @Override
+            public String getValue(Employee employee) {
+                return employee.getFirstName();
+            }
+        };
+
+        table.addColumn(firstName, CONSTANTS.employeeTableFirstName());
+
+        firstName.setFieldUpdater((index, row, value) -> {
+            if (value == null || value.isEmpty()) {
+                Window.alert(CONSTANTS.employeeTableFirstNameNotNull());
+                return;
+            } else if (value.matches(CHECK_ONLY_LETTERS)) {
+                Window.alert(CONSTANTS.employeeTableFirstNameOnlyLetters());
+                return;
+            } else if (!row.isReadyToSave()) {
+                row.setFirstName(value);
+                return;
+            }
+            row.setFirstName(value);
+            updateEmployee(row);
+        });
     }
 
     private void updateEmployee(Employee employee) {
