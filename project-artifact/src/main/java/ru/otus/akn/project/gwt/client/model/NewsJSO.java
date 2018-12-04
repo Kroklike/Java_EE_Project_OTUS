@@ -7,7 +7,11 @@ public class NewsJSO extends JavaScriptObject {
     protected NewsJSO() {
     }
 
-    public final native String getTitle() /*-{ return this.title; }-*/;
+    public final native String getTitle() /*-{
+        return this.title;
+    }-*/;
 
-    public final native String getUrl() /*-{ return this.url; }-*/;
+    public final native String getUrl() /*-{
+        return this.url;
+    }-*/;
 }

@@ -157,6 +157,9 @@ public interface ApplicationConstants extends Constants {
     @Key("logon.button")
     String logonButton();
 
+    @Key("login.success")
+    String loginSuccess();
+
     @Key("employee.table.first.name")
     String employeeTableFirstName();
 

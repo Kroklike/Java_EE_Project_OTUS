@@ -456,7 +456,7 @@ public class CenterBlock extends Composite {
 
             @Override
             public void onSuccess(Void result) {
-                Window.alert("Вход успешен!");
+                Window.alert(CONSTANTS.loginSuccess());
                 mainBlock.showWidget(EMPLOYEE_LIST_LINK_INDEX);
 
                 updateDataGrid();
