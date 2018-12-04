@@ -13,6 +13,8 @@ public interface EmployeeService extends RemoteService {
 
     void deleteEmployeeById(Long employeeId);
 
+    void addNewEmployee(Employee employee);
+
     void updateEmployee(Employee employee);
 
 }

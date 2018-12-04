@@ -4,7 +4,6 @@ import com.google.gwt.user.client.rpc.IsSerializable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 
 import java.math.BigDecimal;
 
@@ -14,15 +13,18 @@ import java.math.BigDecimal;
 public class Employee implements IsSerializable {
 
     private Long id;
-    @NonNull
     private String firstName;
-    @NonNull
     private String lastName;
     private String middleName;
-    @NonNull
     private String departmentName;
-    @NonNull
     private String positionName;
-    @NonNull
     private BigDecimal salary;
+
+    public boolean isReadyToSave() {
+        return (firstName != null && !firstName.isEmpty()) &&
+                (lastName != null && !lastName.isEmpty()) &&
+                (departmentName != null && !departmentName.isEmpty()) &&
+                (positionName != null && !positionName.isEmpty()) &&
+                salary != null;
+    }
 }

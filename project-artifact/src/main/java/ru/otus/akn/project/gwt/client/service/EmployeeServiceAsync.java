@@ -12,4 +12,6 @@ public interface EmployeeServiceAsync {
     void deleteEmployeeById(Long employeeId, AsyncCallback<Void> async);
 
     void updateEmployee(Employee employee, AsyncCallback<Void> async);
+
+    void addNewEmployee(Employee employee, AsyncCallback<Void> async);
 }

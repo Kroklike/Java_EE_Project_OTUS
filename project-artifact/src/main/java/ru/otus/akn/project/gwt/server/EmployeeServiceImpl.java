@@ -43,6 +43,20 @@ public class EmployeeServiceImpl extends RemoteServiceServlet implements Employe
     }
 
     @Override
+    public void addNewEmployee(Employee employee) {
+        try {
+            new EntityManagerControl(MANAGER_FACTORY) {
+                @Override
+                public void requestMethod(EntityManager manager) {
+                    addNewEmployeeEntity(manager, employee);
+                }
+            }.processRequest();
+        } catch (Exception e) {
+            throw new RuntimeException("Something went wrong when tried to add employee entity.", e);
+        }
+    }
+
+    @Override
     public void updateEmployee(Employee employee) {
         try {
             new EntityManagerControl(MANAGER_FACTORY) {
@@ -52,7 +66,7 @@ public class EmployeeServiceImpl extends RemoteServiceServlet implements Employe
                 }
             }.processRequest();
         } catch (Exception e) {
-            throw new RuntimeException("Something went wrong when tried to update employee entity from DB by id.", e);
+            throw new RuntimeException("Something went wrong when tried to update employee entity by id.", e);
         }
     }
 

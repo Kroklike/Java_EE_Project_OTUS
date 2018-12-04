@@ -109,11 +109,12 @@ public class CenterBlock extends Composite {
         firstName.setFieldUpdater((index, row, value) -> {
             if (value == null || value.isEmpty()) {
                 Window.alert("Имя должно быть заполнено");
-                updateDataGrid();
                 return;
             } else if (value.matches(CHECK_ONLY_LETTERS)) {
                 Window.alert("Имя должно содержать только буквы");
-                updateDataGrid();
+                return;
+            } else if (!row.isReadyToSave()) {
+                row.setFirstName(value);
                 return;
             }
             row.setFirstName(value);
@@ -135,6 +136,9 @@ public class CenterBlock extends Composite {
             } else if (value.matches(CHECK_ONLY_LETTERS)) {
                 Window.alert("Фамилия должна содержать только буквы");
                 return;
+            } else if (!row.isReadyToSave()) {
+                row.setLastName(value);
+                return;
             }
             row.setLastName(value);
             updateEmployee(row);
@@ -151,7 +155,9 @@ public class CenterBlock extends Composite {
         middleName.setFieldUpdater((index, row, value) -> {
             if (value != null && !value.isEmpty() && value.matches(CHECK_ONLY_LETTERS)) {
                 Window.alert("Отчество должно содержать только буквы");
-                updateDataGrid();
+                return;
+            } else if (!row.isReadyToSave()) {
+                row.setMiddleName(value);
                 return;
             }
             row.setMiddleName(value);
@@ -168,6 +174,10 @@ public class CenterBlock extends Composite {
         table.addColumn(department, "Department");
 
         department.setFieldUpdater((index, employee, value) -> {
+            if (!employee.isReadyToSave()) {
+                employee.setDepartmentName(value);
+                return;
+            }
             employee.setDepartmentName(value);
             updateEmployee(employee);
         });
@@ -183,6 +193,10 @@ public class CenterBlock extends Composite {
         table.addColumn(position, "Position");
 
         position.setFieldUpdater((index, employee, value) -> {
+            if (!employee.isReadyToSave()) {
+                employee.setPositionName(value);
+                return;
+            }
             employee.setPositionName(value);
             updateEmployee(employee);
         });
@@ -198,7 +212,9 @@ public class CenterBlock extends Composite {
         salary.setFieldUpdater((index, row, value) -> {
             if (value.matches("[^0-9]*")) {
                 Window.alert("Зарплата должна состоять только из цифр");
-                updateDataGrid();
+                return;
+            } else if (!row.isReadyToSave()) {
+                row.setSalary(new BigDecimal(value));
                 return;
             }
             row.setSalary(new BigDecimal(value));
@@ -281,17 +297,31 @@ public class CenterBlock extends Composite {
     }
 
     private void updateEmployee(Employee employee) {
-        employeeService.updateEmployee(employee, new AsyncCallback<Void>() {
-            @Override
-            public void onFailure(Throwable caught) {
-                LOGGER.log(Level.SEVERE, caught.getLocalizedMessage());
-            }
+        if (employee.getId() == null) {
+            employeeService.addNewEmployee(employee, new AsyncCallback<Void>() {
+                @Override
+                public void onFailure(Throwable caught) {
+                    LOGGER.log(Level.SEVERE, caught.getLocalizedMessage());
+                }
 
-            @Override
-            public void onSuccess(Void result) {
-                updateDataGrid();
-            }
-        });
+                @Override
+                public void onSuccess(Void result) {
+                    updateDataGrid();
+                }
+            });
+        } else {
+            employeeService.updateEmployee(employee, new AsyncCallback<Void>() {
+                @Override
+                public void onFailure(Throwable caught) {
+                    LOGGER.log(Level.SEVERE, caught.getLocalizedMessage());
+                }
+
+                @Override
+                public void onSuccess(Void result) {
+                    updateDataGrid();
+                }
+            });
+        }
     }
 
     private void initNewsBlock() {
