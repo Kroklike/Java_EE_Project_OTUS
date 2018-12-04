@@ -232,6 +232,8 @@ public class CenterBlock extends Composite {
         table.addColumn(deleteBtn, "");
 
         deleteBtn.setFieldUpdater((index, employee, value) ->
+        {
+            if (employee.getId() != null) {
                 employeeService.deleteEmployeeById(employee.getId(),
                         new AsyncCallback<Void>() {
                             @Override
@@ -243,7 +245,11 @@ public class CenterBlock extends Composite {
                             public void onSuccess(Void result) {
                                 updateDataGrid();
                             }
-                        }));
+                        });
+            } else {
+                updateDataGrid();
+            }
+        });
 
         Column<Employee, String> addBtn = new Column<Employee, String>(
                 new ButtonCell()) {
