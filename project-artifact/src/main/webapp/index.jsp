@@ -1,3 +1,4 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
     <style>
@@ -41,5 +42,24 @@
         <td><h2>/getEmployeesWithMaxSalary</h2></td>
     </tr>
 </table>
+
+<%
+    Cookie[] cookies = request.getCookies();
+    boolean isVersionOk = true;
+    if (cookies != null) {
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals("BROWSER_OK")) {
+                isVersionOk = Boolean.parseBoolean(cookie.getValue());
+                break;
+            }
+        }
+    }
+    if (!isVersionOk) {
+%>
+<%@include file="oldBrowserVersion.jsp" %>
+<%
+    }
+%>
+
 </body>
 </html>

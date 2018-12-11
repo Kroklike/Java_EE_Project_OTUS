@@ -31,7 +31,7 @@ public class XPathServlet extends HttpServlet {
 
         try {
             builder = factory.newDocumentBuilder();
-            doc = builder.parse(getResourceFile(this, PATH_TO_XML_FILE));
+            doc = builder.parse(getResourceFile(this.getServletContext(), PATH_TO_XML_FILE));
 
             XPathFactory xPathFactory = XPathFactory.newInstance();
             XPath xPath = xPathFactory.newXPath();

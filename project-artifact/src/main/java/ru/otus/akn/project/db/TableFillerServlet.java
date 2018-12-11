@@ -62,7 +62,7 @@ public class TableFillerServlet extends HttpServlet {
             response.getWriter().println("Departments table have already filled");
             return;
         }
-        File departmentFile = getResourceFile(this, CSV_DEPARTMENTS);
+        File departmentFile = getResourceFile(this.getServletContext(), CSV_DEPARTMENTS);
         new TransactionQueryConsumer(em) {
             @Override
             public void needToProcessData() throws Exception {
@@ -86,7 +86,7 @@ public class TableFillerServlet extends HttpServlet {
             response.getWriter().println("Users table have already filled");
             return;
         }
-        File userFile = getResourceFile(this, CSV_USERS);
+        File userFile = getResourceFile(this.getServletContext(), CSV_USERS);
         new TransactionQueryConsumer(em) {
             @Override
             public void needToProcessData() throws Exception {
@@ -110,7 +110,7 @@ public class TableFillerServlet extends HttpServlet {
             response.getWriter().println("Positions table have already filled");
             return;
         }
-        File positionFile = getResourceFile(this, CSV_POSITIONS);
+        File positionFile = getResourceFile(this.getServletContext(), CSV_POSITIONS);
         new TransactionQueryConsumer(em) {
             @Override
             public void needToProcessData() throws Exception {
@@ -133,7 +133,7 @@ public class TableFillerServlet extends HttpServlet {
             response.getWriter().println("Employees table have already filled");
             return;
         }
-        File employeeFile = getResourceFile(this, CSV_EMPLOYEES);
+        File employeeFile = getResourceFile(this.getServletContext(), CSV_EMPLOYEES);
         new TransactionQueryConsumer(em) {
             @Override
             public void needToProcessData() throws Exception {

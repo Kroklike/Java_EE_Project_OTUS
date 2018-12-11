@@ -3,6 +3,7 @@ package ru.otus.akn.project.db.dao;
 import lombok.NonNull;
 import ru.otus.akn.project.db.entity.EmployeeEntity;
 import ru.otus.akn.project.gwt.shared.Employee;
+import ru.otus.akn.project.util.EntityManagerControl;
 import ru.otus.akn.project.util.TransactionQueryConsumer;
 
 import javax.persistence.EntityManager;
@@ -15,12 +16,23 @@ import java.util.stream.Collectors;
 
 import static ru.otus.akn.project.db.dao.DepartmentsDAO.getDepartmentEntity;
 import static ru.otus.akn.project.db.dao.PositionsDAO.getPositionEntity;
+import static ru.otus.akn.project.util.PersistenceUtil.MANAGER_FACTORY;
 
 public class EmployeesDAO {
 
     public static List<EmployeeEntity> getAllEmployeeEntities(EntityManager em) {
         Query employeeQ = em.createQuery("select employee from EmployeeEntity employee ");
         return (List<EmployeeEntity>) employeeQ.getResultList();
+    }
+
+    public static void deleteAllEmployeeEntities(EntityManager em) {
+        new TransactionQueryConsumer(em) {
+            @Override
+            public void needToProcessData() {
+                Query employeeQ = em.createQuery("delete from EmployeeEntity employee");
+                employeeQ.executeUpdate();
+            }
+        }.processQueryInTransaction();
     }
 
     public static void deleteEmployeeEntityById(EntityManager em, @NonNull Long empId) {
@@ -52,6 +64,22 @@ public class EmployeesDAO {
                 em.persist(employeeEntity);
             }
         }.processQueryInTransaction();
+    }
+
+    public static void saveAllEmployees(List<EmployeeEntity> employeeEntities) throws Exception {
+        new EntityManagerControl(MANAGER_FACTORY) {
+            @Override
+            public void requestMethod(EntityManager manager) {
+                new TransactionQueryConsumer(manager) {
+                    @Override
+                    public void needToProcessData() {
+                        for (EmployeeEntity employeeEntity : employeeEntities) {
+                            manager.persist(employeeEntity);
+                        }
+                    }
+                }.processQueryInTransaction();
+            }
+        }.processRequest();
     }
 
     public static void updateEmployeeEntity(EntityManager em, @NonNull Employee employee) {

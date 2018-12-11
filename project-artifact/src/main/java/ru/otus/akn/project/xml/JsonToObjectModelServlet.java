@@ -30,7 +30,7 @@ public class JsonToObjectModelServlet extends HttpServlet {
 
         try (PrintWriter pw = resp.getWriter();
              BufferedReader fileReader = new BufferedReader(
-                     new FileReader(getResourceFile(this, PATH_TO_JSON_FILE)))) {
+                     new FileReader(getResourceFile(this.getServletContext(), PATH_TO_JSON_FILE)))) {
 
             pw.println("Path to json file: " + PATH_TO_JSON_FILE);
             String jsonContent = getWholeStringFromFile(fileReader).toString();

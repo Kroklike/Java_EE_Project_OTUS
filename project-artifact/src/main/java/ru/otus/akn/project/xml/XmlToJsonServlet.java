@@ -29,11 +29,11 @@ public class XmlToJsonServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException {
         try (PrintWriter pw = resp.getWriter();
-             FileWriter fileWriterJson = new FileWriter(getResourceFile(this, PATH_TO_JSON_FILE));
+             FileWriter fileWriterJson = new FileWriter(getResourceFile(this.getServletContext(), PATH_TO_JSON_FILE));
              BufferedReader fileReaderJson = new BufferedReader(
-                     new FileReader(getResourceFile(this, PATH_TO_JSON_FILE)));
+                     new FileReader(getResourceFile(this.getServletContext(), PATH_TO_JSON_FILE)));
              BufferedReader fileReaderXml = new BufferedReader(
-                     new FileReader(getResourceFile(this, PATH_TO_XML_FILE)))) {
+                     new FileReader(getResourceFile(this.getServletContext(), PATH_TO_XML_FILE)))) {
 
             pw.println("Path to xml file: " + PATH_TO_XML_FILE);
             pw.println("Path to json file: " + PATH_TO_JSON_FILE);

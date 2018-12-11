@@ -38,6 +38,12 @@
     height: 300px;
     width: 300px;
 }
+
+.browser img {
+    height: 100px;
+    width: 100px;
+}
+
 .material-style-gwt {
     overflow: auto;
     display: flex;

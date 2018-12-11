@@ -87,6 +87,13 @@
       <version>${h2.version}</version>
       <scope>test</scope>
     </dependency>
+
+    <dependency>
+      <groupId>eu.bitwalker</groupId>
+      <artifactId>UserAgentUtils</artifactId>
+      <version>1.21</version>
+    </dependency>
+
   </dependencies>
 
   <!-- Oracle Maven Repository -->

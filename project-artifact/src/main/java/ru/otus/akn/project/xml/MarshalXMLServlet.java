@@ -61,9 +61,9 @@ public class MarshalXMLServlet extends HttpServlet {
         toMarshal.setEmployeeEntities(entitiesOrderById);
 
         try (PrintWriter pw = resp.getWriter();
-             FileWriter fileWriter = new FileWriter(getResourceFile(this, PATH_TO_XML_FILE));
+             FileWriter fileWriter = new FileWriter(getResourceFile(this.getServletContext(), PATH_TO_XML_FILE));
              BufferedReader fileReader = new BufferedReader(
-                     new FileReader(getResourceFile(this, PATH_TO_XML_FILE)))) {
+                     new FileReader(getResourceFile(this.getServletContext(), PATH_TO_XML_FILE)))) {
             JAXBContext context = JAXBContext.newInstance(EmployeesList.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, TRUE);
