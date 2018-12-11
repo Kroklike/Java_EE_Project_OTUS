@@ -19,7 +19,7 @@ public class DepartmentEntity {
     @SequenceGenerator(name = "DEPARTMENTS_SEQ", sequenceName = "DEPARTMENTS_SEQ", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "DEPARTMENTS_SEQ")
     @XmlAttribute(required = true)
-    private long departmentId;
+    private Long departmentId;
 
     @Basic
     @Column(name = "DEPARTMENT_NAME", nullable = false)

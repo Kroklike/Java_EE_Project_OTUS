@@ -69,7 +69,7 @@ public class ApplicationServletContextListener implements ServletContextListener
         if (!departmentOrPositionLoadingFailed) {
             try {
                 EmployeesList employeesList = unmarshallEntities(PATH_TO_EMPLOYEE_FILE, EmployeesList.class, servletContext);
-                saveAllEmployees(employeesList.getEmployeeEntities());
+                saveAllEmployees(employeesList.getEmployeeEntities(), true);
             } catch (Throwable throwable) {
                 LOGGER.log(Level.WARNING, "Got some problem when tried to unmarchall and upload objects", throwable);
             }
@@ -149,10 +149,9 @@ public class ApplicationServletContextListener implements ServletContextListener
         try (FileReader fileReader = new FileReader(getResourceFile(contextServlet, pathToFile))) {
             JAXBContext context = JAXBContext.newInstance(tClass);
             Unmarshaller unmarshaller = context.createUnmarshaller();
-            unmarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, TRUE);
             return (T) unmarshaller.unmarshal(fileReader);
         } catch (Exception e) {
-            throw new RuntimeException("Got exception when tried to marshal objects", e);
+            throw new RuntimeException("Got exception when tried to unmarshal objects", e);
         }
     }
 

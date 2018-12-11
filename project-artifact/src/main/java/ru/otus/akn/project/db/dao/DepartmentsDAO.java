@@ -43,6 +43,9 @@ public class DepartmentsDAO {
                     @Override
                     public void needToProcessData() {
                         for (DepartmentEntity departmentEntity : departmentEntities) {
+                            if (departmentEntity.getDepartmentId() != null) {
+                                departmentEntity.setDepartmentId(null);
+                            }
                             manager.persist(departmentEntity);
                         }
                     }

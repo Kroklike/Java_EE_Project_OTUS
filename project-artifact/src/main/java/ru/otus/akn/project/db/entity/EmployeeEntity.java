@@ -27,7 +27,7 @@ public class EmployeeEntity {
     @SequenceGenerator(name = "EMPLOYEES_SEQ", sequenceName = "EMPLOYEES_SEQ", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "EMPLOYEES_SEQ")
     @XmlAttribute(required = true)
-    private long employeeId;
+    private Long employeeId;
 
     @ManyToOne
     @JoinColumn(name = "POSITION_ID", nullable = false, foreignKey = @ForeignKey(name = "EMPLOYEE_POSITION_FK"))

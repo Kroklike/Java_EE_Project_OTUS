@@ -35,6 +35,9 @@ public class UsersDAO {
                     @Override
                     public void needToProcessData() {
                         for (UserEntity userEntity : userEntities) {
+                            if (userEntity.getUserId() != null) {
+                                userEntity.setUserId(null);
+                            }
                             manager.persist(userEntity);
                         }
                     }

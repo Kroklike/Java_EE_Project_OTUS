@@ -66,7 +66,7 @@ public class EmployeesDAO {
         }.processQueryInTransaction();
     }
 
-    public static void saveAllEmployees(List<EmployeeEntity> employeeEntities) throws Exception {
+    public static void saveAllEmployees(List<EmployeeEntity> employeeEntities, boolean fromContext) throws Exception {
         new EntityManagerControl(MANAGER_FACTORY) {
             @Override
             public void requestMethod(EntityManager manager) {
@@ -74,6 +74,15 @@ public class EmployeesDAO {
                     @Override
                     public void needToProcessData() {
                         for (EmployeeEntity employeeEntity : employeeEntities) {
+                            if (employeeEntity.getEmployeeId() != null) {
+                                employeeEntity.setEmployeeId(null);
+                            }
+                            if (fromContext) {
+                                employeeEntity.setPositionEntity(
+                                        getPositionEntity(manager, employeeEntity.getPositionEntity().getPositionName()));
+                                employeeEntity.setDepartmentEntity(
+                                        getDepartmentEntity(manager, employeeEntity.getDepartmentEntity().getDepartmentName()));
+                            }
                             manager.persist(employeeEntity);
                         }
                     }

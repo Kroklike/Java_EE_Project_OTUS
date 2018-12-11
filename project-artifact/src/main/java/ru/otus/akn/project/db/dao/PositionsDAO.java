@@ -43,6 +43,9 @@ public class PositionsDAO {
                     @Override
                     public void needToProcessData() {
                         for (PositionEntity positionEntity : positionEntities) {
+                            if (positionEntity.getPositionId() != null) {
+                                positionEntity.setPositionId(null);
+                            }
                             manager.persist(positionEntity);
                         }
                     }
