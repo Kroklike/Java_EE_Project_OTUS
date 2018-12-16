@@ -59,6 +59,13 @@ public class EmployeeEntity {
     private LocalDate employmentDate;
 
     @Basic
+    @Column(name = "BIRTHDAY_DATE", nullable = false)
+    @XmlElement(required = true)
+    @XmlJavaTypeAdapter(DateTimeAdapter.class)
+    @JsonbDateFormat(value = DATE_FORMAT)
+    private LocalDate birthdayDate;
+
+    @Basic
     @Column(name = "SALARY", nullable = false)
     @XmlElement(required = true)
     private BigDecimal salary;

@@ -93,6 +93,7 @@ public class MarshalXMLServlet extends HttpServlet {
         testEmployee.setEmployeeId(1L);
         testEmployee.setBonusPercent(new BigDecimal(30));
         testEmployee.setEmploymentDate(LocalDate.now());
+        testEmployee.setBirthdayDate(LocalDate.now());
         return testEmployee;
     }
 }

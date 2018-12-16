@@ -160,6 +160,9 @@ public interface ApplicationConstants extends Constants {
     @Key("login.success")
     String loginSuccess();
 
+    @Key("employee.table.search.form")
+    String employeeTableSearchForm();
+
     @Key("employee.table.first.name")
     String employeeTableFirstName();
 
@@ -190,11 +193,38 @@ public interface ApplicationConstants extends Constants {
     @Key("employee.table.position")
     String employeeTablePosition();
 
+    @Key("employee.table.position.only.letters")
+    String employeeTablePositionOnlyLetters();
+
+    @Key("employee.table.town.only.letters")
+    String employeeTableTownOnlyLetters();
+
     @Key("employee.table.salary")
     String employeeTableSalary();
 
+    @Key("employee.table.town")
+    String employeeTableTown();
+
+    @Key("employee.table.age.from")
+    String employeeTableAgeFrom();
+
+    @Key("employee.table.age.from.only.numbers")
+    String employeeTableAgeFromOnlyNumbers();
+
+    @Key("employee.table.age.to")
+    String employeeTableAgeTo();
+
+    @Key("employee.table.age.to.only.numbers")
+    String employeeTableAgeToOnlyNumbers();
+
+    @Key("employee.table.age.from.to.compare")
+    String employeeTableAgeFromToCompare();
+
     @Key("employee.table.salary.only.numbers")
     String employeeTableSalaryOnlyNumbers();
+
+    @Key("employee.table.find")
+    String employeeTableFind();
 
     String title();
 

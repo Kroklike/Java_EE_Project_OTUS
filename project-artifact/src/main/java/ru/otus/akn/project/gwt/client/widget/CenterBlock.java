@@ -24,10 +24,7 @@ import ru.otus.akn.project.gwt.client.service.AuthorisationServiceAsync;
 import ru.otus.akn.project.gwt.client.service.DepartmentServiceAsync;
 import ru.otus.akn.project.gwt.client.service.EmployeeServiceAsync;
 import ru.otus.akn.project.gwt.client.service.PositionServiceAsync;
-import ru.otus.akn.project.gwt.shared.Department;
-import ru.otus.akn.project.gwt.shared.Employee;
-import ru.otus.akn.project.gwt.shared.Position;
-import ru.otus.akn.project.gwt.shared.User;
+import ru.otus.akn.project.gwt.shared.*;
 import ru.otus.akn.project.gwt.shared.exception.WrongCredentialsException;
 
 import java.math.BigDecimal;
@@ -48,6 +45,7 @@ public class CenterBlock extends Composite {
     public static final int PRICES_LINK_INDEX = 4;
     public static final int PROJECTS_LINK_INDEX = 5;
     private static final String CHECK_ONLY_LETTERS = "[^a-zA-Zа-яА-Я]*";
+    private static final String CHECK_ONLY_LETTERS_AND_SPACE = "[^a-zA-Zа-яА-Я ]*";
     private static final String ONLY_NUMBERS_CHECK = "[^0-9]*";
 
     @UiTemplate("CenterBlock.ui.xml")
@@ -74,7 +72,7 @@ public class CenterBlock extends Composite {
     @UiField
     TextBox passwordTextField;
     @UiField
-    SimpleLayoutPanel employeePanel;
+    FlowPanel employeePanel;
 
     @Inject
     public CenterBlock() {
@@ -94,7 +92,11 @@ public class CenterBlock extends Composite {
 
     private void initTableBlock() {
 
+        DecoratorPanel searchPanel = new DecoratorPanel();
+        searchPanel.add(formSearchArea());
+
         DataGrid<Employee> table = new DataGrid<>();
+        table.setSize("100%", "100%");
         table.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.ENABLED);
 
         initFirstNameColumn(table);
@@ -141,7 +143,115 @@ public class CenterBlock extends Composite {
             }
         });
 
+        employeePanel.add(searchPanel);
         employeePanel.add(table);
+    }
+
+    private FlexTable formSearchArea() {
+        FlexTable layout = new FlexTable();
+        layout.setCellSpacing(6);
+
+        FlexTable.FlexCellFormatter cellFormatter = layout.getFlexCellFormatter();
+
+        layout.setHTML(0, 0, CONSTANTS.employeeTableSearchForm());
+        cellFormatter.setColSpan(0, 0, 2);
+        cellFormatter.setHorizontalAlignment(
+                0, 0, HasHorizontalAlignment.ALIGN_CENTER);
+
+        layout.setHTML(1, 0, CONSTANTS.employeeTableFirstName() + ":");
+        TextArea firstNameArea = new TextArea();
+        layout.setWidget(1, 1, firstNameArea);
+        layout.setHTML(1, 2, CONSTANTS.employeeTableLastName() + ":");
+        TextArea lastNameArea = new TextArea();
+        layout.setWidget(1, 3, lastNameArea);
+        layout.setHTML(1, 4, CONSTANTS.employeeTableMiddleName() + ":");
+        TextArea middleNameArea = new TextArea();
+        layout.setWidget(1, 5, middleNameArea);
+        layout.setHTML(2, 0, CONSTANTS.employeeTablePosition() + ":");
+        TextArea positionArea = new TextArea();
+        layout.setWidget(2, 1, positionArea);
+        layout.setHTML(2, 2, CONSTANTS.employeeTableTown() + ":");
+        TextArea townArea = new TextArea();
+        layout.setWidget(2, 3, townArea);
+        layout.setHTML(3, 0, CONSTANTS.employeeTableAgeFrom() + ":");
+        TextArea ageAreaFrom = new TextArea();
+        layout.setWidget(3, 1, ageAreaFrom);
+        layout.setHTML(3, 2, CONSTANTS.employeeTableAgeTo() + ":");
+        TextArea ageAreaTo = new TextArea();
+        layout.setWidget(3, 3, ageAreaTo);
+        Button findButton = new Button(CONSTANTS.employeeTableFind());
+        layout.setWidget(4, 0, findButton);
+
+        findButton.addClickHandler(event -> {
+            StringBuilder errorsList = new StringBuilder();
+            if (!firstNameArea.getValue().isEmpty() &&
+                    firstNameArea.getValue().matches(CHECK_ONLY_LETTERS)) {
+                errorsList.append(CONSTANTS.employeeTableFirstNameOnlyLetters() + "\n");
+            }
+            if (!lastNameArea.getValue().isEmpty() &&
+                    lastNameArea.getValue().matches(CHECK_ONLY_LETTERS)) {
+                errorsList.append(CONSTANTS.employeeTableLastNameOnlyLetters() + "\n");
+            }
+            if (!middleNameArea.getValue().isEmpty() &&
+                    middleNameArea.getValue().matches(CHECK_ONLY_LETTERS)) {
+                errorsList.append(CONSTANTS.employeeTableMiddleNameOnlyLetters() + "\n");
+            }
+            if (!positionArea.getValue().isEmpty() &&
+                    positionArea.getValue().matches(CHECK_ONLY_LETTERS_AND_SPACE)) {
+                errorsList.append(CONSTANTS.employeeTablePositionOnlyLetters() + "\n");
+            }
+            if (!townArea.getValue().isEmpty() &&
+                    townArea.getValue().matches(CHECK_ONLY_LETTERS_AND_SPACE)) {
+                errorsList.append(CONSTANTS.employeeTableTownOnlyLetters() + "\n");
+            }
+            if (!ageAreaFrom.getValue().isEmpty() &&
+                    ageAreaFrom.getValue().matches(ONLY_NUMBERS_CHECK)) {
+                errorsList.append(CONSTANTS.employeeTableAgeFromOnlyNumbers() + "\n");
+            }
+            if (!ageAreaTo.getValue().isEmpty() &&
+                    ageAreaTo.getValue().matches(ONLY_NUMBERS_CHECK)) {
+                errorsList.append(CONSTANTS.employeeTableAgeToOnlyNumbers() + "\n");
+            }
+            if (!ageAreaFrom.getValue().isEmpty() && !ageAreaTo.getValue().isEmpty() &&
+                    !ageAreaFrom.getValue().matches(ONLY_NUMBERS_CHECK) && !ageAreaTo.getValue().matches(ONLY_NUMBERS_CHECK)) {
+                BigDecimal ageFrom = new BigDecimal(ageAreaFrom.getValue());
+                BigDecimal ageTo = new BigDecimal(ageAreaTo.getValue());
+                if (ageFrom.compareTo(ageTo) > 0) {
+                    errorsList.append(CONSTANTS.employeeTableAgeFromToCompare());
+                }
+            }
+            if (!errorsList.toString().isEmpty()) {
+                Window.alert(errorsList.toString());
+            } else {
+                Filter filter = new Filter();
+                filter.setFirstName(firstNameArea.getValue());
+                filter.setLastName(lastNameArea.getValue());
+                filter.setMiddleName(middleNameArea.getValue());
+                filter.setPosition(positionArea.getValue());
+                filter.setTown(townArea.getValue());
+                filter.setAgeFrom(ageAreaFrom.getValue());
+                filter.setAgeTo(ageAreaTo.getValue());
+                employeeService.findEmployee(filter, new AsyncCallback<List<Employee>>() {
+                    @Override
+                    public void onFailure(Throwable caught) {
+                        LOGGER.log(Level.SEVERE, caught.getLocalizedMessage());
+                    }
+
+                    @Override
+                    public void onSuccess(List<Employee> result) {
+                        StringBuilder resultS = new StringBuilder();
+                        for (Employee employee : result) {
+                            resultS.append(employee.getFirstName() + " " + employee.getLastName()
+                                    + " " + employee.getMiddleName() + " " + employee.getPositionName() + "\n");
+                        }
+
+                        Window.alert(resultS.toString());
+                    }
+                });
+            }
+        });
+
+        return layout;
     }
 
     private void initAddNewButton(DataGrid<Employee> table) {

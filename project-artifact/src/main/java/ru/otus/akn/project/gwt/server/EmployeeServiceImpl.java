@@ -4,6 +4,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import ru.otus.akn.project.db.entity.EmployeeEntity;
 import ru.otus.akn.project.gwt.client.service.EmployeeService;
 import ru.otus.akn.project.gwt.shared.Employee;
+import ru.otus.akn.project.gwt.shared.Filter;
 import ru.otus.akn.project.util.EntityManagerControl;
 import ru.otus.akn.project.util.EntityManagerControlGeneric;
 
@@ -82,6 +83,29 @@ public class EmployeeServiceImpl extends RemoteServiceServlet implements Employe
         } catch (Exception e) {
             throw new RuntimeException("Something went wrong when tried to delete employee entity from DB by id.", e);
         }
+    }
+
+    @Override
+    public List<Employee> findEmployee(Filter filter) {
+        List<EmployeeEntity> allEmployees;
+
+        try {
+            allEmployees = new EntityManagerControlGeneric<List<EmployeeEntity>>(MANAGER_FACTORY) {
+                @Override
+                public List<EmployeeEntity> requestMethod(EntityManager manager) {
+                    return getEmployeeEntitiesByFilter(manager, filter);
+                }
+            }.processRequest();
+        } catch (Exception e) {
+            throw new RuntimeException("Something went wrong when tried to get employee entities from DB by filter.", e);
+        }
+
+        List<Employee> result = new ArrayList<>();
+        for (EmployeeEntity entity : allEmployees) {
+            result.add(convertEmployeeEntityToEmployee(entity));
+        }
+
+        return result;
     }
 
     private Employee convertEmployeeEntityToEmployee(EmployeeEntity employeeEntity) {

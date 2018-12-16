@@ -21,7 +21,7 @@
         <td><h2>/fillTable</h2></td>
         <td><h2>/marshalEmployees</h2></td>
         <td><h2><a href="html/main.html">Go to web-page</a></h2></td>
-        <td><h2><a href="Project.html">Go to GWT-project</a></h2></td>
+        <td><h2><a href="Project.jsp">Go to GWT-project</a></h2></td>
     </tr>
     <tr>
         <td><h2>/cleanTable</h2></td>

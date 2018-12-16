@@ -1,8 +1,10 @@
 package ru.otus.akn.project.db.dao;
 
 import lombok.NonNull;
+import org.hibernate.criterion.MatchMode;
 import ru.otus.akn.project.db.entity.EmployeeEntity;
 import ru.otus.akn.project.gwt.shared.Employee;
+import ru.otus.akn.project.gwt.shared.Filter;
 import ru.otus.akn.project.util.EntityManagerControl;
 import ru.otus.akn.project.util.TransactionQueryConsumer;
 
@@ -10,6 +12,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.Period;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,6 +27,70 @@ public class EmployeesDAO {
     public static List<EmployeeEntity> getAllEmployeeEntities(EntityManager em) {
         Query employeeQ = em.createQuery("select employee from EmployeeEntity employee ");
         return (List<EmployeeEntity>) employeeQ.getResultList();
+    }
+
+    public static List<EmployeeEntity> getEmployeeEntitiesByFilter(EntityManager em, Filter filter) {
+        StringBuilder query = new StringBuilder("select employee from EmployeeEntity employee " +
+                " inner join employee.positionEntity inner join employee.departmentEntity " +
+                " where 1 = 1 ");
+
+        boolean firstNameCheck = !filter.getFirstName().isEmpty();
+        boolean lastNameCheck = !filter.getLastName().isEmpty();
+        boolean middleNameCheck = !filter.getMiddleName().isEmpty();
+        boolean positionCheck = !filter.getPosition().isEmpty();
+        boolean townCheck = !filter.getTown().isEmpty();
+        boolean ageCheckFrom = !filter.getAgeFrom().isEmpty();
+        boolean ageCheckTo = !filter.getAgeTo().isEmpty();
+
+        if (firstNameCheck) {
+            query.append(" AND employee.firstName LIKE :firstName ");
+        }
+        if (lastNameCheck) {
+            query.append(" AND employee.lastName LIKE :lastName ");
+        }
+        if (middleNameCheck) {
+            query.append(" AND (employee.middleName IS NOT NULL AND employee.middleName LIKE :middleName) ");
+        }
+        if (positionCheck) {
+            query.append(" AND employee.positionEntity.positionName LIKE :positionName");
+        }
+        if (townCheck) {
+            query.append(" AND (employee.departmentEntity.city IS NOT NULL AND employee.departmentEntity.city LIKE :townName)");
+        }
+
+        Query employeeQ = em.createQuery(query.toString());
+        if (firstNameCheck) {
+            employeeQ.setParameter("firstName", MatchMode.ANYWHERE.toMatchString(filter.getFirstName()));
+        }
+        if (lastNameCheck) {
+            employeeQ.setParameter("lastName", MatchMode.ANYWHERE.toMatchString(filter.getLastName()));
+        }
+        if (middleNameCheck) {
+            employeeQ.setParameter("middleName", MatchMode.ANYWHERE.toMatchString(filter.getMiddleName()));
+        }
+        if (positionCheck) {
+            employeeQ.setParameter("positionName", MatchMode.ANYWHERE.toMatchString(filter.getPosition()));
+        }
+        if (townCheck) {
+            employeeQ.setParameter("townName", MatchMode.ANYWHERE.toMatchString(filter.getTown()));
+        }
+
+        List<EmployeeEntity> employeeEntities = (List<EmployeeEntity>) employeeQ.getResultList();
+
+        LocalDate now = LocalDate.now();
+
+        List<EmployeeEntity> result = new ArrayList<>();
+        for (EmployeeEntity employeeEntity : employeeEntities) {
+            Period period = Period.between(employeeEntity.getBirthdayDate(), now);
+            int age = period.getYears();
+            if ((ageCheckFrom && age < new BigDecimal(filter.getAgeFrom()).intValue())
+                    || (ageCheckTo && age > new BigDecimal(filter.getAgeTo()).intValue())) {
+                continue;
+            }
+            result.add(employeeEntity);
+        }
+
+        return result;
     }
 
     public static void deleteAllEmployeeEntities(EntityManager em) {
@@ -58,6 +126,7 @@ public class EmployeesDAO {
                 }
                 employeeEntity.setSalary(employee.getSalary());
                 employeeEntity.setEmploymentDate(LocalDate.now());
+                employeeEntity.setBirthdayDate(LocalDate.now());
                 employeeEntity.setBonusPercent(BigDecimal.ZERO);
                 employeeEntity.setDepartmentEntity(getDepartmentEntity(em, employee.getDepartmentName()));
                 employeeEntity.setPositionEntity(getPositionEntity(em, employee.getPositionName()));

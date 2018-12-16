@@ -150,14 +150,16 @@ public class TableFillerServlet extends HttpServlet {
                         employeeEntity.setLastName(nextLine[3]);
                         employeeEntity.setEmploymentDate(nextLine[4].equals("SYSDATE") ? LocalDate.now() :
                                 LocalDate.parse(nextLine[4], formatter));
-                        employeeEntity.setSalary(new BigDecimal(nextLine[5]));
-                        employeeEntity.setBonusPercent(new BigDecimal(nextLine[6]));
-                        employeeEntity.setMiddleName(nextLine[7].equals("") ? null : nextLine[7]);
-                        employeeEntity.setTelephoneNumber(nextLine[8].equals("") ? null : nextLine[8]);
-                        employeeEntity.setEmail(nextLine[9].equals("") ? null : nextLine[9]);
-                        employeeEntity.setDismissalDate(nextLine[10].equals("") ? null :
-                                nextLine[10].equals("SYSDATE") ? LocalDate.now() :
-                                        LocalDate.parse(nextLine[10], formatter));
+                        employeeEntity.setBirthdayDate(nextLine[5].equals("SYSDATE") ? LocalDate.now() :
+                                LocalDate.parse(nextLine[5], formatter));
+                        employeeEntity.setSalary(new BigDecimal(nextLine[6]));
+                        employeeEntity.setBonusPercent(new BigDecimal(nextLine[7]));
+                        employeeEntity.setMiddleName(nextLine[8].equals("") ? null : nextLine[8]);
+                        employeeEntity.setTelephoneNumber(nextLine[9].equals("") ? null : nextLine[9]);
+                        employeeEntity.setEmail(nextLine[10].equals("") ? null : nextLine[10]);
+                        employeeEntity.setDismissalDate(nextLine[11].equals("") ? null :
+                                nextLine[11].equals("SYSDATE") ? LocalDate.now() :
+                                        LocalDate.parse(nextLine[11], formatter));
                         em.persist(employeeEntity);
                     }
                 }

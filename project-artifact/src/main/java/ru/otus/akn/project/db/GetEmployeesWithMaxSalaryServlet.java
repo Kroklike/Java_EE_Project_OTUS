@@ -47,7 +47,8 @@ public class GetEmployeesWithMaxSalaryServlet extends HttpServlet {
                     pw.print("TelephoneNumber: " + employee[9] + " ");
                     pw.print("Email: " + employee[10] + " ");
                     pw.print("DismissalDate: " + employee[11] + " ");
-                    pw.print("UserId: " + employee[12] + "}\n");
+                    pw.print("UserId: " + employee[12] + " ");
+                    pw.print("BirthdayDate: " + employee[13] + "}\n");
                 }
             }
         } catch (Exception e) {
