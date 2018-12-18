@@ -11,13 +11,16 @@ import ru.otus.akn.project.util.EntityManagerControlGeneric;
 import javax.persistence.EntityManager;
 import javax.servlet.annotation.WebServlet;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static ru.otus.akn.project.db.dao.EmployeesDAO.*;
 import static ru.otus.akn.project.util.PersistenceUtil.MANAGER_FACTORY;
 
 @WebServlet("/Project/EmployeeService")
 public class EmployeeServiceImpl extends RemoteServiceServlet implements EmployeeService {
+    private static final Map<Filter, List<EmployeeEntity>> cache = new HashMap<>();
 
     @Override
     public List<Employee> getAllEmployees() {
@@ -89,15 +92,20 @@ public class EmployeeServiceImpl extends RemoteServiceServlet implements Employe
     public List<Employee> findEmployee(Filter filter) {
         List<EmployeeEntity> allEmployees;
 
-        try {
-            allEmployees = new EntityManagerControlGeneric<List<EmployeeEntity>>(MANAGER_FACTORY) {
-                @Override
-                public List<EmployeeEntity> requestMethod(EntityManager manager) {
-                    return getEmployeeEntitiesByFilter(manager, filter);
-                }
-            }.processRequest();
-        } catch (Exception e) {
-            throw new RuntimeException("Something went wrong when tried to get employee entities from DB by filter.", e);
+        if (cache.get(filter) != null) {
+            allEmployees = cache.get(filter);
+        } else {
+            try {
+                allEmployees = new EntityManagerControlGeneric<List<EmployeeEntity>>(MANAGER_FACTORY) {
+                    @Override
+                    public List<EmployeeEntity> requestMethod(EntityManager manager) {
+                        return getEmployeeEntitiesByFilter(manager, filter);
+                    }
+                }.processRequest();
+                cache.put(filter, allEmployees);
+            } catch (Exception e) {
+                throw new RuntimeException("Something went wrong when tried to get employee entities from DB by filter.", e);
+            }
         }
 
         List<Employee> result = new ArrayList<>();
