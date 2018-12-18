@@ -1,0 +1,35 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<div class="header">
+    <div class="with-round-border">
+        <img src="../../images/logo.png" alt="logo">
+    </div>
+    <div class="with-round-border main-info">
+        <div>
+            <span class="description-block">Быстрый и качественный ремонт помещений</span>
+        </div>
+        <div class="description-item">
+            <span>Телефон 8 (098) 776-65-77</span>
+        </div>
+        <div class="description-item">
+            <span>Наш адрес: г. Москва, ул. Вавилова, д.66</span>
+        </div>
+        <form method="get" action="http://www.google.com/search">
+            <div class="search-form">
+                <table border="0" align="center" cellpadding="0">
+                    <tr>
+                        <td>
+                            <input type="text" name="q" size="50" style="color:#808080;"
+                                   maxlength="255" value="Поиск в Google по сайту..."
+                                   onfocus="if(this.value === this.defaultValue)this.value=''; this.style.color='black';"
+                                   onblur="if(this.value === '')this.value=this.defaultValue; "/>
+                        </td>
+                        <td>
+                            <input type="submit" value="Начать поиск!"/>
+                            <input type="hidden" name="sitesearch" value="mfr-group.com"/>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </form>
+    </div>
+</div>

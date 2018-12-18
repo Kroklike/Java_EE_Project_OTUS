@@ -239,13 +239,7 @@ public class CenterBlock extends Composite {
 
                     @Override
                     public void onSuccess(List<Employee> result) {
-                        StringBuilder resultS = new StringBuilder();
-                        for (Employee employee : result) {
-                            resultS.append(employee.getFirstName() + " " + employee.getLastName()
-                                    + " " + employee.getMiddleName() + " " + employee.getPositionName() + "\n");
-                        }
-
-                        Window.alert(resultS.toString());
+                        Window.open("http://localhost:8080/resultPage.jsp", "", "");
                     }
                 });
             }

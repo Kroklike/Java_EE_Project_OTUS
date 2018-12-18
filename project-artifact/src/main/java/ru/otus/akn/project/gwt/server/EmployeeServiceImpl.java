@@ -105,6 +105,8 @@ public class EmployeeServiceImpl extends RemoteServiceServlet implements Employe
             result.add(convertEmployeeEntityToEmployee(entity));
         }
 
+        this.getThreadLocalRequest().getSession().setAttribute("empList", allEmployees);
+
         return result;
     }
 
