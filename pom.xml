@@ -9,6 +9,8 @@
   <modules>
     <module>project-artifact</module>
     <module>sql-migrations</module>
+      <module>project-statistics</module>
+      <module>project-dao</module>
   </modules>
   <packaging>pom</packaging>
 

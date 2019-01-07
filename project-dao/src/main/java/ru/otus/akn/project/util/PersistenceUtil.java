@@ -1,5 +1,7 @@
 package ru.otus.akn.project.util;
 
+import org.hibernate.procedure.ParameterRegistration;
+
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 

@@ -3,8 +3,7 @@ package ru.otus.akn.project.db.dao;
 import lombok.NonNull;
 import org.hibernate.criterion.MatchMode;
 import ru.otus.akn.project.db.entity.EmployeeEntity;
-import ru.otus.akn.project.gwt.shared.Employee;
-import ru.otus.akn.project.gwt.shared.Filter;
+import ru.otus.akn.project.db.filters.EmployeeFilter;
 import ru.otus.akn.project.util.EntityManagerControl;
 import ru.otus.akn.project.util.TransactionQueryConsumer;
 
@@ -29,7 +28,7 @@ public class EmployeesDAO {
         return (List<EmployeeEntity>) employeeQ.getResultList();
     }
 
-    public static List<EmployeeEntity> getEmployeeEntitiesByFilter(EntityManager em, Filter filter) {
+    public static List<EmployeeEntity> getEmployeeEntitiesByFilter(EntityManager em, EmployeeFilter filter) {
         StringBuilder query = new StringBuilder("select employee from EmployeeEntity employee " +
                 " inner join employee.positionEntity inner join employee.departmentEntity " +
                 " where 1 = 1 ");
@@ -114,23 +113,16 @@ public class EmployeesDAO {
         }.processQueryInTransaction();
     }
 
-    public static void addNewEmployeeEntity(EntityManager em, @NonNull Employee employee) {
-        new TransactionQueryConsumer(em) {
+    public static void saveAllEmployees(EntityManager manager, List<EmployeeEntity> employeeEntities) {
+        new TransactionQueryConsumer(manager) {
             @Override
             public void needToProcessData() {
-                EmployeeEntity employeeEntity = new EmployeeEntity();
-                employeeEntity.setFirstName(employee.getFirstName());
-                employeeEntity.setLastName(employee.getLastName());
-                if (employee.getMiddleName() != null && !employee.getMiddleName().isEmpty()) {
-                    employeeEntity.setMiddleName(employee.getMiddleName());
+                for (EmployeeEntity employeeEntity : employeeEntities) {
+                    if (employeeEntity.getEmployeeId() != null) {
+                        employeeEntity.setEmployeeId(null);
+                    }
+                    manager.persist(employeeEntity);
                 }
-                employeeEntity.setSalary(employee.getSalary());
-                employeeEntity.setEmploymentDate(LocalDate.now());
-                employeeEntity.setBirthdayDate(LocalDate.now());
-                employeeEntity.setBonusPercent(BigDecimal.ZERO);
-                employeeEntity.setDepartmentEntity(getDepartmentEntity(em, employee.getDepartmentName()));
-                employeeEntity.setPositionEntity(getPositionEntity(em, employee.getPositionName()));
-                em.persist(employeeEntity);
             }
         }.processQueryInTransaction();
     }
@@ -160,7 +152,7 @@ public class EmployeesDAO {
         }.processRequest();
     }
 
-    public static void updateEmployeeEntity(EntityManager em, @NonNull Employee employee) {
+    public static void updateEmployeeEntity(EntityManager em, @NonNull EmployeeEntity employee) {
         new TransactionQueryConsumer(em) {
             @Override
             public void needToProcessData() {
@@ -171,10 +163,10 @@ public class EmployeesDAO {
                 employeeQ.setParameter("lastName", employee.getLastName());
                 employeeQ.setParameter("middleName", employee.getMiddleName().isEmpty() ?
                         null : employee.getMiddleName());
-                employeeQ.setParameter("department", getDepartmentEntity(em, employee.getDepartmentName()));
-                employeeQ.setParameter("position", getPositionEntity(em, employee.getPositionName()));
+                employeeQ.setParameter("department", employee.getDepartmentEntity());
+                employeeQ.setParameter("position", employee.getPositionEntity());
                 employeeQ.setParameter("salary", employee.getSalary());
-                employeeQ.setParameter("id", employee.getId());
+                employeeQ.setParameter("id", employee.getEmployeeId());
                 employeeQ.executeUpdate();
             }
         }.processQueryInTransaction();

@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="stat" uri="/stattags" %>
 <%@ page import="java.util.List"%>
 <% List eList = (List)session.getAttribute("empList");
     request.setAttribute("eList", eList);
@@ -37,6 +38,10 @@
 </div>
 
 <%@include file="html/common/footer.jsp" %>
+
+<div hidden>
+    <stat:stat pageName="resultPage.jsp"/>
+</div>
 
 </body>
 </html>

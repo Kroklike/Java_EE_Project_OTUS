@@ -2,6 +2,7 @@ package ru.otus.akn.project.gwt.server;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import ru.otus.akn.project.db.entity.EmployeeEntity;
+import ru.otus.akn.project.db.filters.EmployeeFilter;
 import ru.otus.akn.project.gwt.client.service.EmployeeService;
 import ru.otus.akn.project.gwt.shared.Employee;
 import ru.otus.akn.project.gwt.shared.Filter;
@@ -10,12 +11,13 @@ import ru.otus.akn.project.util.EntityManagerControlGeneric;
 
 import javax.persistence.EntityManager;
 import javax.servlet.annotation.WebServlet;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.*;
 
+import static ru.otus.akn.project.db.dao.DepartmentsDAO.getDepartmentEntity;
 import static ru.otus.akn.project.db.dao.EmployeesDAO.*;
+import static ru.otus.akn.project.db.dao.PositionsDAO.getPositionEntity;
 import static ru.otus.akn.project.util.PersistenceUtil.MANAGER_FACTORY;
 
 @WebServlet("/Project/EmployeeService")
@@ -52,7 +54,19 @@ public class EmployeeServiceImpl extends RemoteServiceServlet implements Employe
             new EntityManagerControl(MANAGER_FACTORY) {
                 @Override
                 public void requestMethod(EntityManager manager) {
-                    addNewEmployeeEntity(manager, employee);
+                    EmployeeEntity employeeEntity = new EmployeeEntity();
+                    employeeEntity.setFirstName(employee.getFirstName());
+                    employeeEntity.setLastName(employee.getLastName());
+                    if (employee.getMiddleName() != null && !employee.getMiddleName().isEmpty()) {
+                        employeeEntity.setMiddleName(employee.getMiddleName());
+                    }
+                    employeeEntity.setSalary(employee.getSalary());
+                    employeeEntity.setEmploymentDate(LocalDate.now());
+                    employeeEntity.setBirthdayDate(LocalDate.now());
+                    employeeEntity.setBonusPercent(BigDecimal.ZERO);
+                    employeeEntity.setDepartmentEntity(getDepartmentEntity(manager, employee.getDepartmentName()));
+                    employeeEntity.setPositionEntity(getPositionEntity(manager, employee.getPositionName()));
+                    saveAllEmployees(manager, Collections.singletonList(employeeEntity));
                 }
             }.processRequest();
         } catch (Exception e) {
@@ -66,7 +80,17 @@ public class EmployeeServiceImpl extends RemoteServiceServlet implements Employe
             new EntityManagerControl(MANAGER_FACTORY) {
                 @Override
                 public void requestMethod(EntityManager manager) {
-                    updateEmployeeEntity(manager, employee);
+                    EmployeeEntity employeeEntity = new EmployeeEntity();
+                    employeeEntity.setEmployeeId(employee.getId());
+                    employeeEntity.setFirstName(employee.getFirstName());
+                    employeeEntity.setLastName(employee.getLastName());
+                    if (employee.getMiddleName() != null && !employee.getMiddleName().isEmpty()) {
+                        employeeEntity.setMiddleName(employee.getMiddleName());
+                    }
+                    employeeEntity.setSalary(employee.getSalary());
+                    employeeEntity.setDepartmentEntity(getDepartmentEntity(manager, employee.getDepartmentName()));
+                    employeeEntity.setPositionEntity(getPositionEntity(manager, employee.getPositionName()));
+                    updateEmployeeEntity(manager, employeeEntity);
                 }
             }.processRequest();
         } catch (Exception e) {
@@ -99,7 +123,15 @@ public class EmployeeServiceImpl extends RemoteServiceServlet implements Employe
                 allEmployees = new EntityManagerControlGeneric<List<EmployeeEntity>>(MANAGER_FACTORY) {
                     @Override
                     public List<EmployeeEntity> requestMethod(EntityManager manager) {
-                        return getEmployeeEntitiesByFilter(manager, filter);
+                        EmployeeFilter employeeFilter = new EmployeeFilter();
+                        employeeFilter.setFirstName(filter.getFirstName());
+                        employeeFilter.setLastName(filter.getLastName());
+                        employeeFilter.setMiddleName(filter.getMiddleName());
+                        employeeFilter.setPosition(filter.getPosition());
+                        employeeFilter.setTown(filter.getTown());
+                        employeeFilter.setAgeFrom(filter.getAgeFrom());
+                        employeeFilter.setAgeTo(filter.getAgeTo());
+                        return getEmployeeEntitiesByFilter(manager, employeeFilter);
                     }
                 }.processRequest();
                 cache.put(filter, allEmployees);

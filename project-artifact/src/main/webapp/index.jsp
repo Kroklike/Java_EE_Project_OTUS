@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="stat" uri="/stattags" %>
 <html>
 <head>
     <style>
@@ -60,6 +61,10 @@
 <%
     }
 %>
+
+<div hidden>
+<stat:stat pageName="index.jsp"/>
+</div>
 
 </body>
 </html>

@@ -55,14 +55,14 @@ public class EmployeeEntity {
     @Column(name = "EMPLOYMENT_DATE", nullable = false)
     @XmlElement(required = true)
     @XmlJavaTypeAdapter(DateTimeAdapter.class)
-    @JsonbDateFormat(value = DATE_FORMAT)
+    @JsonbDateFormat(value = DateTimeAdapter.DATE_FORMAT)
     private LocalDate employmentDate;
 
     @Basic
     @Column(name = "BIRTHDAY_DATE", nullable = false)
     @XmlElement(required = true)
     @XmlJavaTypeAdapter(DateTimeAdapter.class)
-    @JsonbDateFormat(value = DATE_FORMAT)
+    @JsonbDateFormat(value = DateTimeAdapter.DATE_FORMAT)
     private LocalDate birthdayDate;
 
     @Basic
@@ -90,7 +90,7 @@ public class EmployeeEntity {
     @Basic
     @Column(name = "DISMISSAL_DATE")
     @XmlJavaTypeAdapter(DateTimeAdapter.class)
-    @JsonbDateFormat(value = DATE_FORMAT)
+    @JsonbDateFormat(value = DateTimeAdapter.DATE_FORMAT)
     private LocalDate dismissalDate;
 
     @OneToOne
