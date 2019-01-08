@@ -226,6 +226,9 @@ public interface ApplicationConstants extends Constants {
     @Key("employee.table.find")
     String employeeTableFind();
 
+    @Key("employee.table.stat")
+    String employeeTableStat();
+
     String title();
 
 }

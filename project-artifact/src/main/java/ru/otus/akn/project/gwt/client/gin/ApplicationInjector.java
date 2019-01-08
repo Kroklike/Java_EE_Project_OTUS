@@ -38,4 +38,6 @@ public interface ApplicationInjector extends Ginjector {
     DepartmentServiceAsync getDepartmentService();
 
     PositionServiceAsync getPositionService();
+
+    StatServiceAsync getStatService();
 }

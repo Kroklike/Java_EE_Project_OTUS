@@ -20,10 +20,7 @@ import com.google.inject.Inject;
 import ru.otus.akn.project.gwt.client.constants.ApplicationConstants;
 import ru.otus.akn.project.gwt.client.model.NewsItemCreator;
 import ru.otus.akn.project.gwt.client.model.PartnerItemCreator;
-import ru.otus.akn.project.gwt.client.service.AuthorisationServiceAsync;
-import ru.otus.akn.project.gwt.client.service.DepartmentServiceAsync;
-import ru.otus.akn.project.gwt.client.service.EmployeeServiceAsync;
-import ru.otus.akn.project.gwt.client.service.PositionServiceAsync;
+import ru.otus.akn.project.gwt.client.service.*;
 import ru.otus.akn.project.gwt.shared.*;
 import ru.otus.akn.project.gwt.shared.exception.WrongCredentialsException;
 
@@ -66,6 +63,7 @@ public class CenterBlock extends Composite {
     private EmployeeServiceAsync employeeService = INSTANCE.getEmployeeService();
     private DepartmentServiceAsync departmentService = INSTANCE.getDepartmentService();
     private PositionServiceAsync positionService = INSTANCE.getPositionService();
+    private StatServiceAsync statService = INSTANCE.getStatService();
     private DataGrid<Employee> employeeDataGrid;
 
     @UiField
@@ -189,6 +187,20 @@ public class CenterBlock extends Composite {
         layout.setWidget(3, 3, ageAreaTo);
         Button findButton = new Button(CONSTANTS.employeeTableFind());
         layout.setWidget(4, 0, findButton);
+        Button statButton = new Button(CONSTANTS.employeeTableStat());
+        layout.setWidget(4, 1, statButton);
+
+        statButton.addClickHandler(event -> statService.getStatisticInfo(new AsyncCallback<List<Statistic>>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                LOGGER.log(Level.SEVERE, caught.getLocalizedMessage());
+            }
+
+            @Override
+            public void onSuccess(List<Statistic> result) {
+                Window.open("http://localhost:8080/statPage.jsp", "", "");
+            }
+        }));
 
         findButton.addClickHandler(event -> {
             StringBuilder errorsList = new StringBuilder();
