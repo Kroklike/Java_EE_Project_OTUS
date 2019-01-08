@@ -44,6 +44,10 @@
     </tr>
 </table>
 
+<div hidden>
+<stat:stat pageName="index.jsp"/>
+</div>
+
 <%
     Cookie[] cookies = request.getCookies();
     boolean isVersionOk = true;
@@ -61,10 +65,6 @@
 <%
     }
 %>
-
-<div hidden>
-<stat:stat pageName="index.jsp"/>
-</div>
 
 </body>
 </html>

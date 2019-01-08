@@ -12,11 +12,14 @@ import javax.servlet.http.HttpFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-@WebFilter(filterName = "BrowserVersionFilter", urlPatterns = "/*")
+@WebFilter(filterName = "BrowserVersionFilter", urlPatterns = "/")
 public class BrowserVersionFilter extends HttpFilter {
 
     private static final String BROWSER_OK = "BROWSER_OK";
+    private static final Logger LOGGER = Logger.getLogger(BrowserVersionFilter.class.getSimpleName());
 
     @Override
     protected void doFilter(HttpServletRequest req, HttpServletResponse res, FilterChain chain) throws IOException, ServletException {
@@ -62,7 +65,11 @@ public class BrowserVersionFilter extends HttpFilter {
             }
         }
 
-        super.doFilter(req, res, chain);
+        try {
+            super.doFilter(req, res, chain);
+        } catch (Exception e) {
+            LOGGER.log(Level.WARNING, "Filtering exception", e);
+        }
     }
 
     private boolean CheckVersion(Version browserVersion, int i) {

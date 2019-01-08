@@ -45,6 +45,10 @@ public class StatisticServlet extends HttpServlet {
                 }
 
                 String pageName = (String) req.getAttribute("pageNameInfo");
+                if (pageName == null) {
+                    pageName = req.getParameter("pageName");
+                }
+                String finalPageName = pageName == null ? "unknown" : pageName;
 
                 UserAgent userAgent = UserAgent.parseUserAgentString(req.getHeader("User-Agent"));
                 Browser browser = userAgent.getBrowser();
@@ -59,7 +63,7 @@ public class StatisticServlet extends HttpServlet {
                                 .registerStoredProcedureParameter("p_stat_mark", String.class, ParameterMode.IN)
                                 .setParameter("p_stat_mark", resultStatMark)
                                 .registerStoredProcedureParameter("p_page_name", String.class, ParameterMode.IN)
-                                .setParameter("p_page_name", pageName == null ? "unknown" : pageName)
+                                .setParameter("p_page_name", finalPageName)
                                 .registerStoredProcedureParameter("p_ip_address", String.class, ParameterMode.IN)
                                 .setParameter("p_ip_address", !clientIp.isEmpty() ? clientIp : "unknown client ip")
                                 .registerStoredProcedureParameter("p_browser_info", String.class, ParameterMode.IN)

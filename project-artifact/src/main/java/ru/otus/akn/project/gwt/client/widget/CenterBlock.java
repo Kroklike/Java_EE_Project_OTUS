@@ -34,16 +34,23 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static ru.otus.akn.project.gwt.client.Project.fixStat;
 import static ru.otus.akn.project.gwt.client.gin.ApplicationInjector.INSTANCE;
 
 public class CenterBlock extends Composite {
 
     public static final int MAIN_LINK_INDEX = 0;
+    public static final String MAIN_PAGE_NAME = "MainPageGWT";
     public static final int ENTRANCE_LINK_INDEX = 1;
+    public static final String ENTRANCE_PAGE_NAME = "EntrancePageGWT";
     public static final int EMPLOYEE_LIST_LINK_INDEX = 2;
+    public static final String EMPLOYEE_PAGE_NAME = "EmployeePageGWT";
     public static final int MATERIAL_LINK_INDEX = 3;
+    public static final String MATERIAL_PAGE_NAME = "MaterialsPageGWT";
     public static final int PRICES_LINK_INDEX = 4;
+    public static final String PRICES_PAGE_NAME = "PricesPageGWT";
     public static final int PROJECTS_LINK_INDEX = 5;
+    public static final String PROJECTS_PAGE_NAME = "ProjectsPageGWT";
     private static final String CHECK_ONLY_LETTERS = "[^a-zA-Zа-яА-Я]*";
     private static final String CHECK_ONLY_LETTERS_AND_SPACE = "[^a-zA-Zа-яА-Я ]*";
     private static final String ONLY_NUMBERS_CHECK = "[^0-9]*";
@@ -87,6 +94,7 @@ public class CenterBlock extends Composite {
         initMaterialBlock();
         initTableBlock();
 
+        fixStat(MAIN_PAGE_NAME);
         mainBlock.showWidget(MAIN_LINK_INDEX);
     }
 
@@ -473,7 +481,10 @@ public class CenterBlock extends Composite {
         FlowPanel materialNewsDescription = new FlowPanel();
         materialNewsDescription.add(new Label(CONSTANTS.centerBlockNewsMaterialsFirstMessage()));
         Anchor materialsLink = new Anchor(CONSTANTS.centerBlockNewsMaterialsAnchorText());
-        materialsLink.addClickHandler(event -> mainBlock.showWidget(MATERIAL_LINK_INDEX));
+        materialsLink.addClickHandler(event -> {
+            fixStat(MATERIAL_PAGE_NAME);
+            mainBlock.showWidget(MATERIAL_LINK_INDEX);
+        });
         materialNewsDescription.add(materialsLink);
         materialNewsDescription.add(new Label(CONSTANTS.centerBlockNewsMaterialsSecondMessage()));
 
@@ -484,7 +495,10 @@ public class CenterBlock extends Composite {
         FlowPanel pricesDescription = new FlowPanel();
         pricesDescription.add(new Label(CONSTANTS.centerBlockNewsPricesMessage()));
         Anchor pricesLink = new Anchor(CONSTANTS.centerBlockNewsPricesAnchorText());
-        pricesLink.addClickHandler(event -> mainBlock.showWidget(PRICES_LINK_INDEX));
+        pricesLink.addClickHandler(event -> {
+            fixStat(PRICES_PAGE_NAME);
+            mainBlock.showWidget(PRICES_LINK_INDEX);
+        });
         pricesDescription.add(pricesLink);
 
         NewsItemCreator pricesNewsItem = new NewsItemCreator("../images/prices.jpg",
@@ -561,6 +575,7 @@ public class CenterBlock extends Composite {
             @Override
             public void onSuccess(Void result) {
                 Window.alert(CONSTANTS.loginSuccess());
+                fixStat(EMPLOYEE_PAGE_NAME);
                 mainBlock.showWidget(EMPLOYEE_LIST_LINK_INDEX);
 
                 updateDataGrid();
