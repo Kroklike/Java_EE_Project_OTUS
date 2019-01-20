@@ -1,10 +1,15 @@
 package ru.otus.akn.project.gwt.client.widget;
 
 import com.google.gwt.core.client.JsArray;
+import com.google.gwt.core.client.JsonUtils;
 import com.google.gwt.http.client.*;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.jsonp.client.JsonpRequestBuilder;
+import com.google.gwt.typedarrays.shared.ArrayBuffer;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
@@ -14,9 +19,13 @@ import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.Node;
 import com.google.gwt.xml.client.NodeList;
 import com.google.gwt.xml.client.XMLParser;
+import org.realityforge.gwt.websockets.client.WebSocket;
+import org.realityforge.gwt.websockets.client.WebSocketListener;
 import ru.otus.akn.project.gwt.client.constants.ApplicationConstants;
 import ru.otus.akn.project.gwt.client.model.NewsJSO;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -92,6 +101,7 @@ public class SideMenu extends Composite {
                             }
                         }
                         if (result.size() > 0) {
+                            currency.clear();
                             currency.add(new Label(CONSTANTS.sideMenuRates()));
                             String currencyInfo = "EUR " + result.get(EUR_KEY) +
                                     " | USD " + result.get(USD_KEY);
@@ -109,6 +119,80 @@ public class SideMenu extends Composite {
             LOGGER.log(Level.WARNING, "Something went wrong when tried to get currency rates", e);
         }
 
+        final WebSocket newsSocket = WebSocket.newWebSocketIfSupported();
+        if (newsSocket != null) {
+            newsSocket.setListener(new WebSocketListener() {
+                @Override
+                public void onOpen(@Nonnull WebSocket webSocket) {
+                }
+
+                @Override
+                public void onClose(@Nonnull WebSocket webSocket, boolean b, int i, @Nullable String s) {
+                }
+
+                @Override
+                public void onMessage(@Nonnull WebSocket webSocket, @Nonnull String s) {
+                    try {
+                        JSONObject resultMapNews = new JSONObject(JsonUtils.safeEval(s));
+                        news.clear();
+                        for (String title : resultMapNews.keySet()) {
+                            Anchor newsAnchor = new Anchor(title);
+                            newsAnchor.addStyleName("rbc-news-item-gwt");
+                            newsAnchor.setHref(getValueFromResult(resultMapNews.get(title)));
+                            news.add(newsAnchor);
+                        }
+                    } catch (Exception e) {
+                        Window.alert("Cannot deserialize news" + e.getLocalizedMessage());
+                    }
+                }
+
+                @Override
+                public void onMessage(@Nonnull WebSocket webSocket, @Nonnull ArrayBuffer arrayBuffer) {
+                }
+
+                @Override
+                public void onError(@Nonnull WebSocket webSocket) {
+                }
+            });
+            newsSocket.connect("ws://localhost:8080/news");
+        }
+
+        final WebSocket ratesSocket = WebSocket.newWebSocketIfSupported();
+        if (ratesSocket != null) {
+            ratesSocket.setListener(new WebSocketListener() {
+                @Override
+                public void onOpen(@Nonnull WebSocket webSocket) {
+                }
+
+                @Override
+                public void onClose(@Nonnull WebSocket webSocket, boolean b, int i, @Nullable String s) {
+                }
+
+                @Override
+                public void onMessage(@Nonnull WebSocket webSocket, @Nonnull String s) {
+                    try {
+                        JSONObject resultMapRates = new JSONObject(JsonUtils.safeEval(s));
+                        currency.clear();
+                        currency.add(new Label(CONSTANTS.sideMenuRates()));
+                        String currencyInfo = "EUR " + getValueFromResult(resultMapRates.get(EUR_KEY)) +
+                                " | USD " + getValueFromResult(resultMapRates.get(USD_KEY));
+                        currency.add(new Label(currencyInfo));
+                    } catch (Exception e) {
+                        Window.alert("Cannot deserialize rates" + e.getLocalizedMessage());
+                    }
+                }
+
+                @Override
+                public void onMessage(@Nonnull WebSocket webSocket, @Nonnull ArrayBuffer arrayBuffer) {
+                }
+
+                @Override
+                public void onError(@Nonnull WebSocket webSocket) {
+                }
+            });
+            ratesSocket.connect("ws://localhost:8080/rates");
+        }
+
         new JsonpRequestBuilder()
                 .requestObject(NEWS_SERVLET, new AsyncCallback<JsArray<NewsJSO>>() {
                     @Override
@@ -118,6 +202,7 @@ public class SideMenu extends Composite {
 
                     @Override
                     public void onSuccess(JsArray<NewsJSO> result) {
+                        news.clear();
                         for (int i = 0; i < result.length(); i++) {
                             NewsJSO newsJSO = result.get(i);
                             Anchor newsAnchor = new Anchor(newsJSO.getTitle());
@@ -127,5 +212,10 @@ public class SideMenu extends Composite {
                         }
                     }
                 });
+    }
+
+    private String getValueFromResult(JSONValue jsonValue) {
+        String result = jsonValue.toString();
+        return result.replaceAll("[\\[\\]\"]", "");
     }
 }
