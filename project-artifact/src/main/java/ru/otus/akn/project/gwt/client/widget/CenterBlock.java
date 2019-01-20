@@ -190,14 +190,14 @@ public class CenterBlock extends Composite {
         Button statButton = new Button(CONSTANTS.employeeTableStat());
         layout.setWidget(4, 1, statButton);
 
-        statButton.addClickHandler(event -> statService.getStatisticInfo(new AsyncCallback<List<Statistic>>() {
+        statButton.addClickHandler(event -> statService.getStatisticInfo(new AsyncCallback<Void>() {
             @Override
             public void onFailure(Throwable caught) {
                 LOGGER.log(Level.SEVERE, caught.getLocalizedMessage());
             }
 
             @Override
-            public void onSuccess(List<Statistic> result) {
+            public void onSuccess(Void aVoid) {
                 Window.open("http://localhost:8080/statPage.jsp", "", "");
             }
         }));

@@ -17,7 +17,7 @@ import javax.xml.xpath.XPathFactory;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
 
-import static ru.otus.akn.project.util.ResourceUtil.getResourceFile;
+import static ru.otus.akn.project.util.ResourceUtil.getFileAsInputStream;
 import static ru.otus.akn.project.xml.MarshalXMLServlet.PATH_TO_XML_FILE;
 
 @WebServlet("/xPathEmployeeSearching")
@@ -31,7 +31,7 @@ public class XPathServlet extends HttpServlet {
 
         try {
             builder = factory.newDocumentBuilder();
-            doc = builder.parse(getResourceFile(this.getServletContext(), PATH_TO_XML_FILE));
+            doc = builder.parse(getFileAsInputStream(this.getServletContext(), PATH_TO_XML_FILE));
 
             XPathFactory xPathFactory = XPathFactory.newInstance();
             XPath xPath = xPathFactory.newXPath();

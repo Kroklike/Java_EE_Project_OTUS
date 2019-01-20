@@ -10,12 +10,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.BufferedWriter;
 import java.io.PrintWriter;
 
 import static ru.otus.akn.project.util.FileUtils.getWholeStringFromFile;
-import static ru.otus.akn.project.util.ResourceUtil.getResourceFile;
+import static ru.otus.akn.project.util.ResourceUtil.getFileAsBufferedReader;
+import static ru.otus.akn.project.util.ResourceUtil.getFileAsBufferedWriter;
 import static ru.otus.akn.project.xml.MarshalXMLServlet.PATH_TO_XML_FILE;
 
 @WebServlet("/xmlToJsonConvert")
@@ -29,11 +29,9 @@ public class XmlToJsonServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException {
         try (PrintWriter pw = resp.getWriter();
-             FileWriter fileWriterJson = new FileWriter(getResourceFile(this.getServletContext(), PATH_TO_JSON_FILE));
-             BufferedReader fileReaderJson = new BufferedReader(
-                     new FileReader(getResourceFile(this.getServletContext(), PATH_TO_JSON_FILE)));
-             BufferedReader fileReaderXml = new BufferedReader(
-                     new FileReader(getResourceFile(this.getServletContext(), PATH_TO_XML_FILE)))) {
+             BufferedWriter writerJson = getFileAsBufferedWriter(this.getServletContext(), PATH_TO_JSON_FILE);
+             BufferedReader fileReaderJson = getFileAsBufferedReader(this.getServletContext(), PATH_TO_JSON_FILE);
+             BufferedReader fileReaderXml = getFileAsBufferedReader(this.getServletContext(), PATH_TO_XML_FILE)) {
 
             pw.println("Path to xml file: " + PATH_TO_XML_FILE);
             pw.println("Path to json file: " + PATH_TO_JSON_FILE);
@@ -45,8 +43,8 @@ public class XmlToJsonServlet extends HttpServlet {
             JSONObject employeesObject = xmlJsonObj.getJSONObject(EMPLOYEES_JSON_NAME);
             JSONObject employeeArray = employeesObject.getJSONObject(EMPLOYEE_JSON_ARRAY);
             replaceSingleElementToArrayIfNeed(employeeArray, employeesObject);
-            fileWriterJson.write(xmlJsonObj.toString(INDENT_FACTOR));
-            fileWriterJson.flush();
+            writerJson.write(xmlJsonObj.toString(INDENT_FACTOR));
+            writerJson.flush();
             pw.println("Employees list wrote successfully in json format.");
             pw.println("\nNow employee.json file contains: \n");
             pw.println(getWholeStringFromFile(fileReaderJson).toString());

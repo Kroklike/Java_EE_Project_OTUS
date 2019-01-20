@@ -1,6 +1,5 @@
 package ru.otus.akn.project.websockets;
 
-import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import java.util.Set;
 import java.util.concurrent.Executors;
@@ -15,7 +14,6 @@ public abstract class UpdatableSocket {
     protected Set<Session> allSessions;
     protected boolean isStarted = false;
 
-    @OnOpen
     public void onOpen(Session session) {
         allSessions = session.getOpenSessions();
 

@@ -12,14 +12,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static ru.otus.akn.project.util.FileUtils.getWholeStringFromFile;
-import static ru.otus.akn.project.util.ResourceUtil.getResourceFile;
+import static ru.otus.akn.project.util.ResourceUtil.getFileAsBufferedReader;
 import static ru.otus.akn.project.xml.XmlToJsonServlet.PATH_TO_JSON_FILE;
 
 @WebServlet("/jsonToObjectModel")
@@ -29,8 +28,7 @@ public class JsonToObjectModelServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         try (PrintWriter pw = resp.getWriter();
-             BufferedReader fileReader = new BufferedReader(
-                     new FileReader(getResourceFile(this.getServletContext(), PATH_TO_JSON_FILE)))) {
+             BufferedReader fileReader = getFileAsBufferedReader(this.getServletContext(), PATH_TO_JSON_FILE)) {
 
             pw.println("Path to json file: " + PATH_TO_JSON_FILE);
             String jsonContent = getWholeStringFromFile(fileReader).toString();

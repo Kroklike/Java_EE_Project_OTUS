@@ -10,13 +10,12 @@ import ru.otus.akn.project.util.EntityManagerControl;
 import ru.otus.akn.project.util.TransactionQueryConsumer;
 
 import javax.persistence.EntityManager;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileReader;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -28,7 +27,7 @@ import static ru.otus.akn.project.db.dao.PositionsDAO.getAllPositionEntities;
 import static ru.otus.akn.project.db.dao.PositionsDAO.getPositionEntity;
 import static ru.otus.akn.project.db.dao.UsersDAO.getAllUsersEntities;
 import static ru.otus.akn.project.util.PersistenceUtil.MANAGER_FACTORY;
-import static ru.otus.akn.project.util.ResourceUtil.getResourceFile;
+import static ru.otus.akn.project.util.ResourceUtil.getFileAsBufferedReader;
 
 @WebServlet("/fillTable")
 public class TableFillerServlet extends HttpServlet {
@@ -43,13 +42,14 @@ public class TableFillerServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException {
         try {
+            ServletContext servletContext = this.getServletContext();
             new EntityManagerControl(MANAGER_FACTORY) {
                 @Override
                 public void requestMethod(EntityManager manager) throws Exception {
-                    fillUpDepartmentsTable(response, manager);
-                    fillUpPositionsTable(response, manager);
-                    fillUpEmployeesTable(response, manager);
-                    fillUpUsersTable(response, manager);
+                    fillUpDepartmentsTable(response, manager, servletContext);
+                    fillUpPositionsTable(response, manager, servletContext);
+                    fillUpEmployeesTable(response, manager, servletContext);
+                    fillUpUsersTable(response, manager, servletContext);
                 }
             }.processRequest();
         } catch (Exception e) {
@@ -57,16 +57,15 @@ public class TableFillerServlet extends HttpServlet {
         }
     }
 
-    private void fillUpDepartmentsTable(HttpServletResponse response, EntityManager em) throws Exception {
+    private void fillUpDepartmentsTable(HttpServletResponse response, EntityManager em, ServletContext context) throws Exception {
         if (getAllDepartmentEntities(em).size() != 0) {
             response.getWriter().println("Departments table have already filled");
             return;
         }
-        File departmentFile = getResourceFile(this.getServletContext(), CSV_DEPARTMENTS);
         new TransactionQueryConsumer(em) {
             @Override
             public void needToProcessData() throws Exception {
-                try (CSVReader reader = new CSVReader(new FileReader(departmentFile), CSV_SPLITTER)) {
+                try (CSVReader reader = new CSVReader(getFileAsBufferedReader(context, CSV_DEPARTMENTS), CSV_SPLITTER)) {
                     String[] nextLine;
                     while ((nextLine = reader.readNext()) != null) {
                         DepartmentEntity departmentEntity = new DepartmentEntity();
@@ -81,16 +80,15 @@ public class TableFillerServlet extends HttpServlet {
         response.getWriter().println("Departments table filled");
     }
 
-    private void fillUpUsersTable(HttpServletResponse response, EntityManager em) throws Exception {
+    private void fillUpUsersTable(HttpServletResponse response, EntityManager em, ServletContext servletContext) throws Exception {
         if (getAllUsersEntities(em).size() != 0) {
             response.getWriter().println("Users table have already filled");
             return;
         }
-        File userFile = getResourceFile(this.getServletContext(), CSV_USERS);
         new TransactionQueryConsumer(em) {
             @Override
             public void needToProcessData() throws Exception {
-                try (CSVReader reader = new CSVReader(new FileReader(userFile), CSV_SPLITTER)) {
+                try (CSVReader reader = new CSVReader(getFileAsBufferedReader(servletContext, CSV_USERS), CSV_SPLITTER)) {
                     String[] nextLine;
                     while ((nextLine = reader.readNext()) != null) {
                         UserEntity userEntity = new UserEntity();
@@ -105,16 +103,15 @@ public class TableFillerServlet extends HttpServlet {
         response.getWriter().println("Users table filled");
     }
 
-    private void fillUpPositionsTable(HttpServletResponse response, EntityManager em) throws Exception {
+    private void fillUpPositionsTable(HttpServletResponse response, EntityManager em, ServletContext servletContext) throws Exception {
         if (getAllPositionEntities(em).size() != 0) {
             response.getWriter().println("Positions table have already filled");
             return;
         }
-        File positionFile = getResourceFile(this.getServletContext(), CSV_POSITIONS);
         new TransactionQueryConsumer(em) {
             @Override
             public void needToProcessData() throws Exception {
-                try (CSVReader reader = new CSVReader(new FileReader(positionFile), CSV_SPLITTER)) {
+                try (CSVReader reader = new CSVReader(getFileAsBufferedReader(servletContext, CSV_POSITIONS), CSV_SPLITTER)) {
                     String[] nextLine;
                     while ((nextLine = reader.readNext()) != null) {
                         PositionEntity positionEntity = new PositionEntity();
@@ -127,17 +124,16 @@ public class TableFillerServlet extends HttpServlet {
         response.getWriter().println("Positions table filled");
     }
 
-    private void fillUpEmployeesTable(HttpServletResponse response, EntityManager em) throws Exception {
+    private void fillUpEmployeesTable(HttpServletResponse response, EntityManager em, ServletContext servletContext) throws Exception {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_FORMAT);
         if (getAllEmployeeEntities(em).size() != 0) {
             response.getWriter().println("Employees table have already filled");
             return;
         }
-        File employeeFile = getResourceFile(this.getServletContext(), CSV_EMPLOYEES);
         new TransactionQueryConsumer(em) {
             @Override
             public void needToProcessData() throws Exception {
-                try (CSVReader reader = new CSVReader(new FileReader(employeeFile), CSV_SPLITTER)) {
+                try (CSVReader reader = new CSVReader(getFileAsBufferedReader(servletContext, CSV_EMPLOYEES), CSV_SPLITTER)) {
                     String[] nextLine;
                     while ((nextLine = reader.readNext()) != null) {
                         if (nextLine.length == 0) {

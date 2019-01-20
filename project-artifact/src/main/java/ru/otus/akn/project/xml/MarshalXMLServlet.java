@@ -15,8 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.BufferedWriter;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.net.URI;
@@ -30,7 +29,8 @@ import static java.lang.Boolean.TRUE;
 import static ru.otus.akn.project.db.dao.EmployeesDAO.getAllEmployeeEntitiesOrderById;
 import static ru.otus.akn.project.util.FileUtils.getWholeStringFromFile;
 import static ru.otus.akn.project.util.PersistenceUtil.MANAGER_FACTORY;
-import static ru.otus.akn.project.util.ResourceUtil.getResourceFile;
+import static ru.otus.akn.project.util.ResourceUtil.getFileAsBufferedReader;
+import static ru.otus.akn.project.util.ResourceUtil.getFileAsBufferedWriter;
 
 @WebServlet("/marshalEmployees")
 public class MarshalXMLServlet extends HttpServlet {
@@ -61,9 +61,8 @@ public class MarshalXMLServlet extends HttpServlet {
         toMarshal.setEmployeeEntities(entitiesOrderById);
 
         try (PrintWriter pw = resp.getWriter();
-             FileWriter fileWriter = new FileWriter(getResourceFile(this.getServletContext(), PATH_TO_XML_FILE));
-             BufferedReader fileReader = new BufferedReader(
-                     new FileReader(getResourceFile(this.getServletContext(), PATH_TO_XML_FILE)))) {
+             BufferedWriter fileWriter = getFileAsBufferedWriter(this.getServletContext(), PATH_TO_XML_FILE);
+             BufferedReader fileReader = getFileAsBufferedReader(this.getServletContext(), PATH_TO_XML_FILE)) {
             JAXBContext context = JAXBContext.newInstance(EmployeesList.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, TRUE);

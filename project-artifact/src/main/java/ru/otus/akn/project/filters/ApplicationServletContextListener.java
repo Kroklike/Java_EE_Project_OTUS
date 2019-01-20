@@ -19,8 +19,8 @@ import javax.servlet.annotation.WebListener;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -32,7 +32,8 @@ import static ru.otus.akn.project.db.dao.EmployeesDAO.*;
 import static ru.otus.akn.project.db.dao.PositionsDAO.*;
 import static ru.otus.akn.project.db.dao.UsersDAO.*;
 import static ru.otus.akn.project.util.PersistenceUtil.MANAGER_FACTORY;
-import static ru.otus.akn.project.util.ResourceUtil.getResourceFile;
+import static ru.otus.akn.project.util.ResourceUtil.getFileAsBufferedReader;
+import static ru.otus.akn.project.util.ResourceUtil.getFileAsBufferedWriter;
 
 @WebListener
 public class ApplicationServletContextListener implements ServletContextListener {
@@ -135,7 +136,7 @@ public class ApplicationServletContextListener implements ServletContextListener
     }
 
     private <T> void marshallEntities(String pathToFile, Class<T> tClass, ServletContext contextServlet, T listToSave) {
-        try (FileWriter fileWriter = new FileWriter(getResourceFile(contextServlet, pathToFile))) {
+        try (BufferedWriter fileWriter = getFileAsBufferedWriter(contextServlet, pathToFile)) {
             JAXBContext context = JAXBContext.newInstance(tClass);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, TRUE);
@@ -146,7 +147,7 @@ public class ApplicationServletContextListener implements ServletContextListener
     }
 
     private <T> T unmarshallEntities(String pathToFile, Class<T> tClass, ServletContext contextServlet) {
-        try (FileReader fileReader = new FileReader(getResourceFile(contextServlet, pathToFile))) {
+        try (BufferedReader fileReader = getFileAsBufferedReader(contextServlet, pathToFile)) {
             JAXBContext context = JAXBContext.newInstance(tClass);
             Unmarshaller unmarshaller = context.createUnmarshaller();
             return (T) unmarshaller.unmarshal(fileReader);
