@@ -8,18 +8,17 @@ import javax.xml.namespace.QName;
 
 
 /**
- * This object contains factory methods for each 
- * Java content interface and Java element interface 
- * generated in the ru.otus.akn.project.soap.salary.client package. 
- * <p>An ObjectFactory allows you to programatically 
- * construct new instances of the Java representation 
- * for XML content. The Java representation of XML 
- * content can consist of schema derived interfaces 
- * and classes representing the binding of schema 
- * type definitions, element declarations and model 
- * groups.  Factory methods for each of these are 
+ * This object contains factory methods for each
+ * Java content interface and Java element interface
+ * generated in the ru.otus.akn.project.soap.salary.client package.
+ * <p>An ObjectFactory allows you to programatically
+ * construct new instances of the Java representation
+ * for XML content. The Java representation of XML
+ * content can consist of schema derived interfaces
+ * and classes representing the binding of schema
+ * type definitions, element declarations and model
+ * groups.  Factory methods for each of these are
  * provided in this class.
- * 
  */
 @XmlRegistry
 public class ObjectFactory {
@@ -31,14 +30,12 @@ public class ObjectFactory {
 
     /**
      * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: ru.otus.akn.project.soap.salary.client
-     * 
      */
     public ObjectFactory() {
     }
 
     /**
      * Create an instance of {@link GetMaxEmployeesSalaryResponse }
-     * 
      */
     public GetMaxEmployeesSalaryResponse createGetMaxEmployeesSalaryResponse() {
         return new GetMaxEmployeesSalaryResponse();
@@ -46,7 +43,6 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link CalculateAverageSalary }
-     * 
      */
     public CalculateAverageSalary createCalculateAverageSalary() {
         return new CalculateAverageSalary();
@@ -54,7 +50,6 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link GetMaxEmployeesSalary }
-     * 
      */
     public GetMaxEmployeesSalary createGetMaxEmployeesSalary() {
         return new GetMaxEmployeesSalary();
@@ -62,7 +57,6 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link CalculateAverageSalaryResponse }
-     * 
      */
     public CalculateAverageSalaryResponse createCalculateAverageSalaryResponse() {
         return new CalculateAverageSalaryResponse();
@@ -70,7 +64,6 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link JAXBElement }{@code <}{@link GetMaxEmployeesSalaryResponse }{@code >}}
-     * 
      */
     @XmlElementDecl(namespace = "http://salary.soap.project.akn.otus.ru/", name = "getMaxEmployeesSalaryResponse")
     public JAXBElement<GetMaxEmployeesSalaryResponse> createGetMaxEmployeesSalaryResponse(GetMaxEmployeesSalaryResponse value) {
@@ -79,7 +72,6 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link JAXBElement }{@code <}{@link CalculateAverageSalaryResponse }{@code >}}
-     * 
      */
     @XmlElementDecl(namespace = "http://salary.soap.project.akn.otus.ru/", name = "calculateAverageSalaryResponse")
     public JAXBElement<CalculateAverageSalaryResponse> createCalculateAverageSalaryResponse(CalculateAverageSalaryResponse value) {
@@ -88,7 +80,6 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link JAXBElement }{@code <}{@link CalculateAverageSalary }{@code >}}
-     * 
      */
     @XmlElementDecl(namespace = "http://salary.soap.project.akn.otus.ru/", name = "calculateAverageSalary")
     public JAXBElement<CalculateAverageSalary> createCalculateAverageSalary(CalculateAverageSalary value) {
@@ -97,7 +88,6 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link JAXBElement }{@code <}{@link GetMaxEmployeesSalary }{@code >}}
-     * 
      */
     @XmlElementDecl(namespace = "http://salary.soap.project.akn.otus.ru/", name = "getMaxEmployeesSalary")
     public JAXBElement<GetMaxEmployeesSalary> createGetMaxEmployeesSalary(GetMaxEmployeesSalary value) {
