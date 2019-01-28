@@ -8,7 +8,7 @@
 </head>
 <body>
 
-<form id="taxResult" method="post" action="http://localhost:8080/taxCalculator">
+<form id="taxResult" method="post" action="${pageContext.request.contextPath}/taxCalculator">
     <div>
         <label for="income">Доходы (от реализации и внереализационные) нарастающим итогом с начала года:</label>
         <input type="number" id="income" step="0.01" name="income" autocomplete="off" placeholder="0,00"/>

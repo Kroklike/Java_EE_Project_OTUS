@@ -14,7 +14,7 @@
     <script src="libs/jquery/jquery-3.3.1.min.js"></script>
     <script src="libs/jquery.datetimepicker.js"></script>
     <script>
-        var webSocket = new WebSocket('ws://localhost:8080/statistic');
+        var webSocket = new WebSocket('ws://'+ ${pageContext.request.contextPath} + '/statistic');
         webSocket.onmessage = function (evt) {
             $("#stat").empty();
             var resultData = JSON.parse(evt.data);
@@ -31,7 +31,6 @@
                         + resultData[i].cookies + "</td><td>"
                         + resultData[i].requestedParams + "</td></tr>";
                 }
-                alert(txt);
                 $("#stat").append(txt);
             }
         };

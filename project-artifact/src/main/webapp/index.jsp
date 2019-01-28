@@ -31,28 +31,28 @@
         <td><h2>/xPathEmployeeSearching</h2></td>
         <td><h2></h2></td>
         <td><h2></h2></td>
-        <td><h2><a href="http://localhost:8080/salaryCalculatorMax">Get max salary among employees</a></h2></td>
+        <td><h2><a href="${pageContext.request.contextPath}/salaryCalculatorMax">Get max salary among employees</a></h2></td>
     </tr>
     <tr>
         <td><h2>/getEmployees</h2></td>
         <td><h2>/xmlToJsonConvert</h2></td>
         <td><h2></h2></td>
         <td><h2></h2></td>
-        <td><h2><a href="http://localhost:8080/salaryCalculatorAvg">Calculate employees's average salary</a></h2></td>
+        <td><h2><a href="${pageContext.request.contextPath}/salaryCalculatorAvg">Calculate employees's average salary</a></h2></td>
     </tr>
     <tr>
         <td><h2>/changeLastNameAndPosition</h2></td>
         <td><h2>/jsonToObjectModel</h2></td>
         <td><h2></h2></td>
         <td><h2></h2></td>
-        <td><h2><a href="http://localhost:8080/bankZScoreClient">Get Bank's Z-Score by years</a></h2></td>
+        <td><h2><a href="${pageContext.request.contextPath}/bankZScoreClient">Get Bank's Z-Score by years</a></h2></td>
     </tr>
     <tr>
         <td><h2>/deleteThreeEmployees</h2></td>
         <td><h2></h2></td>
         <td><h2></h2></td>
         <td><h2></h2></td>
-        <td><h2><a href="http://localhost:8080/broadEffExRateClient">Get Broad Effective Exchange Rate for Russia</a></h2></td>
+        <td><h2><a href="${pageContext.request.contextPath}/broadEffExRateClient">Get Broad Effective Exchange Rate for Russia</a></h2></td>
     </tr>
     <tr>
         <td><h2>/getEmployeesWithMaxSalary</h2></td>
