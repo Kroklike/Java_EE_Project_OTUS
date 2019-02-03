@@ -18,6 +18,7 @@
         <td><h3>HTML, CSS, JS</h3></td>
         <td><h3>GWT</h3></td>
         <td><h3>SOAP</h3></td>
+        <td><h3>REST</h3></td>
     </tr>
     <tr>
         <td><h2>/fillTable</h2></td>
@@ -25,6 +26,7 @@
         <td><h2><a href="html/main.html">Go to web-page</a></h2></td>
         <td><h2><a href="Project.jsp">Go to GWT-project</a></h2></td>
         <td><h2><a href="calculateProfitTax.jsp">Calculate profit tax</a></h2></td>
+        <td><h2><a href="paymentCalculator.jsp">Calculate payments</a></h2></td>
     </tr>
     <tr>
         <td><h2>/cleanTable</h2></td>
