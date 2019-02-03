@@ -133,6 +133,11 @@ textarea {
     width: auto;
 }
 
+.departments img {
+    height: 30px;
+    width: auto;
+}
+
 .news-text {
     display: flex;
     flex-direction: column;

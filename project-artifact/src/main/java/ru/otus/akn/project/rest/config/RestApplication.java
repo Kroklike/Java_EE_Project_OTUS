@@ -1,5 +1,6 @@
 package ru.otus.akn.project.rest.config;
 
+import ru.otus.akn.project.rest.DepartmentResource;
 import ru.otus.akn.project.rest.exception.RuntimeExceptionMapper;
 import ru.otus.akn.project.rest.filter.CorsFilter;
 import ru.otus.akn.project.rest.payments.AnnuityPayment;
@@ -39,6 +40,7 @@ public class RestApplication extends Application {
     private void registerResources() {
         register(AnnuityPayment.class);
         register(DifferentiatedPayment.class);
+        register(DepartmentResource.class);
     }
 
     public void register(Class clazz) {
