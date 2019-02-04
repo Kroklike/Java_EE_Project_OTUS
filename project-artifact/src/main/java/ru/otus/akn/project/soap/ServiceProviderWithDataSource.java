@@ -1,9 +1,9 @@
 package ru.otus.akn.project.soap;
 
-import com.sun.xml.internal.ws.util.ByteArrayDataSource;
 import org.json.JSONArray;
 
 import javax.activation.DataSource;
+import javax.mail.util.ByteArrayDataSource;
 import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.handler.MessageContext;
 import java.io.BufferedReader;

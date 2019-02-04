@@ -1,5 +1,7 @@
 package ru.otus.akn.project.rest.payments;
 
+import io.swagger.annotations.*;
+
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
@@ -11,10 +13,33 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.MediaType.TEXT_PLAIN;
 
 @Path("/calculator/v2")
+@Api(tags = "Calculator version 2")
+@SwaggerDefinition(
+        info = @Info(
+                title = "Swagger-generated RESTful API",
+                description = "RESTful Description",
+                version = "1.0.0",
+                termsOfService = "Free to use",
+                contact = @Contact(
+                        name = "Kirill Art", email = "IAMKIRART@gmail.com",
+                        url = "https://google.com"),
+                license = @License(
+                        name = "Apache 2.0",
+                        url = "http://www.apache.org")),
+        tags = {
+                @Tag(name = "Calculator version 2", description = "RESTful API to calculate annuity payment")
+        },
+        host = "localhost:8080",
+        basePath = "/api",
+        schemes = {SwaggerDefinition.Scheme.HTTP},
+        externalDocs = @ExternalDocs(
+                value = "Swagger REST",
+                url = "https://tinyurl.com/swagger-wlp"))
 public class AnnuityPayment implements PaymentCalculator {
 
     @GET
     @Path("/calculate")
+    @ApiOperation("Calculate annuity payment")
     @Produces(APPLICATION_JSON)
     @Override
     public Response calculatePayments(@QueryParam("numberOfPeriods") int numberOfPeriods,

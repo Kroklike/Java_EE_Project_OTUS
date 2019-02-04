@@ -1,5 +1,10 @@
 package ru.otus.akn.project.rest.payments;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.SwaggerDefinition;
+import io.swagger.annotations.Tag;
+
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
@@ -11,10 +16,15 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.MediaType.TEXT_PLAIN;
 
 @Path("/calculator/v1")
+@Api(tags = "Calculator version 1")
+@SwaggerDefinition(tags = {
+        @Tag(name = "Calculator version 1", description = "RESTful API to calculate differentiated payment")
+})
 public class DifferentiatedPayment implements PaymentCalculator {
 
     @GET
     @Path("/calculate")
+    @ApiOperation("Calculate differentiated payment")
     @Produces(APPLICATION_JSON)
     @Override
     public Response calculatePayments(@QueryParam("numberOfPeriods") int numberOfPeriods,

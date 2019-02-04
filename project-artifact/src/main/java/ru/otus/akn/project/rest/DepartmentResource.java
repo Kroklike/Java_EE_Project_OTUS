@@ -1,5 +1,9 @@
 package ru.otus.akn.project.rest;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.SwaggerDefinition;
+import io.swagger.annotations.Tag;
 import ru.otus.akn.project.db.entity.DepartmentEntity;
 import ru.otus.akn.project.rest.model.Department;
 import ru.otus.akn.project.util.EntityManagerControlGeneric;
@@ -16,9 +20,14 @@ import static ru.otus.akn.project.db.dao.DepartmentsDAO.*;
 import static ru.otus.akn.project.util.PersistenceUtil.MANAGER_FACTORY;
 
 @Path("/departments")
+@Api(tags = "Departments")
+@SwaggerDefinition(tags = {
+        @Tag(name = "Departments", description = "RESTful API to manage with departments")
+})
 public class DepartmentResource {
 
     @GET
+    @ApiOperation("Get all departments")
     public Response read() {
         List<DepartmentEntity> allDepartments;
 
@@ -41,6 +50,7 @@ public class DepartmentResource {
     }
 
     @GET
+    @ApiOperation("Get department by id")
     @Path("/{departmentId}")
     public Response read(@PathParam("departmentId") Long departmentId) {
         DepartmentEntity departmentEntity;
@@ -60,6 +70,7 @@ public class DepartmentResource {
     }
 
     @POST
+    @ApiOperation("Create department")
     public Response create(@Valid @BeanParam Department department) {
         DepartmentEntity saved;
         try {
@@ -71,6 +82,7 @@ public class DepartmentResource {
     }
 
     @PUT
+    @ApiOperation("Update department")
     @Path("/{departmentId}")
     public Response update(@PathParam("departmentId") Long id, @Valid @BeanParam Department department) {
         department.setDepartmentId(id);
@@ -83,6 +95,7 @@ public class DepartmentResource {
     }
 
     @DELETE
+    @ApiOperation("Delete department by id")
     @Path("/{departmentId}")
     public Response delete(@PathParam("departmentId") Long id) {
         try {

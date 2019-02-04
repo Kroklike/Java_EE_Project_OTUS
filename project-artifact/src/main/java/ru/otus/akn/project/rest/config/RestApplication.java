@@ -1,5 +1,7 @@
 package ru.otus.akn.project.rest.config;
 
+import io.swagger.jaxrs.listing.ApiListingResource;
+import io.swagger.jaxrs.listing.SwaggerSerializers;
 import ru.otus.akn.project.rest.DepartmentResource;
 import ru.otus.akn.project.rest.exception.RuntimeExceptionMapper;
 import ru.otus.akn.project.rest.filter.CorsFilter;
@@ -27,6 +29,7 @@ public class RestApplication extends Application {
         registerResources();
         registerExceptionMappers();
         registerFilters();
+        registerSwaggerClasses();
     }
 
     private void registerFilters() {
@@ -41,6 +44,11 @@ public class RestApplication extends Application {
         register(AnnuityPayment.class);
         register(DifferentiatedPayment.class);
         register(DepartmentResource.class);
+    }
+
+    private void registerSwaggerClasses() {
+        register(ApiListingResource.class);
+        register(SwaggerSerializers.class);
     }
 
     public void register(Class clazz) {

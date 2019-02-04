@@ -33,14 +33,18 @@
         <td><h2>/xPathEmployeeSearching</h2></td>
         <td><h2></h2></td>
         <td><h2></h2></td>
-        <td><h2><a href="${pageContext.request.contextPath}/salaryCalculatorMax">Get max salary among employees</a></h2></td>
+        <td><h2><a href="${pageContext.request.contextPath}/salaryCalculatorMax">Get max salary among employees</a></h2>
+        </td>
+        <td><h2><a href="departmentForm.jsp">Departments REST</a></h2></td>
     </tr>
     <tr>
         <td><h2>/getEmployees</h2></td>
         <td><h2>/xmlToJsonConvert</h2></td>
         <td><h2></h2></td>
         <td><h2></h2></td>
-        <td><h2><a href="${pageContext.request.contextPath}/salaryCalculatorAvg">Calculate employees's average salary</a></h2></td>
+        <td><h2><a href="${pageContext.request.contextPath}/salaryCalculatorAvg">Calculate employees's average
+            salary</a></h2></td>
+        <td><h2><a href="api-docs.jsp">Swagger docs</a></h2></td>
     </tr>
     <tr>
         <td><h2>/changeLastNameAndPosition</h2></td>
@@ -54,7 +58,8 @@
         <td><h2></h2></td>
         <td><h2></h2></td>
         <td><h2></h2></td>
-        <td><h2><a href="${pageContext.request.contextPath}/broadEffExRateClient">Get Broad Effective Exchange Rate for Russia</a></h2></td>
+        <td><h2><a href="${pageContext.request.contextPath}/broadEffExRateClient">Get Broad Effective Exchange Rate for
+            Russia</a></h2></td>
     </tr>
     <tr>
         <td><h2>/getEmployeesWithMaxSalary</h2></td>
@@ -62,7 +67,7 @@
 </table>
 
 <div hidden>
-<stat:stat pageName="index.jsp"/>
+    <stat:stat pageName="index.jsp"/>
 </div>
 
 <%
