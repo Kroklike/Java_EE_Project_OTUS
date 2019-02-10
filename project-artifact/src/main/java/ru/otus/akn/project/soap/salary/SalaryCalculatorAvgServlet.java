@@ -17,10 +17,10 @@ import java.io.PrintWriter;
 public class SalaryCalculatorAvgServlet extends HttpServlet {
 
     @WebServiceRef
-    SalaryCalculatorService calculatorService;
+    private SalaryCalculatorService calculatorService;
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         SalaryCalculatorProvider provider = calculatorService.getSalaryCalculatorProviderPort();
 
         String jsonResult = new Gson().toJson(provider.calculateAverageSalary());

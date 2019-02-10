@@ -1,13 +1,13 @@
 package ru.otus.akn.project.rest.payments;
 
 import io.swagger.annotations.*;
+import ru.otus.akn.project.ejb.api.stateless.PaymentCalculatorService;
 
+import javax.ejb.EJB;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import java.math.BigDecimal;
-import java.math.MathContext;
-import java.math.RoundingMode;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.MediaType.TEXT_PLAIN;
@@ -37,6 +37,9 @@ import static javax.ws.rs.core.MediaType.TEXT_PLAIN;
                 url = "https://tinyurl.com/swagger-wlp"))
 public class AnnuityPayment implements PaymentCalculator {
 
+    @EJB
+    private PaymentCalculatorService paymentCalculatorService;
+
     @GET
     @Path("/calculate")
     @ApiOperation("Calculate annuity payment")
@@ -54,18 +57,8 @@ public class AnnuityPayment implements PaymentCalculator {
                     .build());
         }
 
-        MathContext calculatingContext = new MathContext(8, RoundingMode.HALF_UP);
-        BigDecimal interestRateValue = interestRateByYear
-                .divide(TO_PERCENTS, calculatingContext)
-                .divide(MONTHS_IN_A_YEAR, calculatingContext);
-        BigDecimal result = BigDecimal.valueOf(1)
-                .add(interestRateValue, calculatingContext)
-                .pow(numberOfPeriods, calculatingContext);
-        result = BigDecimal.valueOf(1).divide(result, calculatingContext);
-        result = BigDecimal.valueOf(1).subtract(result, calculatingContext);
-        result = creditAmount.multiply(interestRateValue, calculatingContext)
-                .divide(result, calculatingContext).setScale(2, RoundingMode.HALF_UP);
-
+        BigDecimal result = paymentCalculatorService
+                .calculateAnnuityPayments(numberOfPeriods, creditAmount, interestRateByYear);
         return Response.status(200).entity(result).build();
     }
 }

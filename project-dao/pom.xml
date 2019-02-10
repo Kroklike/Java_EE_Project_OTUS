@@ -17,6 +17,4 @@
             <artifactId>gwt-user</artifactId>
         </dependency>
     </dependencies>
-
-
 </project>

@@ -59,11 +59,11 @@ public class CenterBlock extends Composite {
     private static final Logger LOGGER = Logger.getLogger(CenterBlock.class.getSimpleName());
     private static final ApplicationConstants CONSTANTS = INSTANCE.getConstants();
     private static CenterBlockUiBinder centerBlockUiBinder = INSTANCE.getCenterBlockUiBinder();
-    private AuthorisationServiceAsync authorisationService = INSTANCE.getAuthorisationService();
-    private EmployeeServiceAsync employeeService = INSTANCE.getEmployeeService();
-    private DepartmentServiceAsync departmentService = INSTANCE.getDepartmentService();
-    private PositionServiceAsync positionService = INSTANCE.getPositionService();
-    private StatServiceAsync statService = INSTANCE.getStatService();
+    private GWTAuthorisationServiceAsync authorisationService = INSTANCE.getAuthorisationService();
+    private GWTEmployeeServiceAsync employeeService = INSTANCE.getEmployeeService();
+    private GWTDepartmentServiceAsync departmentService = INSTANCE.getDepartmentService();
+    private GWTPositionServiceAsync positionService = INSTANCE.getPositionService();
+    private GWTStatServiceAsync statService = INSTANCE.getStatService();
     private DataGrid<Employee> employeeDataGrid;
 
     @UiField

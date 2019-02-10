@@ -4,13 +4,13 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.SwaggerDefinition;
 import io.swagger.annotations.Tag;
+import ru.otus.akn.project.ejb.api.stateless.PaymentCalculatorService;
 
+import javax.ejb.EJB;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import java.math.BigDecimal;
-import java.math.MathContext;
-import java.math.RoundingMode;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.MediaType.TEXT_PLAIN;
@@ -21,6 +21,9 @@ import static javax.ws.rs.core.MediaType.TEXT_PLAIN;
         @Tag(name = "Calculator version 1", description = "RESTful API to calculate differentiated payment")
 })
 public class DifferentiatedPayment implements PaymentCalculator {
+
+    @EJB
+    private PaymentCalculatorService paymentCalculatorService;
 
     @GET
     @Path("/calculate")
@@ -41,19 +44,11 @@ public class DifferentiatedPayment implements PaymentCalculator {
         }
 
         String[] output = new String[numberOfPeriods];
-        MathContext calculatingContext = new MathContext(8, RoundingMode.HALF_UP);
-        BigDecimal startValue = creditAmount.divide(BigDecimal.valueOf(numberOfPeriods), calculatingContext);
-        BigDecimal interestRateValue = interestRateByYear
-                .divide(TO_PERCENTS, calculatingContext)
-                .divide(MONTHS_IN_A_YEAR, calculatingContext)
-                .divide(BigDecimal.valueOf(numberOfPeriods), calculatingContext);
+        BigDecimal[] result = paymentCalculatorService
+                .calculateDifferentiatedPayments(numberOfPeriods, creditAmount, interestRateByYear);
 
         for (int i = 1; i <= numberOfPeriods; i++) {
-            int multiplyValue = numberOfPeriods - i + 1;
-            BigDecimal result = interestRateValue.multiply(BigDecimal.valueOf(multiplyValue), calculatingContext)
-                    .multiply(creditAmount, calculatingContext).add(startValue, calculatingContext);
-
-            output[i - 1] = i + " месяц: " + result.setScale(2, RoundingMode.HALF_UP);
+            output[i - 1] = i + " месяц: " + result[i - 1];
         }
         return Response.status(200).entity(output).build();
     }

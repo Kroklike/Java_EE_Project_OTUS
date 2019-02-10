@@ -18,11 +18,11 @@ public class ApplicationGinModule extends AbstractGinModule {
         bind(FooterUiBinder.class);
         bind(UnderHeaderMenuUiBinder.class);
         bind(CenterBlockUiBinder.class);
-        bind(AuthorisationService.class);
+        bind(GWTAuthorisationService.class);
         bind(SideMenuUiBinder.class);
-        bind(EmployeeService.class);
-        bind(DepartmentService.class);
-        bind(PositionService.class);
-        bind(StatService.class);
+        bind(GWTEmployeeService.class);
+        bind(GWTDepartmentService.class);
+        bind(GWTPositionService.class);
+        bind(GWTStatService.class);
     }
 }

@@ -1,9 +1,9 @@
 package ru.otus.akn.project.db;
 
 import ru.otus.akn.project.db.entity.EmployeeEntity;
-import ru.otus.akn.project.util.EntityManagerControlGeneric;
+import ru.otus.akn.project.ejb.api.stateless.EmployeesService;
 
-import javax.persistence.EntityManager;
+import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -12,21 +12,16 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
 import java.util.List;
 
-import static ru.otus.akn.project.db.dao.EmployeesDAO.getAllEmployeeEntitiesOrderById;
-import static ru.otus.akn.project.util.PersistenceUtil.MANAGER_FACTORY;
-
 @WebServlet("/getEmployees")
 public class GetEmployeeServlet extends HttpServlet {
+
+    @EJB
+    private EmployeesService employeesService;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException {
         try {
-            List<EmployeeEntity> entitiesOrderById = new EntityManagerControlGeneric<List<EmployeeEntity>>(MANAGER_FACTORY) {
-                @Override
-                public List<EmployeeEntity> requestMethod(EntityManager manager) {
-                    return getAllEmployeeEntitiesOrderById(manager);
-                }
-            }.processRequest();
+            List<EmployeeEntity> entitiesOrderById = employeesService.getAllEmployeeEntitiesOrderById();
             try (PrintWriter pw = response.getWriter()) {
                 entitiesOrderById.forEach(pw::println);
             }

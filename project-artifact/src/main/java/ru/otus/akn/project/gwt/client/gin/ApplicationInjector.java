@@ -29,15 +29,15 @@ public interface ApplicationInjector extends Ginjector {
 
     CenterBlockUiBinder getCenterBlockUiBinder();
 
-    AuthorisationServiceAsync getAuthorisationService();
+    GWTAuthorisationServiceAsync getAuthorisationService();
 
     SideMenuUiBinder getSideMenuUiBinder();
 
-    EmployeeServiceAsync getEmployeeService();
+    GWTEmployeeServiceAsync getEmployeeService();
 
-    DepartmentServiceAsync getDepartmentService();
+    GWTDepartmentServiceAsync getDepartmentService();
 
-    PositionServiceAsync getPositionService();
+    GWTPositionServiceAsync getPositionService();
 
-    StatServiceAsync getStatService();
+    GWTStatServiceAsync getStatService();
 }

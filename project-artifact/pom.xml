@@ -84,7 +84,7 @@
 
         <dependency>
             <groupId>ru.otus.akn.project</groupId>
-            <artifactId>project-dao</artifactId>
+            <artifactId>project-service</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
 

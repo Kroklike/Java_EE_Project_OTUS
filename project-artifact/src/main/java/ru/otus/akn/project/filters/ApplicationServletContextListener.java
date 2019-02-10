@@ -4,14 +4,16 @@ import ru.otus.akn.project.db.entity.DepartmentEntity;
 import ru.otus.akn.project.db.entity.EmployeeEntity;
 import ru.otus.akn.project.db.entity.PositionEntity;
 import ru.otus.akn.project.db.entity.UserEntity;
-import ru.otus.akn.project.util.EntityManagerControl;
-import ru.otus.akn.project.util.EntityManagerControlGeneric;
+import ru.otus.akn.project.ejb.api.stateless.DepartmentsService;
+import ru.otus.akn.project.ejb.api.stateless.EmployeesService;
+import ru.otus.akn.project.ejb.api.stateless.PositionsService;
+import ru.otus.akn.project.ejb.api.stateless.UsersService;
 import ru.otus.akn.project.xml.data.DepartmentsList;
 import ru.otus.akn.project.xml.data.EmployeesList;
 import ru.otus.akn.project.xml.data.PositionsList;
 import ru.otus.akn.project.xml.data.UsersList;
 
-import javax.persistence.EntityManager;
+import javax.ejb.EJB;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -21,17 +23,11 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static java.lang.Boolean.TRUE;
-import static ru.otus.akn.project.db.dao.DepartmentsDAO.*;
-import static ru.otus.akn.project.db.dao.EmployeesDAO.*;
-import static ru.otus.akn.project.db.dao.PositionsDAO.*;
-import static ru.otus.akn.project.db.dao.UsersDAO.*;
-import static ru.otus.akn.project.util.PersistenceUtil.MANAGER_FACTORY;
 import static ru.otus.akn.project.util.ResourceUtil.getFileAsBufferedReader;
 import static ru.otus.akn.project.util.ResourceUtil.getFileAsBufferedWriter;
 
@@ -44,6 +40,15 @@ public class ApplicationServletContextListener implements ServletContextListener
     private final static String PATH_TO_POSITION_FILE = "/WEB-INF/classes/xml-data/PositionData.xml";
     private final static String PATH_TO_USERS_FILE = "/WEB-INF/classes/xml-data/UsersData.xml";
 
+    @EJB
+    private DepartmentsService departmentsService;
+    @EJB
+    private PositionsService positionsService;
+    @EJB
+    private EmployeesService employeesService;
+    @EJB
+    private UsersService usersService;
+
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
 
@@ -53,7 +58,7 @@ public class ApplicationServletContextListener implements ServletContextListener
 
         try {
             DepartmentsList departmentsList = unmarshallEntities(PATH_TO_DEPARTMENT_FILE, DepartmentsList.class, servletContext);
-            saveAllDepartments(departmentsList.getDepartmentEntities());
+            departmentsService.saveAllDepartments(departmentsList.getDepartmentEntities());
         } catch (Throwable throwable) {
             departmentOrPositionLoadingFailed = true;
             LOGGER.log(Level.WARNING, "Got some problem when tried to unmarchall and upload objects", throwable);
@@ -61,7 +66,7 @@ public class ApplicationServletContextListener implements ServletContextListener
 
         try {
             PositionsList positionsList = unmarshallEntities(PATH_TO_POSITION_FILE, PositionsList.class, servletContext);
-            saveAllPositions(positionsList.getPositionEntities());
+            positionsService.saveAllPositions(positionsList.getPositionEntities());
         } catch (Throwable throwable) {
             departmentOrPositionLoadingFailed = true;
             LOGGER.log(Level.WARNING, "Got some problem when tried to unmarchall and upload objects", throwable);
@@ -70,7 +75,7 @@ public class ApplicationServletContextListener implements ServletContextListener
         if (!departmentOrPositionLoadingFailed) {
             try {
                 EmployeesList employeesList = unmarshallEntities(PATH_TO_EMPLOYEE_FILE, EmployeesList.class, servletContext);
-                saveAllEmployees(employeesList.getEmployeeEntities(), true);
+                employeesService.addAllEmployees(employeesList.getEmployeeEntities(), true);
             } catch (Throwable throwable) {
                 LOGGER.log(Level.WARNING, "Got some problem when tried to unmarchall and upload objects", throwable);
             }
@@ -78,7 +83,7 @@ public class ApplicationServletContextListener implements ServletContextListener
 
         try {
             UsersList usersList = unmarshallEntities(PATH_TO_USERS_FILE, UsersList.class, servletContext);
-            saveAllUsers(usersList.getUserEntities());
+            usersService.saveAllUsers(usersList.getUserEntities());
         } catch (Throwable throwable) {
             LOGGER.log(Level.WARNING, "Got some problem when tried to unmarchall and upload objects", throwable);
         }
@@ -90,15 +95,10 @@ public class ApplicationServletContextListener implements ServletContextListener
 
         try {
 
-            List<DepartmentEntity> departmentEntities = new ArrayList<>();
-            List<PositionEntity> positionEntities = new ArrayList<>();
-            List<EmployeeEntity> employeeEntities = new ArrayList<>();
-            List<UserEntity> userEntities = new ArrayList<>();
-
-            fillUpDepartmentEntities(departmentEntities);
-            fillUpPositionEntity(positionEntities);
-            fillUpEmployeeList(employeeEntities);
-            fillUpUserEntities(userEntities);
+            List<DepartmentEntity> departmentEntities = departmentsService.getAllDepartmentEntities();
+            List<PositionEntity> positionEntities = positionsService.getAllPositionEntities();
+            List<EmployeeEntity> employeeEntities = employeesService.getAllEmployeeEntitiesOrderById();
+            List<UserEntity> userEntities = usersService.getAllUsersEntities();
 
             ServletContext servletContext = servletContextEvent.getServletContext();
 
@@ -106,28 +106,28 @@ public class ApplicationServletContextListener implements ServletContextListener
                 EmployeesList employeesList = new EmployeesList();
                 employeesList.setEmployeeEntities(employeeEntities);
                 marshallEntities(PATH_TO_EMPLOYEE_FILE, EmployeesList.class, servletContext, employeesList);
-                deleteAllEmployees();
+                employeesService.deleteAllEmployeeEntities();
             }
 
             if (!userEntities.isEmpty()) {
                 UsersList usersList = new UsersList();
                 usersList.setUserEntities(userEntities);
                 marshallEntities(PATH_TO_USERS_FILE, UsersList.class, servletContext, usersList);
-                deleteAllUsers();
+                usersService.deleteAllUsersEntities();
             }
 
             if (!positionEntities.isEmpty()) {
                 PositionsList positionsList = new PositionsList();
                 positionsList.setPositionEntities(positionEntities);
                 marshallEntities(PATH_TO_POSITION_FILE, PositionsList.class, servletContext, positionsList);
-                deleteAllPositions();
+                positionsService.deleteAllPositionsEntities();
             }
 
             if (!departmentEntities.isEmpty()) {
                 DepartmentsList departmentsList = new DepartmentsList();
                 departmentsList.setDepartmentEntities(departmentEntities);
                 marshallEntities(PATH_TO_DEPARTMENT_FILE, DepartmentsList.class, servletContext, departmentsList);
-                deleteAllDepartments();
+                departmentsService.deleteAllDepartmentEntities();
             }
 
         } catch (Throwable throwable) {
@@ -153,110 +153,6 @@ public class ApplicationServletContextListener implements ServletContextListener
             return (T) unmarshaller.unmarshal(fileReader);
         } catch (Exception e) {
             throw new RuntimeException("Got exception when tried to unmarshal objects", e);
-        }
-    }
-
-    private void fillUpUserEntities(List<UserEntity> userEntities) {
-        try {
-            userEntities.addAll(new EntityManagerControlGeneric<List<UserEntity>>(MANAGER_FACTORY) {
-                @Override
-                public List<UserEntity> requestMethod(EntityManager manager) {
-                    return getAllUsersEntities(manager);
-                }
-            }.processRequest());
-        } catch (Exception e) {
-            LOGGER.log(Level.WARNING, "Got some problem when tried to get user objects from DB", e);
-        }
-    }
-
-    private void deleteAllUsers() {
-        try {
-            new EntityManagerControl(MANAGER_FACTORY) {
-                @Override
-                public void requestMethod(EntityManager manager) {
-                    deleteAllUsersEntities(manager);
-                }
-            }.processRequest();
-        } catch (Exception e) {
-            LOGGER.log(Level.WARNING, "Got some problem when tried to delete users from DB", e);
-        }
-    }
-
-    private void fillUpPositionEntity(List<PositionEntity> positionEntities) {
-        try {
-            positionEntities.addAll(new EntityManagerControlGeneric<List<PositionEntity>>(MANAGER_FACTORY) {
-                @Override
-                public List<PositionEntity> requestMethod(EntityManager manager) {
-                    return getAllPositionEntities(manager);
-                }
-            }.processRequest());
-        } catch (Exception e) {
-            LOGGER.log(Level.WARNING, "Got some problem when tried to get position objects from DB", e);
-        }
-    }
-
-    private void deleteAllPositions() {
-        try {
-            new EntityManagerControl(MANAGER_FACTORY) {
-                @Override
-                public void requestMethod(EntityManager manager) {
-                    deleteAllPositionsEntities(manager);
-                }
-            }.processRequest();
-        } catch (Exception e) {
-            LOGGER.log(Level.WARNING, "Got some problem when tried to delete positions from DB", e);
-        }
-    }
-
-    private void fillUpDepartmentEntities(List<DepartmentEntity> departmentEntities) {
-        try {
-            departmentEntities.addAll(new EntityManagerControlGeneric<List<DepartmentEntity>>(MANAGER_FACTORY) {
-                @Override
-                public List<DepartmentEntity> requestMethod(EntityManager manager) {
-                    return getAllDepartmentEntities(manager);
-                }
-            }.processRequest());
-        } catch (Exception e) {
-            LOGGER.log(Level.WARNING, "Got some problem when tried to get department objects from DB", e);
-        }
-    }
-
-    private void deleteAllDepartments() {
-        try {
-            new EntityManagerControl(MANAGER_FACTORY) {
-                @Override
-                public void requestMethod(EntityManager manager) {
-                    deleteAllDepartmentsEntities(manager);
-                }
-            }.processRequest();
-        } catch (Exception e) {
-            LOGGER.log(Level.WARNING, "Got some problem when tried to delete departments from DB", e);
-        }
-    }
-
-    private void fillUpEmployeeList(List<EmployeeEntity> employeeEntities) {
-        try {
-            employeeEntities.addAll(new EntityManagerControlGeneric<List<EmployeeEntity>>(MANAGER_FACTORY) {
-                @Override
-                public List<EmployeeEntity> requestMethod(EntityManager manager) {
-                    return getAllEmployeeEntitiesOrderById(manager);
-                }
-            }.processRequest());
-        } catch (Exception e) {
-            LOGGER.log(Level.WARNING, "Got some problem when tried to get employee objects from DB", e);
-        }
-    }
-
-    private void deleteAllEmployees() {
-        try {
-            new EntityManagerControl(MANAGER_FACTORY) {
-                @Override
-                public void requestMethod(EntityManager manager) {
-                    deleteAllEmployeeEntities(manager);
-                }
-            }.processRequest();
-        } catch (Exception e) {
-            LOGGER.log(Level.WARNING, "Got some problem when tried to delete employees from DB", e);
         }
     }
 }

@@ -5,19 +5,16 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.SwaggerDefinition;
 import io.swagger.annotations.Tag;
 import ru.otus.akn.project.db.entity.DepartmentEntity;
+import ru.otus.akn.project.ejb.api.stateless.DepartmentsService;
 import ru.otus.akn.project.rest.model.Department;
-import ru.otus.akn.project.util.EntityManagerControlGeneric;
 
-import javax.persistence.EntityManager;
+import javax.ejb.EJB;
 import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import static ru.otus.akn.project.db.dao.DepartmentsDAO.*;
-import static ru.otus.akn.project.util.PersistenceUtil.MANAGER_FACTORY;
 
 @Path("/departments")
 @Api(tags = "Departments")
@@ -26,22 +23,13 @@ import static ru.otus.akn.project.util.PersistenceUtil.MANAGER_FACTORY;
 })
 public class DepartmentResource {
 
+    @EJB
+    private DepartmentsService departmentsService;
+
     @GET
     @ApiOperation("Get all departments")
     public Response read() {
-        List<DepartmentEntity> allDepartments;
-
-        try {
-            allDepartments = new EntityManagerControlGeneric<List<DepartmentEntity>>(MANAGER_FACTORY) {
-                @Override
-                public List<DepartmentEntity> requestMethod(EntityManager manager) {
-                    return getAllDepartmentEntities(manager);
-                }
-            }.processRequest();
-        } catch (Exception e) {
-            throw new WebApplicationException("Something went wrong when tried to get department entities from DB.", e);
-        }
-
+        List<DepartmentEntity> allDepartments = departmentsService.getAllDepartmentEntities();
         List<Department> result = new ArrayList<>();
         for (DepartmentEntity entity : allDepartments) {
             result.add(convertDepartmentEntityToDepartmentClient(entity));
@@ -53,31 +41,14 @@ public class DepartmentResource {
     @ApiOperation("Get department by id")
     @Path("/{departmentId}")
     public Response read(@PathParam("departmentId") Long departmentId) {
-        DepartmentEntity departmentEntity;
-
-        try {
-            departmentEntity = new EntityManagerControlGeneric<DepartmentEntity>(MANAGER_FACTORY) {
-                @Override
-                public DepartmentEntity requestMethod(EntityManager manager) {
-                    return getDepartmentEntity(manager, departmentId);
-                }
-            }.processRequest();
-        } catch (Exception e) {
-            throw new WebApplicationException("Something went wrong when tried to get department entity from DB by id.", e);
-        }
-
+        DepartmentEntity departmentEntity = departmentsService.getDepartmentEntity(departmentId);
         return Response.status(200).entity(convertDepartmentEntityToDepartmentClient(departmentEntity)).build();
     }
 
     @POST
     @ApiOperation("Create department")
     public Response create(@Valid @BeanParam Department department) {
-        DepartmentEntity saved;
-        try {
-            saved = saveDepartment(convertDepartmentClientToDepartmentEntity(department));
-        } catch (Exception e) {
-            throw new WebApplicationException("Something went wrong when tried to create department entity.", e);
-        }
+        DepartmentEntity saved = departmentsService.saveDepartment(convertDepartmentClientToDepartmentEntity(department));
         return Response.status(201).entity(saved.getDepartmentId()).build();
     }
 
@@ -86,11 +57,8 @@ public class DepartmentResource {
     @Path("/{departmentId}")
     public Response update(@PathParam("departmentId") Long id, @Valid @BeanParam Department department) {
         department.setDepartmentId(id);
-        try {
-            updateAllDepartments(Collections.singletonList(convertDepartmentClientToDepartmentEntity(department)));
-        } catch (Exception e) {
-            throw new WebApplicationException("Something went wrong when tried to update department entity.", e);
-        }
+        departmentsService.updateAllDepartments
+                (Collections.singletonList(convertDepartmentClientToDepartmentEntity(department)));
         return Response.ok().build();
     }
 
@@ -98,11 +66,7 @@ public class DepartmentResource {
     @ApiOperation("Delete department by id")
     @Path("/{departmentId}")
     public Response delete(@PathParam("departmentId") Long id) {
-        try {
-            deleteDepartmentEntityById(id);
-        } catch (Exception e) {
-            throw new WebApplicationException("Something went wrong when tried to delete department entity.", e);
-        }
+        departmentsService.deleteDepartmentEntityById(id);
         return Response.status(204).build();
     }
 

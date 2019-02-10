@@ -11,6 +11,7 @@
         <module>sql-migrations</module>
         <module>project-statistics</module>
         <module>project-dao</module>
+        <module>project-service</module>
     </modules>
     <packaging>pom</packaging>
 
